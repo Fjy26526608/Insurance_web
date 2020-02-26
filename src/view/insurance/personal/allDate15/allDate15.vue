@@ -6,8 +6,12 @@
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col>
-      <i-col span="5"><DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择开始时间"></DatePicker></i-col>
-      <i-col span="5"><DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择结束时间"></DatePicker></i-col>
+      <i-col span="5">
+        <DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择开始时间"></DatePicker>
+      </i-col>
+      <i-col span="5">
+        <DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择结束时间"></DatePicker>
+      </i-col>
       <i-col span="5">
         <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj">
           <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -19,10 +23,12 @@
           <Option v-for="item in queryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col>
-      <i-col span="12" class="mt20"><Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" /></i-col>
+      <i-col span="12" class="mt20">
+        <Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" />
+      </i-col>
       <i-col span="24"></i-col>
       <i-col span="12" class="mt20">
-        <Button type="primary" @click="showAddModal = true" class="mr15">新增</Button>
+        <Button type="primary" class="mr15">新增</Button>
         <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button>
       </i-col>
@@ -38,21 +44,23 @@
         <span>条</span>
       </i-col>
     </Row>
-    <div class="tableList"><Table border stripe ref="selection" :columns="columns" :data="tableLisr"></Table></div>
-    <div class="text-right pageList"><Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator /></div>
-    <Modal v-model="showAddModal" title="添加企业信息" @on-ok="ok" @on-cancel="cancel"><p>这里是添加信息弹窗，需要原型及设计</p></Modal>
+    <div class="tableList">
+      <Table border ref="selection" :columns="columns" :data="tableLisr"></Table>
+    </div>
+    <div class="text-right pageList">
+      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'enterprise',
+  name: 'allDate',
   data () {
     return {
-      showAddModal: false,
-      total: 10, // 一共有多少行
-      pageSize: 10, // 每页显示行数
-      pageNo: 1, // 第几页
+      total: 100,
+      pageSize: 10,
+      pageNo: 1,
       typeList: [
         {
           label: '创建时间',
@@ -189,7 +197,55 @@ export default {
           remaining: '0.00'
         },
         {
-          index: '2051655',
+          index: '2051654',
+          name: '山东如意集团',
+          type: '五险，工伤保险',
+          createTime: '2016.12.20',
+          amount: '1000.00',
+          endTime: '2019.12.20',
+          poundage: '1000.00',
+          stno: '2000.00',
+          on: '1000.00',
+          remaining: '0.00'
+        },
+        {
+          index: '2051654',
+          name: '山东如意集团',
+          type: '五险，工伤保险',
+          createTime: '2016.12.20',
+          amount: '1000.00',
+          endTime: '2019.12.20',
+          poundage: '1000.00',
+          stno: '2000.00',
+          on: '1000.00',
+          remaining: '0.00'
+        },
+        {
+          index: '2051654',
+          name: '山东如意集团',
+          type: '五险，工伤保险',
+          createTime: '2016.12.20',
+          amount: '1000.00',
+          endTime: '2019.12.20',
+          poundage: '1000.00',
+          stno: '2000.00',
+          on: '1000.00',
+          remaining: '0.00'
+        },
+        {
+          index: '2051654',
+          name: '山东如意集团',
+          type: '五险，工伤保险',
+          createTime: '2016.12.20',
+          amount: '1000.00',
+          endTime: '2019.12.20',
+          poundage: '1000.00',
+          stno: '2000.00',
+          on: '1000.00',
+          remaining: '0.00'
+        },
+        {
+          index: '2051654',
           name: '山东如意集团',
           type: '五险，工伤保险',
           createTime: '2016.12.20',
@@ -205,29 +261,23 @@ export default {
   },
   methods: {
     changePage (page) {
-      // alert(page)
-    },
-    cancel () {
-      alert('弹窗关闭')
-    },
-    ok () {
-      alert('弹窗确认')
+      alert(page)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.typeSelList {
-  width: 100%;
-}
+  .typeSelList {
+    width: 100%;
+  }
 
-.tableList {
-  margin-top: 30px;
-  position: relative;
-}
+  .tableList {
+    margin-top: 30px;
+    position: relative;
+  }
 
-.pageList {
-  margin-top: 30px;
-}
+  .pageList {
+    margin-top: 30px;
+  }
 </style>
