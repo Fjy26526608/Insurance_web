@@ -1,7 +1,7 @@
 <template>
   <div>
     <Row :gutter="20">
-      <i-col span="5">
+      <!-- <i-col span="5">
         <Select class="typeSelList" v-model="typeObj">
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
@@ -26,13 +26,13 @@
       <i-col span="12" class="mt20">
         <Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" />
       </i-col>
-      <i-col span="24"></i-col>
+      <i-col span="24"></i-col> -->
       <i-col span="12" class="mt20">
         <Button type="primary" class="mr15">新增</Button>
-        <Button type="warning" class="mr15">删除</Button>
-        <Button>导出</Button>
+        <!-- <Button type="warning" class="mr15">删除</Button>
+        <Button>导出</Button> -->
       </i-col>
-      <i-col span="12" class="text-right mt20">
+      <!-- <i-col span="12" class="text-right mt20">
         <span class="mr15">排序</span>
         <Select class="typeSelList mr15" style="width: 160px; text-align: left;margin-right: 25px;" v-model="sortingObj">
           <Option v-for="item in sortingList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -42,7 +42,7 @@
           <Option v-for="item in pageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
         <span>条</span>
-      </i-col>
+      </i-col> -->
     </Row>
     <div class="tableList">
       <Table border ref="selection" :columns="columns" :data="tableLisr"></Table>
@@ -138,49 +138,64 @@ export default {
       ],
       columns: [
         {
-          type: 'selection',
-          width: 60,
-          align: 'center'
-        },
-        {
           title: '合同编号',
-          key: 'index'
+          key: 'index',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '名称',
-          key: 'name'
+          key: 'name',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '保险类型',
-          key: 'type'
+          key: 'type',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '购买日期',
-          key: 'createTime'
+          key: 'createTime',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '金额',
-          key: 'amount'
+          key: 'amount',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '到期日期',
-          key: 'endTime'
+          key: 'endTime',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '手续费',
-          key: 'poundage'
+          key: 'poundage',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '实际支付',
-          key: 'stno'
+          key: 'stno',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '已使用',
-          key: 'on'
+          key: 'on',
+          align: 'center',
+          tooltip: true
         },
         {
           title: '剩余',
-          key: 'remaining'
+          key: 'remaining',
+          align: 'center',
+          tooltip: true
         }
       ],
       tableLisr: [
