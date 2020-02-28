@@ -438,8 +438,6 @@ export default {
         this.hasShowSpin = false
       }, 500)
     },
-    more10() {},
-    more15() {},
     cdet(e, index) {
       console.log('我的下标是', index, e)
       this.$router.push({ path: '/insurance/enterprise/cdet' })

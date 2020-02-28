@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import Qs from 'qs'
 // import { Spin } from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
@@ -21,7 +22,8 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {
-        //
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        // 定义请求头
       }
     }
     return config
@@ -38,6 +40,9 @@ class HttpRequest {
       // 添加全局的loading...
       if (!Object.keys(this.queue).length) {
         // Spin.show() // 不建议开启，因为界面不友好
+      }
+      if (config.data) {
+        config.data = Qs.stringify(config.data)
       }
       this.queue[url] = true
       return config

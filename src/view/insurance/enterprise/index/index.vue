@@ -129,6 +129,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'enterprise',
   data() {
@@ -502,8 +503,22 @@ export default {
     },
     changePage(page) {
       // alert(page)
+
     },
     cancel() {
+      let url = '47.105.49.81:2222/main/login'
+      let data = {
+        userName: 'superadmin',
+        password: '1'
+      }
+      axios
+        .post(url, data)
+        .then(res => {
+          console.log(res) // 返回的数据
+        })
+        .catch(err => {
+          console.log(err) // 错误信息
+        })
       this.$Message.success('点击取消!')
     },
     cdet(e, index) {

@@ -23,16 +23,16 @@ export default {
     LoginForm
   },
   methods: {
-    ...mapActions(['handleLogin', 'getUserInfo']),
+    // ...mapActions(['handleLogin', 'getUserInfo']),
+    ...mapActions(['handleLogin']),
     handleSubmit({ userName, password }) {
-      console.log(userName, password)
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          console.log('登录跳转')
-          this.$router.push({
-            name: this.$config.homeName
-          })
+        // this.getUserInfo().then(res => {
+        console.log('登录跳转', this.$config.homeName)
+        this.$router.push({
+          name: this.$config.homeName
         })
+        // })
       })
     }
   }
