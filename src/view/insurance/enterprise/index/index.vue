@@ -43,7 +43,8 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+      <Table size="large" :loading="loading" border stripe highlight-row :columns="columns" :data="tableLisr"
+        @on-row-dblclick="cdet">
       </Table>
     </div>
     <div class="text-right pageList">
@@ -104,24 +105,24 @@
                 <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
                 <div class="filter"></div>
               </div>
-              <Row>
-                <div class="img_box" v-for="(item,index) in imgArr" :key="index">
-                  <Col span="4">
-                  <div class="img_show_box">
-                    <img :src="item" alt="">
-                    <i class="img_delete" @click="deleteImg(index)"></i>
-                    <!-- <i class="img_delete" @click="imgArr.splice(index,1)"></i> -->
-                  </div>
-                  </Col>
+              <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
+                <img :src="item" alt="">
+                <div class="demo-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
+                  <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
                 </div>
-              </Row>
+              </div>
             </div>
+            <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+              <Carousel v-model="value1" loop>
+                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
+                  <div class="demo-carousel">
+                    <img :src="img" style="width: 100%" alt="">
+                  </div>
+                </CarouselItem>
+              </Carousel>
+            </Modal>
           </div>
-          <!-- <div style="padding: 20px 0">
-                            <Icon type="ios-cloud-upload" size="50" style="color: #3399ff"></Icon>
-                            <p>点击或拖拽图片以上传</p>
-                            <p>图片仅支持jpg，jpeg，png格式，且小于20MB</p>
-                        </div> -->
         </FormItem>
         <FormItem label="备注" prop="desc">
           <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."
@@ -134,7 +135,7 @@
 
 <script>
 import { getToken } from '@/libs/util'
-import axios from 'axios'
+import axios from '@/libs/api.request'
 export default {
   name: 'enterprise',
   data() {
@@ -343,12 +344,12 @@ export default {
         }
       ],
       columns: [
-        {
-          title: '合同编号',
-          key: 'index',
-          align: 'center',
-          tooltip: true
-        },
+        // {
+        //   title: '合同编号',
+        //   key: 'id',
+        //   align: 'center',
+        //   tooltip: true
+        // },
         {
           title: '名称',
           key: 'name',
@@ -356,100 +357,84 @@ export default {
           tooltip: true
         },
         {
-          title: '保险类型',
-          key: 'type',
+          title: '公司规模',
+          key: 'psize',
           align: 'center',
           tooltip: true
         },
         {
-          title: '购买日期',
-          key: 'createTime',
+          title: '地址',
+          key: 'addrss',
           align: 'center',
           tooltip: true
         },
         {
-          title: '金额',
-          key: 'amount',
+          title: '合同起始时间',
+          key: 'stime',
           align: 'center',
           tooltip: true
         },
         {
-          title: '到期日期',
-          key: 'endTime',
+          title: '合同结束时间',
+          key: 'etime',
           align: 'center',
           tooltip: true
         },
         {
-          title: '手续费',
-          key: 'poundage',
+          title: '负责人名字',
+          key: 'contactperson',
           align: 'center',
           tooltip: true
         },
         {
-          title: '实际支付',
-          key: 'stno',
+          title: '电话',
+          key: 'tel',
           align: 'center',
           tooltip: true
         },
         {
-          title: '已使用',
-          key: 'on',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '剩余',
-          key: 'remaining',
+          title: '备注',
+          key: 'remark',
           align: 'center',
           tooltip: true
         }
+        // {
+        //   title: '剩余',
+        //   key: 'remaining',
+        //   align: 'center',
+        //   tooltip: true
+        // }
       ],
-      tableLisr: [
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051655',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        }
-      ]
+      tableLisr: [],
+      loading: true
     }
   },
   created() {
     console.log('完成创建')
-    axios({
+    this.loading = true
+    this.tableLisr = []
+    let that = this
+    axios.request({
       method: 'post',
-      url: 'http://47.105.49.81:2222/main/companylist',
+      url: '/main/companylist',
       headers: {
         token: getToken(),
         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
       },
       data: {
-        pagem: 1,
+        page: 1,
         pagesize: 15
       }
-    }).then(function (response) {
-      console.log(response)
+    }).then(function (res) {
+      for (let i = 0; i < res.data.data.length; i++) {
+        that.tableLisr.push(res.data.data[i].fields)
+        that.tableLisr[i].id = res.data.data[i].pk
+      }
     }).catch(function (error) {
       console.log(error)
     })
+    console.log(this.tableLisr)
+    this.loading = false
   },
   methods: {
     changeImg: function (e) {
@@ -467,7 +452,6 @@ export default {
           ) {
             return false
           }
-
           if (files.item(dd).size > imgLimit * 102400) {
             // to do sth
           } else {
@@ -476,7 +460,7 @@ export default {
               // 默认按比例压缩
               var w = image.width
               var h = image.height
-              //   scale = w / h
+              // scale = w / h
               // w = 200
               // h = w / scale
               // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
@@ -565,5 +549,50 @@ export default {
 
   .pageList {
     margin-top: 30px;
+  }
+
+  .demo-carousel {
+    min-height: 600px;
+  }
+
+  .demo-upload-list {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    margin-right: 4px;
+  }
+
+  .demo-upload-list img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .demo-upload-list-cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .demo-upload-list:hover .demo-upload-list-cover {
+    display: block;
+  }
+
+  .demo-upload-list-cover i {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
   }
 </style>

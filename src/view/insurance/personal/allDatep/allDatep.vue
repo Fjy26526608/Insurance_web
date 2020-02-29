@@ -96,6 +96,32 @@
         <!-- <FormItem label="邮箱" prop="mail">
                 <Input v-model="formValidate.mail" placeholder="输入电子邮箱"></Input>
                 </FormItem>-->
+                <FormItem label="合同文件" prop="desc">
+                  <div class="com-upload-img">
+                    <div class="img_group">
+                      <div class="img_box" v-if="allowAddImg">
+                        <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
+                        <div class="filter"></div>
+                      </div>
+                      <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
+                        <img :src="item" alt="">
+                        <div class="demo-upload-list-cover">
+                          <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
+                          <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
+                        </div>
+                      </div>
+                    </div>
+                    <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+                      <Carousel v-model="value1" loop>
+                        <CarouselItem v-for='(img,index) in imgArr' :key='index'>
+                          <div class="demo-carousel">
+                            <img :src="img" style="width: 100%" alt="">
+                          </div>
+                        </CarouselItem>
+                      </Carousel>
+                    </Modal>
+                  </div>
+                </FormItem>
         <FormItem label="备注" prop="desc">
           <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..." ></Input>
         </FormItem>
@@ -914,5 +940,45 @@ export default {
 
 .pageList {
   margin-top: 30px;
+}
+
+.demo-carousel {
+    min-height: 600px;
+}
+.demo-upload-list {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  line-height: 60px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  margin-right: 4px;
+}
+.demo-upload-list img {
+  width: 100%;
+  height: 100%;
+}
+.demo-upload-list-cover {
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.demo-upload-list:hover .demo-upload-list-cover {
+  display: block;
+}
+.demo-upload-list-cover i {
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 0 2px;
 }
 </style>

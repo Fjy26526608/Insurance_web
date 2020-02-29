@@ -112,20 +112,8 @@
                   <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
                 </div>
               </div>
-              <!-- <Row>
-                <div class="img_box" v-for="(item,index) in imgArr" :key="index">
-                  <Col span="4">
-                  <div class="img_show_box">
-                    <img :src="item" alt="">
-                    <i class="img_delete" @click="deleteImg(index)"></i>
-                    </img>
-                  </div>
-                  </Col>
-                </div>
-              </Row> -->
             </div>
             <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-            <!-- <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%"> -->
                 <Carousel v-model="value1" loop>
                   <CarouselItem v-for='(img,index) in imgArr' :key='index'>
                     <div class="demo-carousel">
@@ -135,41 +123,7 @@
                 </Carousel>
               </Modal>
           </div>
-          <!-- <div style="padding: 20px 0">
-                            <Icon type="ios-cloud-upload" size="50" style="color: #3399ff"></Icon>
-                            <p>点击或拖拽图片以上传</p>
-                            <p>图片仅支持jpg，jpeg，png格式，且小于20MB</p>
-                        </div> -->
         </FormItem>
-        <!-- <FormItem label="合同文件" prop="desc">
-          <div class="demo-upload-list" v-for="item in uploadList">
-            <template v-if="item.status === 'finished'">
-              <img :src="item.url">
-              <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-              </div>
-            </template>
-            <template v-else>
-              <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-            </template>
-          </div>
-          <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="20480" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
-            :before-upload="handleBeforeUpload" multiple type="drag" action="//jsonplaceholder.typicode.com/posts/" style="display: inline-block;width:58px;">
-            <div style="width: 58px;height:58px;line-height: 58px;">
-              <Icon type="ios-camera" size="20"></Icon>
-            </div>
-          </Upload>
-          <Modal title="合同文件预览" v-model="visible" width='60%':styles="{top: '20px'}">
-            <Carousel v-model="value1" loop>
-              <CarouselItem v-for='(img,index) in defaultList '>
-                <div class="demo-carousel">
-                  <img :src='img.url' v-if="visible" style="width: 100%">
-                </div>
-              </CarouselItem>
-            </Carousel>
-          </Modal>
-        </FormItem> -->
         <FormItem label="备注" prop="desc">
           <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."></Input>
         </FormItem>

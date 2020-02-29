@@ -19,53 +19,56 @@
       </Table>
     </div>
     <div class="text-right pageList">
-      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
+      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
+        show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加用户" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" ok-text='添加'>
+    <Modal v-model="showAddModal" title="添加用户" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false"
+      ok-text='添加'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+        <FormItem label="账号" prop="loginname">
+          <Input v-model="formValidate.loginname" placeholder="输入用户账号"></Input>
+        </FormItem>
         <FormItem label="姓名" prop="name">
           <Input v-model="formValidate.name" placeholder="输入用户姓名"></Input>
         </FormItem>
-        <FormItem label="电话" prop="phone">
+        <!-- <FormItem label="电话" prop="phone">
           <Input v-model="formValidate.phone" placeholder="输入用户电话"></Input>
-        </FormItem>
+        </FormItem> -->
         <!-- <FormItem label="地址" prop="address">
                 <Input v-model="formValidate.address" placeholder="输入被保人地址"></Input>
             </FormItem> -->
-        <FormItem label="用户权限" prop="type">
-          <Select v-model="formValidate.type" placeholder="选择用户权限">
+        <FormItem label="用户权限" prop="roleid">
+          <Select v-model="formValidate.roleid" placeholder="选择用户权限">
             <Option v-for="item in tpyeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="用户密码" prop="passwo">
-          <Input v-model="formValidate.passwo" placeholder="输入用户密码"></Input>
-        </FormItem>
-        <FormItem label="用户密码" prop="repasswd">
-          <Input v-model="formValidate.repasswd" placeholder="重复输入用户密码"></Input>
+        <FormItem label="用户密码" prop="passwd">
+          <Input v-model="formValidate.passwd" placeholder="输入用户密码"></Input>
         </FormItem>
       </Form>
     </Modal>
-    <Modal v-model="showAddModal1" title="修改用户" @on-ok="ok1" @on-cancel="cancel1" :closable="false" :mask-closable="false" ok-text='添加'>
+    <Modal v-model="showAddModal1" title="修改用户" @on-ok="ok1" @on-cancel="cancel1" :closable="false"
+      :mask-closable="false" ok-text='添加'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+        <FormItem label="账号" prop="loginname">
+          <Input v-model="formValidate.loginname" placeholder="输入账号"></Input>
+        </FormItem>
         <FormItem label="姓名" prop="name">
           <Input v-model="formValidate.name" placeholder="输入用户姓名"></Input>
         </FormItem>
-        <FormItem label="电话" prop="phone">
+        <!-- <FormItem label="电话" prop="phone">
           <Input v-model="formValidate.phone" placeholder="输入用户电话"></Input>
-        </FormItem>
+        </FormItem> -->
         <!-- <FormItem label="地址" prop="address">
                 <Input v-model="formValidate.address" placeholder="输入被保人地址"></Input>
             </FormItem> -->
-        <FormItem label="用户权限" prop="type">
-          <Select v-model="formValidate.type" placeholder="选择用户权限">
+        <FormItem label="用户权限" prop="roleid">
+          <Select v-model="formValidate.roleid" placeholder="选择用户权限">
             <Option v-for="item in tpyeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="用户密码" prop="passwo">
-          <Input v-model="formValidate.passwo" placeholder="输入用户密码"></Input>
-        </FormItem>
-        <FormItem label="用户密码" prop="repasswd">
-          <Input v-model="formValidate.repasswd" placeholder="重复输入用户密码"></Input>
+        <FormItem label="用户密码" prop="passwd">
+          <Input v-model="formValidate.passwd" placeholder="输入用户密码"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -77,7 +80,7 @@
 
 <script>
 import { getToken } from '@/libs/util'
-import axios from 'axios'
+import axios from '@/libs/api.request'
 export default {
   name: 'users',
   data() {
@@ -140,7 +143,13 @@ export default {
           tooltip: true,
           align: 'center',
           title: '账号',
-          key: 'id'
+          key: 'loginname'
+        },
+        {
+          tooltip: true,
+          align: 'center',
+          title: '密码',
+          key: 'passwd'
         },
         {
           tooltip: true,
@@ -151,8 +160,14 @@ export default {
         {
           tooltip: true,
           align: 'center',
-          title: '权限',
-          key: 'type'
+          title: '用户组',
+          key: 'rolename'
+        },
+        {
+          tooltip: true,
+          align: 'center',
+          title: '用户组ID',
+          key: 'roleid'
         },
         {
           title: '操作',
@@ -160,26 +175,7 @@ export default {
           align: 'center'
         }
       ],
-      tableLisr: [
-        {
-          id: '2051654',
-          name: '山东如意集团',
-          phone: 15866666666,
-          type: '1'
-        },
-        {
-          id: '2051654',
-          name: '山东如意集团',
-          phone: 15866666666,
-          type: '2'
-        },
-        {
-          id: '2051654',
-          name: '山东如意集团',
-          phone: 15866666666,
-          type: '3'
-        }
-      ],
+      tableLisr: [],
       tpyeList: [
         {
           value: '1',
@@ -195,11 +191,10 @@ export default {
         }
       ],
       formValidate: {
-        name: '', // 姓名
-        phone: '', // 电话
-        type: '', // 保险类型
-        passwd: '', // 性别
-        repasswd: '' // 日期
+        name: '',
+        passwd: '',
+        roleid: '',
+        loginname: ''
       },
       ruleValidate: {
         name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
@@ -210,10 +205,10 @@ export default {
             trigger: 'blur'
           }
         ],
-        repasswd: [
+        loginname: [
           {
             required: true,
-            message: '密码不能为空',
+            message: '账号不能为空',
             trigger: 'blur'
           }
         ],
@@ -230,28 +225,30 @@ export default {
     }
   },
   created() {
-    console.log('接收的参数', this.$route.query.type)
-    this.total = this.tableLisr.length
-    // for (let i = 0; i < 15; i++) {
-    //   this.tableLisr[i] = this.tableLisr1[i]
-    // }
-    axios({
+    console.log('创建完成')
+    this.tableLisr = []
+    let that = this
+    axios.request({
       method: 'post',
-      url: 'http://47.105.49.81:2222/main/allUser',
+      url: '/main/allUser',
       headers: {
-        'token': getToken(),
+        token: getToken(),
         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
       },
       data: {
-        pagem: 1,
+        page: 1,
         pagesize: 15
-        // iscompany: true
       }
-    }).then(function (response) {
-      console.log(response)
+    }).then(function (res) {
+      for (let i = 0; i < res.data.data.length; i++) {
+        that.tableLisr.push(res.data.data[i].fields)
+        that.tableLisr[i].id = res.data.data[i].pk
+      }
+      that.total = res.data.count
     }).catch(function (error) {
       console.log(error)
     })
+    console.log(this.tableLisr)
     this.loading = false
   },
   methods: {
@@ -263,7 +260,7 @@ export default {
     },
     pdet(e, index) {
       console.log('我的下标是', index, e)
-      this.showAddModal = true
+      // this.showAddModal = true
     },
     cancel() {
       this.$Message.success('点击取消!')
@@ -302,16 +299,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.typeSelList {
-  width: 100%;
-}
+  .typeSelList {
+    width: 100%;
+  }
 
-.tableList {
-  margin-top: 30px;
-  position: relative;
-}
+  .tableList {
+    margin-top: 30px;
+    position: relative;
+  }
 
-.pageList {
-  margin-top: 30px;
-}
+  .pageList {
+    margin-top: 30px;
+  }
 </style>
