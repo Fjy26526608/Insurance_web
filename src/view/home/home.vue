@@ -144,7 +144,7 @@ export default {
   created() {
     console.log('创建完成：')
     this.loading = true
-    console.log(getToken())
+    console.log('token值', getToken())
     function getc10() {
       return axios({
         method: 'post',
@@ -152,6 +152,7 @@ export default {
         headers: {
           token: getToken(),
           'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+          // 'Access-Control-Allow-Headers': 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild'
         },
         data: {
           pagem: 1,

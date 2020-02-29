@@ -29,19 +29,19 @@ export const logout = (token) => {
   })
 }
 
-export const getUnreadCount = () => {
-  return axios.request({
-    url: 'message/count',
-    method: 'get'
-  })
-}
+// export const getUnreadCount = () => {
+//   return axios.request({
+//     url: 'message/count',
+//     method: 'get'
+//   })
+// }
 
-export const getMessage = () => {
-  return axios.request({
-    url: 'message/init',
-    method: 'get'
-  })
-}
+// export const getMessage = () => {
+//   return axios.request({
+//     url: 'message/init',
+//     method: 'get'
+//   })
+// }
 
 export const getContentByMsgId = msg_id => {
   return axios.request({

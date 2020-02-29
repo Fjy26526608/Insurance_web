@@ -239,7 +239,7 @@ export default {
       method: 'post',
       url: 'http://47.105.49.81:2222/main/allUser',
       headers: {
-        token: getToken(),
+        'token': getToken(),
         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
       },
       data: {
