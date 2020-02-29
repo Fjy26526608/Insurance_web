@@ -59,7 +59,8 @@
 
 <script>
 import { getToken } from '@/libs/util'
-import axios from 'axios'
+// import axios from 'axios'
+import axios from '@/libs/api.request'
 export default {
   name: 'home',
   data() {
@@ -145,67 +146,66 @@ export default {
     console.log('创建完成：')
     this.loading = true
     console.log('token值', getToken())
-    function getc10() {
-      return axios({
-        method: 'post',
-        url: 'http://47.105.49.81:2222/main/maturitylist10',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-          // 'Access-Control-Allow-Headers': 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild'
-        },
-        data: {
-          pagem: 1,
-          pagesize: 15,
-          iscompany: true
-        }
-      }).then(function (response) {
-        console.log(response)
-      }).catch(function (error) {
-        console.log(error)
-      })
-    }
-    function getc15() {
-      return axios({
-        method: 'post',
-        url: 'http://47.105.49.81:2222/main/maturitylist15',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
-        data: {
-          pagem: 1,
-          pagesize: 15,
-          iscompany: true
-        }
-      }).then(function (response) {
-        console.log(response)
-      }).catch(function (error) {
-        console.log(error)
-      })
-    }
-    axios.all([getc10(), getc15()])
-      .then(axios.spread(function (c10, c15) {
-        // 两个请求现在都执行完成
-        console.log('同时请求完成', c10, c15)
-      }))
-    // axios({
-    //   method: 'post',
-    //   url: 'http://47.105.49.81:2222/main/maturitylist10',
-    //   headers: {
-    //     token: getToken(),
-    //     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-    //   },
-    //   data: {
-    //     pagem: 1,
-    //     pagesize: 15,
-    //     iscompany: true
-    //   }
-    // }).then(function (response) {
-    //   console.log(response)
-    // }).catch(function (error) {
-    //   console.log(error)
-    // })
+    // function getc10() {
+    //   return axios({
+    //     method: 'post',
+    //     url: 'http://47.105.49.81:2222/main/maturitylist10',
+    //     headers: {
+    //       token: getToken(),
+    //       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    //     },
+    //     data: {
+    //       page: 1,
+    //       pagesize: 15,
+    //       iscompany: true
+    //     }
+    //   }).then(function (response) {
+    //     console.log(response)
+    //   }).catch(function (error) {
+    //     console.log(error)
+    //   })
+    // }
+    // function getc15() {
+    //   return axios({
+    //     method: 'post',
+    //     url: 'http://47.105.49.81:2222/main/maturitylist15',
+    //     headers: {
+    //       token: getToken(),
+    //       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    //     },
+    //     data: {
+    //       page: 1,
+    //       pagesize: 15,
+    //       iscompany: true
+    //     }
+    //   }).then(function (response) {
+    //     console.log(response)
+    //   }).catch(function (error) {
+    //     console.log(error)
+    //   })
+    // }
+    // axios.all([getc10(), getc15()])
+    //   .then(axios.spread(function (c10, c15) {
+    //     // 两个请求现在都执行完成
+    //     console.log('同时请求完成', c10, c15)
+    //   }))
+    axios.request({
+      method: 'post',
+      url: '/main/maturitylist10',
+      headers: {
+        token: getToken(),
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      data: {
+        page: 1,
+        pagesize: 15,
+        iscompany: true
+      }
+    }).then(function (response) {
+      console.log(response)
+    }).catch(function (error) {
+      console.log(error)
+    })
     let tc = [
       {
         id: 11111,
