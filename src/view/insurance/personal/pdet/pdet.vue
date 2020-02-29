@@ -1,7 +1,7 @@
 <template>
   <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
     <Row>
-      <Col span="18">
+      <Col span="16">
       <FormItem label="合同编号" prop="number">
         <Input v-model="formValidate.number" placeholder="输入合同编号" :disabled="!isChange"></Input>
       </FormItem>
@@ -50,7 +50,45 @@
         <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..." :disabled="!isChange"></Input>
       </FormItem>
       </Col>
-      <Col span="6">合同照片</Col>
+      <Col span="1" style='text-align:center'>合同照片</Col>
+      <Col span="5">
+      <div class="com-upload-img">
+        <div class="img_group">
+          <div class="img_box" v-if="allowAddImg">
+            <!-- <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)"> -->
+            <div class="filter"></div>
+          </div>
+          <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
+            <img :src="item"  alt="">
+            <div class="demo-upload-list-cover">
+              <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
+              <!-- <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon> -->
+            </div>
+          </div>
+          <!-- <Row>
+            <div class="img_box" v-for="(item,index) in imgArr" :key="index">
+              <Col span="4">
+              <div class="img_show_box">
+                <img :src="item" alt="">
+                <i class="img_delete" @click="deleteImg(index)"></i>
+                </img>
+              </div>
+              </Col>
+            </div>
+          </Row> -->
+        </div>
+        <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+        <!-- <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%"> -->
+            <Carousel v-model="value1" loop>
+              <CarouselItem v-for='(img,index) in imgArr'  :key='index'>
+                <div class="demo-carousel">
+                  <img :src="img" style="width: 100%"  alt="">
+                </div>
+              </CarouselItem>
+            </Carousel>
+          </Modal>
+      </div>
+      </Col>
     </Row>
     <FormItem>
       <Button size="large" icon="md-checkmark" type="success" @click="handleSubmit('formValidate')" v-if="isChange">递 交</Button>
@@ -63,6 +101,13 @@
 export default {
   data() {
     return {
+      value1: 0,
+      visible: false,
+      uploadList: [],
+      imgData: '',
+      imgArr: [],
+      imgSrc: '',
+      allowAddImg: true,
       isChange: true,
       insuranceList: [
         {
@@ -200,6 +245,75 @@ export default {
     },
     doNew() {
       this.$Message.success('点击新增!')
+    },
+    changeImg: function(e) {
+      var _this = this
+      var imgLimit = 1024
+      var files = e.target.files
+      var image = new Image()
+      if (files.length > 0) {
+        var dd = 0
+        var timer = setInterval(function() {
+          if (
+            files.item(dd).type !== 'image/png' && files.item(dd).type !== 'image/jpeg' && files.item(dd).type !== 'image/jpg') {
+            return false
+          }
+
+          if (files.item(dd).size > imgLimit * 102400) {
+            // to do sth
+          } else {
+            image.src = window.URL.createObjectURL(files.item(dd))
+            image.onload = function() {
+              // 默认按比例压缩
+              var w = image.width
+              var h = image.height
+              // scale = w / h
+              // w = 200
+              // h = w / scale
+              // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
+              var quality = 1
+              // 生成canvas
+              var canvas = document.createElement('canvas')
+              var ctx = canvas.getContext('2d')
+              // 创建属性节点
+              var anw = document.createAttribute('width')
+              anw.nodeValue = w
+              var anh = document.createAttribute('height')
+              anh.nodeValue = h
+              canvas.setAttributeNode(anw)
+              canvas.setAttributeNode(anh)
+              ctx.drawImage(image, 0, 0, w, h)
+              var ext = image.src
+                .substring(image.src.lastIndexOf('.') + 1)
+                .toLowerCase() // 图片格式
+              var base64 = canvas.toDataURL('image/' + ext, quality)
+              // 回调函数返回base64的值
+              if (_this.imgArr.length <= 8) {
+                _this.imgArr.unshift('')
+                _this.imgArr.splice(0, 1, base64) // 替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
+                if (_this.imgArr.length >= 9) {
+                  _this.allowAddImg = false
+                }
+              }
+            }
+          }
+          if (dd < files.length - 1) {
+            dd++
+          } else {
+            clearInterval(timer)
+          }
+        }, 1000)
+      }
+    },
+    deleteImg: function(index) {
+      this.imgArr.splice(index, 1)
+      if (this.imgArr.length < 9) {
+        this.allowAddImg = true
+      }
+    },
+    handleView(index) {
+      this.value1 = index
+      this.visible = true
     }
   }
 }
