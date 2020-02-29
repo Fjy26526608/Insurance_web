@@ -76,6 +76,8 @@
 </template>
 
 <script>
+import { getToken } from '@/libs/util'
+import axios from 'axios'
 export default {
   name: 'users',
   data() {
@@ -230,9 +232,26 @@ export default {
   created() {
     console.log('接收的参数', this.$route.query.type)
     this.total = this.tableLisr.length
-    for (let i = 0; i < 15; i++) {
-      this.tableLisr[i] = this.tableLisr1[i]
-    }
+    // for (let i = 0; i < 15; i++) {
+    //   this.tableLisr[i] = this.tableLisr1[i]
+    // }
+    axios({
+      method: 'post',
+      url: 'http://47.105.49.81:2222/main/allUser',
+      headers: {
+        token: getToken(),
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      data: {
+        pagem: 1,
+        pagesize: 15
+        // iscompany: true
+      }
+    }).then(function (response) {
+      console.log(response)
+    }).catch(function (error) {
+      console.log(error)
+    })
     this.loading = false
   },
   methods: {
