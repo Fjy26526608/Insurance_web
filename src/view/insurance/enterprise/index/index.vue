@@ -43,12 +43,15 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet"></Table>
+      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+      </Table>
     </div>
     <div class="text-right pageList">
-      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
+      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
+        show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加' :styles="{top: '20px'}">
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
+      :mask-closable="false" width="60%" ok-text='添加' :styles="{top: '20px'}">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
           <Input v-model="formValidate.number" placeholder="输入合同编号" :disabled="!isChange"></Input>
@@ -121,7 +124,8 @@
                         </div> -->
         </FormItem>
         <FormItem label="备注" prop="desc">
-          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..." :disabled="!isChange"></Input>
+          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."
+            :disabled="!isChange"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -129,6 +133,7 @@
 </template>
 
 <script>
+import { getToken } from '@/libs/util'
 import axios from 'axios'
 export default {
   name: 'enterprise',
@@ -427,22 +432,38 @@ export default {
       ]
     }
   },
+  created() {
+    console.log('完成创建')
+    axios({
+      method: 'post',
+      url: 'http://47.105.49.81:2222/main/companylist',
+      headers: {
+        token: getToken(),
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      data: {
+        pagem: 1,
+        pagesize: 15
+      }
+    }).then(function (response) {
+      console.log(response)
+    }).catch(function (error) {
+      console.log(error)
+    })
+  },
   methods: {
-    changeImg: function(e) {
+    changeImg: function (e) {
       var _this = this
       var imgLimit = 1024
       var files = e.target.files
       var image = new Image()
       if (files.length > 0) {
         var dd = 0
-        var timer = setInterval(function() {
+        var timer = setInterval(function () {
           if (
-            // eslint-disable-next-line eqeqeq
-            files.item(dd).type != 'image/png' &&
-            // eslint-disable-next-line eqeqeq
-            files.item(dd).type != 'image/jpeg' &&
-            // eslint-disable-next-line eqeqeq
-            files.item(dd).type != 'image/jpg'
+            files.item(dd).type !== 'image/png' &&
+              files.item(dd).type !== 'image/jpeg' &&
+              files.item(dd).type !== 'image/jpg'
           ) {
             return false
           }
@@ -451,14 +472,13 @@ export default {
             // to do sth
           } else {
             image.src = window.URL.createObjectURL(files.item(dd))
-            image.onload = function() {
+            image.onload = function () {
               // 默认按比例压缩
-              // eslint-disable-next-line one-var
-              var w = image.width,
-                h = image.height,
-                scale = w / h
-              w = 200
-              h = w / scale
+              var w = image.width
+              var h = image.height
+              //   scale = w / h
+              // w = 200
+              // h = w / scale
               // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
               var quality = 1
               // 生成canvas
@@ -495,7 +515,7 @@ export default {
         }, 1000)
       }
     },
-    deleteImg: function(index) {
+    deleteImg: function (index) {
       this.imgArr.splice(index, 1)
       if (this.imgArr.length < 9) {
         this.allowAddImg = true
@@ -534,16 +554,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.typeSelList {
-  width: 100%;
-}
+  .typeSelList {
+    width: 100%;
+  }
 
-.tableList {
-  margin-top: 30px;
-  position: relative;
-}
+  .tableList {
+    margin-top: 30px;
+    position: relative;
+  }
 
-.pageList {
-  margin-top: 30px;
-}
+  .pageList {
+    margin-top: 30px;
+  }
 </style>

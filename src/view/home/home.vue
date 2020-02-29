@@ -500,7 +500,7 @@ export default {
           data: {
             pagem: 1,
             pagesize: 15,
-            iscompany: true
+            iscompany: false
           }
         }).then(function (response) {
           console.log(response)
@@ -519,7 +519,7 @@ export default {
           data: {
             pagem: 1,
             pagesize: 15,
-            iscompany: true
+            iscompany: false
           }
         }).then(function (response) {
           console.log(response)

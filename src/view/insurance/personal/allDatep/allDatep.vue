@@ -828,7 +828,8 @@ export default {
         // ]
       },
       tableLisr: [],
-      loading: true
+      loading: true,
+      type: 0
     }
   },
   created() {
@@ -838,6 +839,44 @@ export default {
       this.tableLisr[i] = this.tableLisr1[i]
     }
     this.loading = false
+    this.type = this.$route.query.type
+    if (this.type === 10) {
+      axios({
+        method: 'post',
+        url: 'http://47.105.49.81:2222/main/maturitylist10',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          pagem: 1,
+          pagesize: 15,
+          iscompany: false
+        }
+      }).then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    } else if (this.type === 15) {
+      axios({
+        method: 'post',
+        url: 'http://47.105.49.81:2222/main/maturitylist15',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          pagem: 1,
+          pagesize: 15,
+          iscompany: false
+        }
+      }).then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    }
   },
   methods: {
     changePage(page) {

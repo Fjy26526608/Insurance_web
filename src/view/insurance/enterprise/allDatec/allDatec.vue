@@ -28,7 +28,7 @@
       </i-col>
       <i-col span="24"></i-col> -->
       <i-col span="12" class="mt20">
-        <Button type="primary"  @click="showAddModal = true"  class="mr15">新增</Button>
+        <Button type="primary" @click="showAddModal = true" class="mr15">新增</Button>
         <!-- <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button> -->
       </i-col>
@@ -45,21 +45,24 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet"></Table>
+      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+      </Table>
     </div>
     <div class="text-right pageList">
-      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
+      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
+        show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加'>
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
+      :mask-closable="false" width="60%" ok-text='添加'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
-          <Input v-model="formValidate.number" placeholder="输入合同编号" ></Input>
+          <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
         </FormItem>
         <FormItem label="姓名" prop="name">
-          <Input v-model="formValidate.name" placeholder="输入被保人姓名" ></Input>
+          <Input v-model="formValidate.name" placeholder="输入被保人姓名"></Input>
         </FormItem>
         <FormItem label="电话" prop="phone">
-          <Input v-model="formValidate.phone" placeholder="输入被保人电话" ></Input>
+          <Input v-model="formValidate.phone" placeholder="输入被保人电话"></Input>
         </FormItem>
         <!-- <FormItem label="地址" prop="address">
                 <Input v-model="formValidate.address" placeholder="输入被保人地址" ></Input>
@@ -85,13 +88,13 @@
                     </Row> -->
         </FormItem>
         <FormItem label="成本单价" prop="unitPrice">
-          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）" ></Input>
+          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）"></Input>
         </FormItem>
         <FormItem label="购买时长" prop="duration">
-          <Input v-model="formValidate.duration" placeholder="输入购买时长（月）" ></Input>
+          <Input v-model="formValidate.duration" placeholder="输入购买时长（月）"></Input>
         </FormItem>
         <FormItem label="实际支付" prop="payment">
-          <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）" ></Input>
+          <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）"></Input>
         </FormItem>
         <FormItem label="合同文件" prop="desc">
           <div class="com-upload-img">
@@ -101,7 +104,7 @@
                 <div class="filter"></div>
               </div>
               <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
-                <img :src="item"  alt="">
+                <img :src="item" alt="">
                 <div class="demo-upload-list-cover">
                   <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
                   <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
@@ -109,21 +112,22 @@
               </div>
             </div>
             <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-                <Carousel v-model="value1" loop>
-                  <CarouselItem v-for='(img,index) in imgArr' :key='index'>
-                    <div class="demo-carousel">
-                      <img :src="img" style="width: 100%"  alt="">
-                    </div>
-                  </CarouselItem>
-                </Carousel>
-              </Modal>
+              <Carousel v-model="value1" loop>
+                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
+                  <div class="demo-carousel">
+                    <img :src="img" style="width: 100%" alt="">
+                  </div>
+                </CarouselItem>
+              </Carousel>
+            </Modal>
           </div>
         </FormItem>
         <!-- <FormItem label="邮箱" prop="mail">
                 <Input v-model="formValidate.mail" placeholder="输入电子邮箱"></Input>
                 </FormItem>-->
         <FormItem label="备注" prop="desc">
-          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..." ></Input>
+          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+            placeholder="输入备注..."></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -135,6 +139,7 @@ export default {
   name: 'allDate',
   data() {
     return {
+      type: 0,
       value1: 0,
       visible: false,
       uploadList: [],
@@ -480,6 +485,44 @@ export default {
   },
   created() {
     console.log('接收的参数', this.$route.query.type)
+    this.type = this.$route.query.type
+    if (this.type === 10) {
+      axios({
+        method: 'post',
+        url: 'http://47.105.49.81:2222/main/maturitylist10',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          pagem: 1,
+          pagesize: 15,
+          iscompany: true
+        }
+      }).then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    } else if (this.type === 15) {
+      axios({
+        method: 'post',
+        url: 'http://47.105.49.81:2222/main/maturitylist15',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          pagem: 1,
+          pagesize: 15,
+          iscompany: true
+        }
+      }).then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    }
   },
   methods: {
     changePage(page) {
@@ -495,18 +538,18 @@ export default {
     ok() {
       this.$Message.success('点击确定!')
     },
-    changeImg: function(e) {
+    changeImg: function (e) {
       var _this = this
       var imgLimit = 1024
       var files = e.target.files
       var image = new Image()
       if (files.length > 0) {
         var dd = 0
-        var timer = setInterval(function() {
+        var timer = setInterval(function () {
           if (
             files.item(dd).type !== 'image/png' &&
-            files.item(dd).type !== 'image/jpeg' &&
-            files.item(dd).type !== 'image/jpg'
+              files.item(dd).type !== 'image/jpeg' &&
+              files.item(dd).type !== 'image/jpg'
           ) {
             return false
           }
@@ -515,7 +558,7 @@ export default {
             // to do sth
           } else {
             image.src = window.URL.createObjectURL(files.item(dd))
-            image.onload = function() {
+            image.onload = function () {
               // 默认按比例压缩
               var w = image.width
               var h = image.height
@@ -558,7 +601,7 @@ export default {
         }, 1000)
       }
     },
-    deleteImg: function(index) {
+    deleteImg: function (index) {
       this.imgArr.splice(index, 1)
       if (this.imgArr.length < 9) {
         this.allowAddImg = true
@@ -573,58 +616,63 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.typeSelList {
-  width: 100%;
-}
+  .typeSelList {
+    width: 100%;
+  }
 
-.tableList {
-  margin-top: 20px;
-  position: relative;
-}
+  .tableList {
+    margin-top: 20px;
+    position: relative;
+  }
 
-.pageList {
-  margin-top: 20px;
-}
+  .pageList {
+    margin-top: 20px;
+  }
 </style>
 
 <style>
-.demo-carousel {
+  .demo-carousel {
     min-height: 600px;
-}
-.demo-upload-list {
-  display: inline-block;
-  width: 60px;
-  height: 60px;
-  text-align: center;
-  line-height: 60px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #fff;
-  position: relative;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  margin-right: 4px;
-}
-.demo-upload-list img {
-  width: 100%;
-  height: 100%;
-}
-.demo-upload-list-cover {
-  display: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-}
-.demo-upload-list:hover .demo-upload-list-cover {
-  display: block;
-}
-.demo-upload-list-cover i {
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  margin: 0 2px;
-}
+  }
+
+  .demo-upload-list {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    margin-right: 4px;
+  }
+
+  .demo-upload-list img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .demo-upload-list-cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .demo-upload-list:hover .demo-upload-list-cover {
+    display: block;
+  }
+
+  .demo-upload-list-cover i {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+  }
 </style>
