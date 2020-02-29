@@ -23,7 +23,7 @@
               <h3 class="pull-left">近期保险到期（10~15天）</h3>
               <router-link class="pull-right" :to="{path:'/insurance/enterprise/allDatec', query: { type: 15 }}">查看更多</router-link>
             </div>
-            <Table size="large" border stripe :columns="ctableTitle" :data="ctableDet15" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
+            <Table :loading="loading"  size="large" border stripe :columns="ctableTitle" :data="ctableDet15" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0"></table> -->
           </Card>
         </i-col>
@@ -38,7 +38,7 @@
               <h3 class="pull-left">近期保险到期（10天以内）</h3>
               <router-link class="pull-right" :to="{path:'/insurance/personal/allDatep', query: { type: 10 }}">查看更多</router-link>
             </div>
-            <Table size="large" border stripe :columns="ptableTitle" :data="ptableDet10" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
+            <Table :loading="loading"  size="large" border stripe :columns="ptableTitle" :data="ptableDet10" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0" ></table>-->
           </Card>
         </i-col>
@@ -48,7 +48,7 @@
               <h3 class="pull-left">近期保险到期（10~15天）</h3>
               <router-link class="pull-right" :to="{path:'/insurance/personal/allDatep', query: { type: 15 }}">查看更多</router-link>
             </div>
-            <Table size="large" border stripe :columns="ptableTitle" :data="ptableDet15" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
+            <Table :loading="loading"  size="large" border stripe :columns="ptableTitle" :data="ptableDet15" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0"></table> -->
           </Card>
         </i-col>
@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import { getToken } from '@/libs/util'
+import axios from 'axios'
 export default {
   name: 'home',
   data() {
@@ -68,13 +70,13 @@ export default {
       ctableTitle: [
         {
           title: '编号',
-          key: 'id',
+          key: 'contractnum',
           align: 'center',
           tooltip: true
         },
         {
           title: '名称',
-          key: 'name',
+          key: 'insured',
           align: 'center',
           tooltip: true
         },
@@ -85,8 +87,8 @@ export default {
           tooltip: true
         },
         {
-          title: '到期',
-          key: 'stopDate',
+          title: '到期时间',
+          key: 'reminddate',
           align: 'center',
           tooltip: true
         },
@@ -100,13 +102,13 @@ export default {
       ptableTitle: [
         {
           title: '编号',
-          key: 'id',
+          key: 'contractnum',
           align: 'center',
           tooltip: true
         },
         {
           title: '姓名',
-          key: 'name',
+          key: 'insured',
           align: 'center',
           tooltip: true
         },
@@ -117,8 +119,8 @@ export default {
           tooltip: true
         },
         {
-          title: '到期',
-          key: 'stopDate',
+          title: '到期时间',
+          key: 'reminddate',
           align: 'center',
           tooltip: true
         },
@@ -138,11 +140,71 @@ export default {
   },
   beforeCreate() {
     console.log('创建前：')
-    console.log(sessionStorage.getItem('token'))
   },
   created() {
     console.log('创建完成：')
     this.loading = true
+    console.log(getToken())
+    function getc10() {
+      return axios({
+        method: 'post',
+        url: 'http://47.105.49.81:2222/main/maturitylist10',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          pagem: 1,
+          pagesize: 15,
+          iscompany: true
+        }
+      }).then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    }
+    function getc15() {
+      return axios({
+        method: 'post',
+        url: 'http://47.105.49.81:2222/main/maturitylist15',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          pagem: 1,
+          pagesize: 15,
+          iscompany: true
+        }
+      }).then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    }
+    axios.all([getc10(), getc15()])
+      .then(axios.spread(function (c10, c15) {
+        // 两个请求现在都执行完成
+        console.log('同时请求完成', c10, c15)
+      }))
+    // axios({
+    //   method: 'post',
+    //   url: 'http://47.105.49.81:2222/main/maturitylist10',
+    //   headers: {
+    //     token: getToken(),
+    //     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    //   },
+    //   data: {
+    //     pagem: 1,
+    //     pagesize: 15,
+    //     iscompany: true
+    //   }
+    // }).then(function (response) {
+    //   console.log(response)
+    // }).catch(function (error) {
+    //   console.log(error)
+    // })
     let tc = [
       {
         id: 11111,
@@ -427,6 +489,49 @@ export default {
   methods: {
     changeTopTab(type) {
       // 切换类型
+      function getc10() {
+        return axios({
+          method: 'post',
+          url: 'http://47.105.49.81:2222/main/maturitylist10',
+          headers: {
+            token: getToken(),
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+          },
+          data: {
+            pagem: 1,
+            pagesize: 15,
+            iscompany: true
+          }
+        }).then(function (response) {
+          console.log(response)
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
+      function getc15() {
+        return axios({
+          method: 'post',
+          url: 'http://47.105.49.81:2222/main/maturitylist15',
+          headers: {
+            token: getToken(),
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+          },
+          data: {
+            pagem: 1,
+            pagesize: 15,
+            iscompany: true
+          }
+        }).then(function (response) {
+          console.log(response)
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
+      axios.all([getc10(), getc15()])
+        .then(axios.spread(function (c10, c15) {
+          // 两个请求现在都执行完成
+          console.log('同时请求完成', c10, c15)
+        }))
       this.changeType = type
       if (type === 1) {
         this.show = true
