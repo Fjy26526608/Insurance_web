@@ -90,20 +90,8 @@ export default {
           tooltip: true
         },
         {
-          title: '日期',
-          key: 'date',
-          align: 'center',
-          tooltip: true
-        },
-        {
           title: '到期时间',
           key: 'reminddate',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '金额',
-          key: 'money',
           align: 'center',
           tooltip: true
         }
@@ -122,20 +110,14 @@ export default {
           tooltip: true
         },
         {
-          title: '日期',
-          key: 'date',
-          align: 'center',
-          tooltip: true
-        },
-        {
           title: '到期时间',
           key: 'reminddate',
           align: 'center',
           tooltip: true
         },
         {
-          title: '金额',
-          key: 'money',
+          title: '待补金额',
+          key: 'policyamount',
           align: 'center',
           tooltip: true
         }
@@ -231,13 +213,13 @@ export default {
         data: {
           page: 1,
           pagesize: 15,
-          iscompany: true
+          iscompany: false
         }
       }).then(function (res) {
         for (let i = 0; i < res.data.data.length; i++) {
-          let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
+          let indexs = res.data.data[i].reminddate.indexOf('T')
           that.ptableDet10.push(res.data.data[i])
-          that.ptableDet10[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
+          that.ptableDet10[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
         }
       }).catch(function (error) {
         console.log(error)
@@ -252,13 +234,14 @@ export default {
         data: {
           page: 1,
           pagesize: 15,
-          iscompany: true
+          iscompany: false
         }
       }).then(function (res) {
         for (let i = 0; i < res.data.data.length; i++) {
-          let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
+          let indexs = res.data.data[i].reminddate.indexOf('T')
           that.ptableDet15.push(res.data.data[i])
-          that.ptableDet15[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
+          console.log(that.ptableDet15)
+          that.ptableDet15[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
         }
       }).catch(function (error) {
         console.log(error)
