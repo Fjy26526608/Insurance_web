@@ -45,12 +45,15 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"></Table>
+      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
+      </Table>
     </div>
     <div class="text-right pageList">
-      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
+      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
+        show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加'>
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
+      :mask-closable="false" width="60%" ok-text='添加'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
           <Input v-model="formValidate.number" placeholder="输入合同编号" :disabled="!isChange"></Input>
@@ -96,8 +99,35 @@
         <!-- <FormItem label="邮箱" prop="mail">
                 <Input v-model="formValidate.mail" placeholder="输入电子邮箱"></Input>
                 </FormItem>-->
+        <FormItem label="合同文件" prop="desc">
+          <div class="com-upload-img">
+            <div class="img_group">
+              <div class="img_box" v-if="allowAddImg">
+                <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
+                <div class="filter"></div>
+              </div>
+              <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
+                <img :src="item" alt="">
+                <div class="demo-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
+                  <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
+                </div>
+              </div>
+            </div>
+            <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+              <Carousel v-model="value1" loop>
+                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
+                  <div class="demo-carousel">
+                    <img :src="img" style="width: 100%" alt="">
+                  </div>
+                </CarouselItem>
+              </Carousel>
+            </Modal>
+          </div>
+        </FormItem>
         <FormItem label="备注" prop="desc">
-          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..." :disabled="!isChange"></Input>
+          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."
+            :disabled="!isChange"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -105,23 +135,22 @@
 </template>
 
 <script>
+import { getToken } from '@/libs/util'
+import axios from '@/libs/api.request'
 export default {
   name: 'personal',
   data() {
     return {
+      value1: 0,
+      imgData: '',
+      imgArr: [],
+      imgSrc: '',
+      visible: false,
+      allowAddImg: true,
       total: 100,
       pageSize: 10,
       pageNo: 1,
-      typeList: [
-        {
-          label: '创建时间',
-          value: 1
-        },
-        {
-          label: '结束时间',
-          value: 2
-        }
-      ],
+      typeList: [],
       typeObj: 1,
       statusList: [
         {
@@ -192,124 +221,64 @@ export default {
           align: 'center',
           tooltip: true,
           title: '合同编号',
-          key: 'index'
+          key: 'contractnum'
         },
         {
           align: 'center',
           tooltip: true,
-          title: '名称',
-          key: 'name'
+          title: '名字',
+          key: 'insured'
         },
         {
           align: 'center',
           tooltip: true,
           title: '保险类型',
-          key: 'type'
+          key: 'insurancetypename'
         },
         {
           align: 'center',
           tooltip: true,
           title: '购买日期',
-          key: 'createTime'
+          key: 'buydate'
         },
         {
           align: 'center',
           tooltip: true,
           title: '金额',
-          key: 'amount'
+          key: 'je'
         },
         {
           align: 'center',
           tooltip: true,
           title: '到期日期',
-          key: 'endTime'
+          key: 'maturitydate'
         },
         {
           align: 'center',
           tooltip: true,
           title: '手续费',
-          key: 'poundage'
+          key: 'cost'
         },
         {
           align: 'center',
           tooltip: true,
           title: '实际支付',
-          key: 'stno'
+          key: 'actualpayment'
         },
         {
           align: 'center',
           tooltip: true,
           title: '已使用',
-          key: 'on'
+          key: 'alreadyused'
         },
         {
           align: 'center',
           tooltip: true,
           title: '剩余',
-          key: 'remaining'
+          key: 'balance'
         }
       ],
       tableLisr: [
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
         {
           index: '2051654',
           name: '山东如意集团',
@@ -446,9 +415,126 @@ export default {
       }
     }
   },
+  created() {
+    console.log('完成创建')
+    this.loading = true
+    this.tableLisr = []
+    let that = this
+    axios.request({
+      method: 'post',
+      url: '/main/instype',
+      headers: {
+        token: getToken(),
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      data: {
+      }
+    }).then(function (res) {
+      console.log('保险类型', res)
+      that.typeList.push(res.date.data)
+      console.log('完成保险类型打印')
+    }).catch(function (error) {
+      console.log(error)
+    })
+    axios.request({
+      method: 'post',
+      url: '/main/inslist',
+      headers: {
+        token: getToken(),
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      data: {
+        page: 1,
+        pagesize: 15
+      }
+    }).then(function (res) {
+      console.log(res)
+      for (let i = 0; i < res.data.data.length; i++) {
+        that.tableLisr.push(res.data.data[i].fields)
+        that.tableLisr[i].id = res.data.data[i].pk
+      }
+      console.log('完成打印')
+    }).catch(function (error) {
+      console.log(error)
+    })
+    console.log(this.tableLisr)
+    this.loading = false
+  },
   methods: {
     changePage(page) {
       // alert(page)
+    },
+    changeImg: function (e) {
+      var _this = this
+      var imgLimit = 1024
+      var files = e.target.files
+      var image = new Image()
+      if (files.length > 0) {
+        var dd = 0
+        var timer = setInterval(function () {
+          if (
+            files.item(dd).type !== 'image/png' &&
+              files.item(dd).type !== 'image/jpeg' &&
+              files.item(dd).type !== 'image/jpg'
+          ) {
+            return false
+          }
+          if (files.item(dd).size > imgLimit * 102400) {
+            // to do sth
+          } else {
+            image.src = window.URL.createObjectURL(files.item(dd))
+            image.onload = function () {
+              // 默认按比例压缩
+              var w = image.width
+              var h = image.height
+              // scale = w / h
+              // w = 200
+              // h = w / scale
+              // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
+              var quality = 1
+              // 生成canvas
+              var canvas = document.createElement('canvas')
+              var ctx = canvas.getContext('2d')
+              // 创建属性节点
+              var anw = document.createAttribute('width')
+              anw.nodeValue = w
+              var anh = document.createAttribute('height')
+              anh.nodeValue = h
+              canvas.setAttributeNode(anw)
+              canvas.setAttributeNode(anh)
+              ctx.drawImage(image, 0, 0, w, h)
+              var ext = image.src
+                .substring(image.src.lastIndexOf('.') + 1)
+                .toLowerCase() // 图片格式
+              var base64 = canvas.toDataURL('image/' + ext, quality)
+              // 回调函数返回base64的值
+              if (_this.imgArr.length <= 8) {
+                _this.imgArr.unshift('')
+                _this.imgArr.splice(0, 1, base64) // 替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
+                if (_this.imgArr.length >= 9) {
+                  _this.allowAddImg = false
+                }
+              }
+            }
+          }
+
+          if (dd < files.length - 1) {
+            dd++
+          } else {
+            clearInterval(timer)
+          }
+        }, 1000)
+      }
+    },
+    deleteImg: function (index) {
+      this.imgArr.splice(index, 1)
+      if (this.imgArr.length < 9) {
+        this.allowAddImg = true
+      }
+    },
+    handleView(index) {
+      this.value1 = index
+      this.visible = true
     },
     pdet(e, index) {
       console.log('我的下标是', index, e)
@@ -468,16 +554,71 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.typeSelList {
-  width: 100%;
-}
+  .typeSelList {
+    width: 100%;
+  }
 
-.tableList {
-  margin-top: 30px;
-  position: relative;
-}
+  .tableList {
+    margin-top: 30px;
+    position: relative;
+  }
 
-.pageList {
-  margin-top: 30px;
-}
+  .pageList {
+    margin-top: 30px;
+  }
+
+  .demo-carousel {
+    min-height: 600px;
+  }
+
+  .demo-upload-list {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    margin-right: 4px;
+  }
+
+  .demo-upload-list img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .demo-upload-list-cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .demo-upload-list:hover .demo-upload-list-cover {
+    display: block;
+  }
+
+  .demo-upload-list-cover i {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+  }
+
+  .ivu-table .demo-table-y-row td {
+    background-color: rgba(255, 255, 0, 0.5);
+    color: rgb(0, 0, 0);
+  }
+
+  .ivu-table .demo-table-r-row td {
+    background-color: rgb(255, 0, 0, 0.2);
+    color: rgb(0, 0, 0);
+  }
 </style>

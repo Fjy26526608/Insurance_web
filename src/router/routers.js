@@ -236,6 +236,16 @@ export default [
           title: '人事'
         },
         component: () => import('@/view/personnel/index/index.vue')
+      },
+      {
+        path: 'typel',
+        name: 'typel',
+        meta: {
+          access: ['super_admin'],
+          icon: 'md-brush',
+          title: '保险类别'
+        },
+        component: () => import('@/view/personnel/typel/typel.vue')
       }
     ]
   },
