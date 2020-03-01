@@ -48,7 +48,7 @@
       </Form>
     </Modal>
     <Modal v-model="showAddModal1" title="修改用户" @on-ok="ok1" @on-cancel="cancel1" :closable="false"
-      :mask-closable="false" ok-text='添加'>
+      :mask-closable="false" ok-text='修改'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="账号" prop="loginname">
           <Input v-model="formValidate.loginname" placeholder="输入账号"></Input>
@@ -191,6 +191,7 @@ export default {
         }
       ],
       formValidate: {
+        id: '',
         name: '',
         passwd: '',
         roleid: '',
@@ -267,7 +268,31 @@ export default {
       this.formValidate = []
     },
     ok() {
-      this.$Message.success('点击确定!')
+      console.log(this.formValidate)
+      let that = this
+      axios.request({
+        method: 'post',
+        url: '/main/addUser',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          loginname: that.formValidate.loginname,
+          passwd: that.formValidate.passwd,
+          name: that.formValidate.name,
+          roleid: that.formValidate.roleid
+        }
+      }).then(function (res) {
+        console.log(res)
+        if (res.data === true) {
+          this.$Message.success(res.data.msg)
+        } else {
+          this.$Message.success(res.data.msg)
+        }
+      }).catch(function (error) {
+        console.log(error)
+      })
       this.formValidate = []
     },
     cancel1() {
@@ -275,14 +300,59 @@ export default {
       this.formValidate = []
     },
     ok1() {
-      this.$Message.success('点击确定!')
+      let that = this
+      axios.request({
+        method: 'post',
+        url: '/main/addUser',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          id: that.formValidate.id,
+          loginname: that.formValidate.loginname,
+          passwd: that.formValidate.passwd,
+          name: that.formValidate.name,
+          roleid: that.formValidate.roleid
+        }
+      }).then(function (res) {
+        console.log(res)
+        if (res.data === true) {
+          this.$Message.success(res.data.msg)
+        } else {
+          this.$Message.success(res.data.msg)
+        }
+      }).catch(function (error) {
+        console.log(error)
+      })
       this.formValidate = []
     },
     cancel2() {
       this.$Message.success('点击取消!')
+      this.formValidate = []
     },
     ok2() {
-      this.$Message.success('点击确定!')
+      let that = this
+      axios.request({
+        method: 'post',
+        url: '/main/delUser',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          id: that.tableLisr[this.remov].id
+        }
+      }).then(function (res) {
+        console.log(res)
+        if (res.data === true) {
+          this.$Message.success(res.data.msg)
+        } else {
+          this.$Message.success(res.data.msg)
+        }
+      }).catch(function (error) {
+        console.log(error)
+      })
       this.tableLisr.splice(this.remov, 1)
       this.remov = ''
     },
