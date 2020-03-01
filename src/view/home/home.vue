@@ -14,8 +14,8 @@
               <router-link class="pull-right" :to="{path:'/insurance/enterprise/allDatec', query: { type: 10 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe :columns="ctableTitle" :data="ctableDet10"
-              max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
+            <Table :loading="loading" :row-class-name="rowClassName" size="large" border stripe :columns="ctableTitle"
+              :data="ctableDet10" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0" ></table>-->
           </Card>
         </i-col>
@@ -284,6 +284,14 @@ export default {
         path: '/insurance/personal/pdet',
         query: { id: e.id }
       })
+    },
+    rowClassName(row, index) {
+      if (index === 0) {
+        return 'demo-table-y-row'
+      } else if (index === 1) {
+        return 'demo-table-y-row'
+      }
+      return ''
     }
   }
 }
@@ -339,5 +347,15 @@ export default {
 
   .parentPosition {
     position: relative;
+  }
+
+  .ivu-table .demo-table-y-row td {
+    background-color: rgba(255, 255, 0, 0.5);
+    color: rgb(0, 0, 0);
+  }
+
+  .ivu-table .demo-table-r-row td {
+    background-color: rgb(255, 0, 0,0.5);
+    color: rgb(0, 0, 0);
   }
 </style>

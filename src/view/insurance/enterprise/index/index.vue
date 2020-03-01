@@ -43,7 +43,7 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" :loading="loading" border stripe highlight-row :columns="columns" :data="tableLisr"
+      <Table size="large" :loading="loading" :row-class-name="rowClassName" border  highlight-row :columns="columns" :data="tableLisr"
         @on-row-dblclick="cdet">
       </Table>
     </div>
@@ -140,9 +140,11 @@ export default {
   name: 'enterprise',
   data() {
     return {
+      value1: 0,
       imgData: '',
       imgArr: [],
       imgSrc: '',
+      visible: false,
       allowAddImg: true,
       showAddModal: false,
       total: 10, // 一共有多少行
@@ -499,11 +501,15 @@ export default {
         }, 1000)
       }
     },
-    deleteImg: function (index) {
+    deleteImg: function(index) {
       this.imgArr.splice(index, 1)
       if (this.imgArr.length < 9) {
         this.allowAddImg = true
       }
+    },
+    handleView(index) {
+      this.value1 = index
+      this.visible = true
     },
     changePage(page) {
       // alert(page)
@@ -532,6 +538,15 @@ export default {
     ok() {
       console.log(this.formValidate)
       this.$Message.success('点击确定!')
+    },
+    rowClassName(row, index) {
+      console.log(row, index)
+      if (index === 0) {
+        return 'demo-table-y-row'
+      } else if (index === 1) {
+        return 'demo-table-r-row'
+      }
+      return ''
     }
   }
 }
@@ -594,5 +609,15 @@ export default {
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
+  }
+
+  .ivu-table .demo-table-y-row td {
+    background-color: rgba(255, 255, 0, 0.5);
+    color: rgb(0, 0, 0);
+  }
+
+  .ivu-table .demo-table-r-row td {
+    background-color: rgb(255, 0, 0,0.2);
+    color: rgb(0, 0, 0);
   }
 </style>
