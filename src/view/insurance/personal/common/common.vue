@@ -43,7 +43,7 @@
         </Select>
         <span>条</span>
       </i-col> -->
-      ID:{{ $route.query.id }}
+      ID2:{{ $route.query.id }}
     </Row>
     <div class="tableList">
       <Table border ref="selection" :columns="columns" :data="tableLisr"></Table>

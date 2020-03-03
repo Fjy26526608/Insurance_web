@@ -140,11 +140,11 @@ export default [
               import('@/view/insurance/enterprise/other/other.vue')
           },
           {
-            path: 'common/:id',
+            path: 'common',
             name: 'enterpriseCommon',
             meta: {
               icon: 'md-options',
-              title: '通用测试',
+              title: '通用页面',
               hideInMenu: true
             },
             component: () =>
@@ -231,6 +231,17 @@ export default [
               title: '公积金'
             },
             component: () => import('@/view/insurance/personal/fund/fund.vue')
+          },
+          {
+            path: 'common',
+            name: 'personalCommon',
+            meta: {
+              icon: 'md-options',
+              title: '通用页面',
+              hideInMenu: true
+            },
+            component: () =>
+              import('@/view/insurance/personal/common/common.vue')
           }
         ]
       }
