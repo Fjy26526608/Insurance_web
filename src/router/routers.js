@@ -77,7 +77,8 @@ export default [
               title: '近期到期',
               hideInMenu: true
             },
-            component: () => import('@/view/insurance/enterprise/allDatec/allDatec.vue')
+            component: () =>
+              import('@/view/insurance/enterprise/allDatec/allDatec.vue')
           },
           {
             path: 'index',
@@ -86,7 +87,8 @@ export default [
               icon: 'md-funnel',
               title: '企业信息'
             },
-            component: () => import('@/view/insurance/enterprise/index/index.vue')
+            component: () =>
+              import('@/view/insurance/enterprise/index/index.vue')
           },
           {
             path: 'cdet',
@@ -114,7 +116,8 @@ export default [
               icon: 'md-pulse',
               title: '工伤保险'
             },
-            component: () => import('@/view/insurance/enterprise/commercial/commercial.vue')
+            component: () =>
+              import('@/view/insurance/enterprise/commercial/commercial.vue')
           },
           {
             path: 'customer',
@@ -123,7 +126,8 @@ export default [
               icon: 'md-paper',
               title: '主顾责任险'
             },
-            component: () => import('@/view/insurance/enterprise/customer/customer.vue')
+            component: () =>
+              import('@/view/insurance/enterprise/customer/customer.vue')
           },
           {
             path: 'other',
@@ -132,7 +136,8 @@ export default [
               icon: 'md-options',
               title: '其他保险'
             },
-            component: () => import('@/view/insurance/enterprise/other/other.vue')
+            component: () =>
+              import('@/view/insurance/enterprise/other/other.vue')
           }
         ]
       },
@@ -156,7 +161,8 @@ export default [
               title: '近期到期',
               hideInMenu: true
             },
-            component: () => import('@/view/insurance/personal/allDatep/allDatep.vue')
+            component: () =>
+              import('@/view/insurance/personal/allDatep/allDatep.vue')
           },
           {
             path: 'pdet',
@@ -193,7 +199,8 @@ export default [
               icon: 'md-pulse',
               title: '工伤保险'
             },
-            component: () => import('@/view/insurance/personal/commercial/commercial.vue')
+            component: () =>
+              import('@/view/insurance/personal/commercial/commercial.vue')
           },
           {
             path: 'customer',
@@ -202,7 +209,8 @@ export default [
               icon: 'md-paper',
               title: '主顾责任险'
             },
-            component: () => import('@/view/insurance/personal/customer/customer.vue')
+            component: () =>
+              import('@/view/insurance/personal/customer/customer.vue')
           },
           {
             path: 'fund',
@@ -243,7 +251,7 @@ export default [
         meta: {
           access: ['super_admin'],
           icon: 'md-brush',
-          title: '保险类别'
+          title: '人事2'
         },
         component: () => import('@/view/personnel/typel/tpyel.vue')
       }
