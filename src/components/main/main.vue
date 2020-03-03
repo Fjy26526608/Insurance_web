@@ -88,7 +88,42 @@ export default {
       return list
     },
     menuList () {
-      return this.$store.getters.menuList
+      let menuListTemp = this.$store.getters.menuList
+      console.log(menuListTemp)
+      for (let i = 0; i < menuListTemp.length; i++) {
+        let item = menuListTemp[i]
+        if (item.name === 'insurance') {
+          let children = item.children
+          for (let j = 0; j < children.length; j++) {
+            let innerItem = children[j]
+            if (innerItem.name === '_enterprise') {
+              let enterpriseChildren = innerItem.children
+              // TODO 需要添加保险菜单对应地址的映射关系
+              // TODO 添加企业合同类型菜单
+              enterpriseChildren.push({
+                icon: 'md-options',
+                name: '通用测试保险2',
+                meta: {
+                  icon: 'options',
+                  title: '通用测试保险'
+                },
+                path: 'common',
+                params: {
+                  id: 123
+                }
+              })
+            } else if (innerItem.name === '_personal') {
+              let personalChildren = innerItem.children
+              console.log(personalChildren)
+              // TODO 添加个人合同类型菜单
+            }
+          }
+          break
+        }
+      }
+
+      return menuListTemp
+      // return this.$store.getters.menuList
     },
     local () {
       return this.$store.state.app.local
@@ -114,6 +149,7 @@ export default {
       'getUnreadMessageCount'
     ]),
     turnToPage (route) {
+      console.log(route)
       let { name, params, query } = {}
       if (typeof route === 'string') name = route
       else {
@@ -123,13 +159,12 @@ export default {
       }
       if (name.indexOf('isTurnByHref_') > -1) {
         window.open(name.split('_')[1])
-        return
       }
-      this.$router.push({
-        name,
-        params,
-        query
-      })
+      // this.$router.push({
+      //   name,
+      //   params,
+      //   query
+      // })
     },
     handleCollapsedChange (state) {
       this.collapsed = state
