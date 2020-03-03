@@ -81,7 +81,7 @@ export default {
           userName,
           password
         }).then(res => {
-          if (res.Date.state === true) {
+          if (res.data.state === 'true') {
             console.log('在src/store/module/user.js上登录成功', res)
             const data = res.data
             commit('setToken', data.token)
