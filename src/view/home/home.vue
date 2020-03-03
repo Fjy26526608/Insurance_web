@@ -272,7 +272,7 @@ export default {
       if (index === 0) {
         return 'demo-table-y-row'
       } else if (index === 1) {
-        return 'demo-table-y-row'
+        return 'demo-table-r-row'
       }
       return ''
     }
@@ -332,7 +332,7 @@ export default {
     position: relative;
   }
 
-  .ivu-table .demo-table-y-row td {
+  /* .ivu-table .demo-table-y-row td {
     background-color: rgba(255, 255, 0, 0.5);
     color: rgb(0, 0, 0);
   }
@@ -340,5 +340,5 @@ export default {
   .ivu-table .demo-table-r-row td {
     background-color: rgb(255, 0, 0,0.5);
     color: rgb(0, 0, 0);
-  }
+  } */
 </style>

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 import Qs from 'qs'
+import { getToken } from '@/libs/util'
 // import { Spin } from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
@@ -22,6 +23,7 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {
+        token: getToken(),
         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         // 定义请求头
       }

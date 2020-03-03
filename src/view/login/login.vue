@@ -28,6 +28,7 @@ export default {
     handleSubmit({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
         this.getUserInfo().then(res => {
+          console.log('登录跳转', res)
           console.log('登录跳转', this.$config.homeName)
           this.$router.push({
             name: this.$config.homeName

@@ -87,7 +87,7 @@ export default {
             commit('setToken', data.token)
             resolve()
           } else {
-            this.$Message.error(res.data.msg)
+            console.log(res.msg)
           }
         }).catch(err => {
           reject(err)
