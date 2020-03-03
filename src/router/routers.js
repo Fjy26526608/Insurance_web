@@ -245,7 +245,7 @@ export default [
           icon: 'md-brush',
           title: '保险类别'
         },
-        component: () => import('@/view/personnel/typel/typel.vue')
+        component: () => import('@/view/personnel/typel/tpyel.vue')
       }
     ]
   },
