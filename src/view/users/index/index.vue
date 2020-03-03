@@ -3,7 +3,7 @@
     <Row :gutter="20">
       <i-col span="12" class="mt20">
         <Button type="primary" @click="showAddModal = true" class="mr15">新增</Button>
-        <Button type="warning" class="mr15">删除</Button>
+        <!-- <Button type="warning" class="mr15">删除</Button> -->
         <!-- <Button>导出</Button> -->
       </i-col>
     </Row>

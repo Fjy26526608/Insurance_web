@@ -258,11 +258,11 @@ export default [
       },
       {
         path: 'typel',
-        name: 'typel',
+        name: '保险类型',
         meta: {
-          access: ['super_admin'],
+          access: ['superadmin'],
           icon: 'md-brush',
-          title: '人事2'
+          title: '保险类型'
         },
         component: () => import('@/view/personnel/typel/tpyel.vue')
       }
