@@ -132,7 +132,7 @@ export default {
                     typeId: type.id
                   },
                   component: () =>
-                    import('@/view/insurance/enterprise/common/common.vue')
+                    import('@/view/insurance/enterprise/index/index.vue')
                 })
                 this.$router.addRoutes([{
                   path: '/insurance',
@@ -165,7 +165,7 @@ export default {
                           typeId: type.id
                         },
                         component: () =>
-                          import('@/view/insurance/enterprise/common/common.vue')
+                          import('@/view/insurance/enterprise/index/index.vue')
                       }]
                     }
                   ]
