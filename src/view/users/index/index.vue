@@ -232,10 +232,6 @@ export default {
     axios.request({
       method: 'post',
       url: '/main/allUser',
-      headers: {
-        token: getToken(),
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
       data: {
         page: 1,
         pagesize: 15

@@ -109,7 +109,7 @@ export default {
     let that = this
     axios.request({
       method: 'post',
-      url: '/main/instype',
+      url: '/main/instypelist',
       data: {
         page: 1,
         pagesize: 15
