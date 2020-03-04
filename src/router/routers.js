@@ -148,26 +148,49 @@ export default [
       }
     ]
   },
+  // {
+  //   path: '/personnel',
+  //   name: '_personnel',
+  //   meta: {
+  //     icon: 'md-albums',
+  //     title: '人事管理',
+  //     showAlways: true
+  //   },
+  //   component: Main,
+  //   redirect: { name: 'personnel' },
+  //   children: [
+  //     {
+  //       path: 'personnel',
+  //       name: 'personnel',
+  //       meta: {
+  //         icon: 'md-brush',
+  //         title: '人事'
+  //       },
+  //       component: () => import('@/view/personnel/index/index.vue')
+  //     },
+  //     {
+  //       path: 'typel',
+  //       name: '保险类型',
+  //       meta: {
+  //         access: ['superadmin'],
+  //         icon: 'md-brush',
+  //         title: '保险类型'
+  //       },
+  //       component: () => import('@/view/personnel/typel/tpyel.vue')
+  //     }
+  //   ]
+  // },
   {
-    path: '/personnel',
-    name: '_personnel',
+    path: '/user',
+    name: '_user',
     meta: {
-      icon: 'md-albums',
-      title: '人事管理',
+      icon: 'md-people',
+      title: '系统管理',
       showAlways: true
     },
+    redirect: { name: 'user' },
     component: Main,
-    redirect: { name: 'personnel' },
     children: [
-      {
-        path: 'personnel',
-        name: 'personnel',
-        meta: {
-          icon: 'md-brush',
-          title: '人事'
-        },
-        component: () => import('@/view/personnel/index/index.vue')
-      },
       {
         path: 'typel',
         name: '保险类型',
@@ -177,20 +200,7 @@ export default [
           title: '保险类型'
         },
         component: () => import('@/view/personnel/typel/tpyel.vue')
-      }
-    ]
-  },
-  {
-    path: '/user',
-    name: '_user',
-    meta: {
-      icon: 'md-people',
-      title: '用户管理',
-      showAlways: true
-    },
-    redirect: { name: 'user' },
-    component: Main,
-    children: [
+      },
       {
         path: 'user',
         name: 'user',
@@ -429,26 +439,26 @@ export default [
   //     }
   //   ]
   // },
-  {
-    path: '/tools_methods',
-    name: 'tools_methods',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'tools_methods_page',
-        name: 'tools_methods_page',
-        meta: {
-          icon: 'ios-hammer',
-          title: '工具方法',
-          beforeCloseName: 'before_close_normal'
-        },
-        component: () => import('@/view/tools-methods/tools-methods.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/tools_methods',
+  //   name: 'tools_methods',
+  //   meta: {
+  //     hideInBread: true
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'tools_methods_page',
+  //       name: 'tools_methods_page',
+  //       meta: {
+  //         icon: 'ios-hammer',
+  //         title: '工具方法',
+  //         beforeCloseName: 'before_close_normal'
+  //       },
+  //       component: () => import('@/view/tools-methods/tools-methods.vue')
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/i18n',
   //   name: 'i18n',

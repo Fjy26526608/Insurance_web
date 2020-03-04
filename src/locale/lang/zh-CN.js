@@ -16,7 +16,7 @@ export default {
   personalFund: '公积金',
   _personnel: '人事管理',
   personnel: '人事管理',
-  _user: '用户管理',
+  _user: '系统管理',
   user: '用户',
   components: '组件',
   count_to_page: '数字渐变',
