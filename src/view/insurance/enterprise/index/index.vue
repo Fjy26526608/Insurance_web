@@ -150,22 +150,16 @@
           number: '', // 编号
           address: '', // 地址
           manager: '', // 联系人
-          unitPrice: '', // 单价
-          duration: '', // 购买时长
-          payment: '', // 实际支付
           phone: '', // 电话
-          mail: '', // 邮箱
-          insuranceType: '', // 保险类型
-          gender: '', // 性别
           date: '', // 日期
-          time: '',
+          stopDate: '', // 结束日期
           desc: '' // 备注
         },
         ruleValidate: {
           name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-          // address: [
-          //     { required: true, message: "地址不能为空", trigger: "blur" }
-          // ],
+          address: [
+              { required: true, message: "地址不能为空", trigger: "blur" }
+          ],
           manager: [
             {
               required: true,
@@ -173,49 +167,7 @@
               trigger: 'blur'
             }
           ],
-          number: [
-            {
-              required: true,
-              message: '合同编号不能为空',
-              trigger: 'blur'
-            }
-          ],
-          unitPrice: [
-            {
-              required: true,
-              message: '成本单价不能为空',
-              trigger: 'blur'
-            }
-          ],
-          duration: [
-            {
-              required: true,
-              message: '购买时长不能为空',
-              trigger: 'blur'
-            }
-          ],
-          payment: [
-            {
-              required: true,
-              message: '实际支付不能为空',
-              trigger: 'blur'
-            }
-          ],
           phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-          insuranceType: [
-            {
-              required: true,
-              message: '请选择保险类型',
-              trigger: 'change'
-            }
-          ],
-          // mail: [
-          //     { required: true, message: '邮箱不能为空', trigger: 'blur' },
-          //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-          // ],
-          // gender: [
-          //     { required: true, message: '请选择性别', trigger: 'change' }
-          // ],
           date: [
             {
               required: true,
@@ -223,20 +175,15 @@
               message: '请选择日期',
               trigger: 'change'
             }
+          ],
+          stopDate: [
+            {
+              required: true,
+              type: 'date',
+              message: '请选择日期',
+              trigger: 'change'
+            }
           ]
-          // desc: [
-          //   {
-          //     required: true,
-          //     message: "请输入备注",
-          //     trigger: "blur"
-          //   },
-          //   {
-          //     type: "string",
-          //     min: 20,
-          //     message: "最少10个字",
-          //     trigger: "blur"
-          //   }
-          // ]
         },
         typeList: [
           {
@@ -485,15 +432,51 @@
 
       },
       cancel() {
-        this.$Message.success('点击取消!')
       },
       cdet(e, index) {
         console.log('我的下标是', index, e)
         this.$router.push({ path: '/insurance/enterprise/cdet' })
       },
+      changeLoading() {
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+      },
       ok() {
-        console.log(this.formValidate)
-        this.$Message.success('点击确定!')
+        this.$refs['formValidate'].validate((valid) => {
+          if (!valid) {
+            return this.changeLoading()
+          }
+          // 请求服务端添加接口
+          const { name, number, address, manager, phone, date, stopDate, desc } = this.formValidate
+          const data = {
+            name,
+            psize: number,
+            address,
+            stime: date,
+            etime: stopDate,
+            contactperson: manager,
+            tel: phone,
+            remark: desc
+          }
+          addCompany(data).then((res) => {
+            if (res.data.state === 'true') {
+              setTimeout(() => {
+                this.changeLoading()
+                this.showAddModal = false
+                this.$Message.success('添加成功')
+                this.fetchPersonalInfo()
+              }, 1000)
+            } else {
+              this.$Message.error('添加企业信息失败')
+            }
+          }).catch((err) => {
+            console.error(err)
+            this.$Message.error('请求服务器错误')
+            this.changeLoading()
+          })
+        })
       },
       rowClassName(row, index) {
         console.log('row is', row)
