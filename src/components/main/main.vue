@@ -122,14 +122,14 @@ export default {
               const enterpriseTypes = this.$store.getters.getEnterpiseInsuranceTypes
               for (const type of enterpriseTypes) {
                 enterpriseChildren.push({
-                  path: 'common/' + type.id,
+                  path: 'index/' + type.id,
                   name: '企业-' + type.name,
                   meta: {
                     icon: 'md-options',
                     title: '企业-' + type.name
                   },
                   props: {
-                    id: type.id
+                    typeId: type.id
                   },
                   component: () =>
                     import('@/view/insurance/enterprise/common/common.vue')
@@ -155,14 +155,14 @@ export default {
                       component: parentView,
                       redirect: { name: 'enterprise' },
                       children: [{
-                        path: 'common/' + type.id,
+                        path: 'index/' + type.id,
                         name: '企业-' + type.name,
                         meta: {
                           icon: 'md-options',
                           title: '企业-' + type.name
                         },
                         props: {
-                          id: type.id
+                          typeId: type.id
                         },
                         component: () =>
                           import('@/view/insurance/enterprise/common/common.vue')
@@ -176,17 +176,17 @@ export default {
               const personalTypes = this.$store.getters.getPersonalInsuranceTypes
               for (const type of personalTypes) {
                 personalChildren.push({
-                  path: 'common/' + type.id,
+                  path: 'index/' + type.id,
                   name: '个人-' + type.name,
                   meta: {
                     icon: 'md-options',
                     title: '个人-' + type.name
                   },
                   props: {
-                    id: type.id
+                    typeId: type.id
                   },
                   component: () =>
-                    import('@/view/insurance/personal/common/common.vue')
+                    import('@/view/insurance/personal/index/index')
                 })
                 this.$router.addRoutes([{
                   path: '/insurance',
@@ -210,17 +210,17 @@ export default {
                       redirect: { name: 'personal' },
                       component: parentView,
                       children: [{
-                        path: 'common/' + type.id,
+                        path: 'index/' + type.id,
                         name: '个人-' + type.name,
                         meta: {
                           icon: 'md-options',
                           title: '个人-' + type.name
                         },
                         props: {
-                          id: type.id
+                          typeId: type.id
                         },
                         component: () =>
-                          import('@/view/insurance/enterprise/common/common.vue')
+                          import('@/view/insurance/personal/index/index')
                       }]
                     }
                   ]

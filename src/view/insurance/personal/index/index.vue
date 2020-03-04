@@ -137,6 +137,7 @@ import axios from '@/libs/api.request'
 import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
 export default {
   name: 'personal',
+  props: ['typeId'],
   data() {
     return {
       deleteInsuModal: false,
@@ -355,16 +356,18 @@ export default {
       }
     }
   },
-  created() {
-    console.log('完成创建')
-    // 查询保险类型
-    this.getInsuranceTypes()
-    this.fetchPersonalInfo()
+  created() {},
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.getInsuranceTypes()
+      vm.fetchPersonalInfo()
+    })
   },
   methods: {
     getInsuranceTypes() {
       getInsuranceTypes().then((res) => {
         if (res.data.state === 'true') {
+          this.insuranceList = []
           const types = res.data.data
           for (const type of types) {
             if (!type.fields.iscompany) {
@@ -394,7 +397,8 @@ export default {
         },
         data: {
           page: 1,
-          pagesize: 15
+          pagesize: 15,
+          instypeid: this.typeId
         }
       }).then(function (res) {
         console.log(res)

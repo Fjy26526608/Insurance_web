@@ -99,45 +99,6 @@ export default [
               hideInMenu: true
             },
             component: () => import('@/view/insurance/enterprise/cdet/cdet.vue')
-          },
-          {
-            path: 'five',
-            name: 'enterpriseFive',
-            meta: {
-              icon: 'md-menu',
-              title: '五险'
-            },
-            component: () => import('@/view/insurance/enterprise/five/five.vue')
-          },
-          {
-            path: 'commercial',
-            name: 'enterpriseCommercial',
-            meta: {
-              icon: 'md-pulse',
-              title: '工伤保险'
-            },
-            component: () =>
-              import('@/view/insurance/enterprise/commercial/commercial.vue')
-          },
-          {
-            path: 'customer',
-            name: 'enterpriseCustomer',
-            meta: {
-              icon: 'md-paper',
-              title: '主顾责任险'
-            },
-            component: () =>
-              import('@/view/insurance/enterprise/customer/customer.vue')
-          },
-          {
-            path: 'other',
-            name: 'enterpriseOther',
-            meta: {
-              icon: 'md-options',
-              title: '其他保险'
-            },
-            component: () =>
-              import('@/view/insurance/enterprise/other/other.vue')
           }
         ]
       },
@@ -182,44 +143,6 @@ export default [
               title: '所有个人'
             },
             component: () => import('@/view/insurance/personal/index/index')
-          },
-          {
-            path: 'commercial',
-            name: 'personalOnce',
-            meta: {
-              icon: 'md-person',
-              title: '个人专柜'
-            },
-            component: () => import('@/view/insurance/personal/once/once.vue')
-          },
-          {
-            path: 'commercial',
-            name: 'personalCommercial',
-            meta: {
-              icon: 'md-pulse',
-              title: '工伤保险'
-            },
-            component: () =>
-              import('@/view/insurance/personal/commercial/commercial.vue')
-          },
-          {
-            path: 'customer',
-            name: 'personalCustomer',
-            meta: {
-              icon: 'md-paper',
-              title: '主顾责任险'
-            },
-            component: () =>
-              import('@/view/insurance/personal/customer/customer.vue')
-          },
-          {
-            path: 'fund',
-            name: 'personalFund',
-            meta: {
-              icon: 'logo-usd',
-              title: '公积金'
-            },
-            component: () => import('@/view/insurance/personal/fund/fund.vue')
           }
         ]
       }
