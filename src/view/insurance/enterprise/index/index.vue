@@ -486,7 +486,6 @@
         this.$Message.success('点击确定!')
       },
       rowClassName(row, index) {
-        console.log(row, index)
         if (index === 0) {
           return 'demo-table-y-row'
         } else if (index === 1) {

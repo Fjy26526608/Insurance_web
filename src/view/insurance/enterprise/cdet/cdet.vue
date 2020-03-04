@@ -1,48 +1,87 @@
 <template>
   <Form ref="formValidate2" :model="formValidate2" :rules="ruleValidate2" :label-width="80">
     <Row>
-      <Col span="23">
+      <Col span="18">
       <FormItem label="名称" prop="name">
-        <Input v-model="formValidate2.name" placeholder="输入公司名称" :disabled="isChange"></Input>
+        <Input v-model="formValidate2.name" placeholder="输入公司名称" :disabled="!isChange"></Input>
       </FormItem>
       <FormItem label="规模" prop="psize">
-        <Input v-model="formValidate2.psize" placeholder="输入公司规模" :disabled="isChange"></Input>
+        <Input v-model="formValidate2.psize" placeholder="输入公司规模" :disabled="!isChange"></Input>
       </FormItem>
-      <FormItem label="地址" prop="addrss">
-        <Input v-model="formValidate2.addrss" placeholder="输入公司地址" :disabled="isChange"></Input>
+      <FormItem label="地址" prop="address">
+        <Input v-model="formValidate2.address" placeholder="输入公司地址" :disabled="!isChange"></Input>
       </FormItem>
       <FormItem label="合同日期">
         <Row>
-          <Col span="3">
-          <FormItem prop="date">
-            <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stime"></DatePicker>
+          <Col span="2">
+          <FormItem prop="stime">
+            <DatePicker type="date" placeholder="选择日期" v-model="formValidate2.stime" :disabled="!isChange"></DatePicker>
           </FormItem>
           </Col>
           <Col span="2" style="text-align: center">结束日期</Col>
-          <Col span="3">
-          <FormItem prop="stopDate">
-            <DatePicker type="date" placeholder="选择日期" v-model="formValidate.etime"></DatePicker>
+          <Col span="2">
+          <FormItem prop="dtime">
+            <DatePicker type="date" placeholder="选择日期" v-model="formValidate2.etime" :disabled="!isChange"></DatePicker>
           </FormItem>
           </Col>
         </Row>
       </FormItem>
       <FormItem label="联系人" prop="contactperson">
-        <Input v-model="formValidate2.contactperson" placeholder="输入公司联系人" :disabled="isChange"></Input>
+        <Input v-model="formValidate2.contactperson" placeholder="输入公司联系人" :disabled="!isChange"></Input>
       </FormItem>
       <FormItem label="电话" prop="tel">
-        <Input v-model="formValidate2.tel" placeholder="输入公司电话" :disabled="isChange"></Input>
+        <Input v-model="formValidate2.tel" placeholder="输入公司电话" :disabled="!isChange"></Input>
       </FormItem>
       <FormItem label="备注" prop="remark">
-        <Input v-model="formValidate2.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..." :disabled="isChange"></Input>
+        <Input v-model="formValidate2.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..." :disabled="!isChange"></Input>
       </FormItem>
+      </Col>
+      <Col span="1" style='text-align:center'>合同照片</Col>
+      <Col span="5">
+      <div class="com-upload-img">
+        <div class="img_group">
+          <div class="img_box" v-if="allowAddImg">
+            <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)" v-if='isChange'>
+            <div class="filter"></div>
+          </div>
+          <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
+            <img :src="item" alt="">
+            <div class="demo-upload-list-cover">
+              <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
+              <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
+            </div>
+          </div>
+          <!-- <Row>
+            <div class="img_box" v-for="(item,index) in imgArr" :key="index">
+              <Col span="4">
+              <div class="img_show_box">
+                <img :src="item" alt="">
+                <i class="img_delete" @click="deleteImg(index)"></i>
+                </img>
+              </div>
+              </Col>
+            </div>
+          </Row> -->
+        </div>
+        <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+          <!-- <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%"> -->
+          <Carousel v-model="value1" loop>
+            <CarouselItem v-for='(img,index) in imgArr' :key='index'>
+              <div class="demo-carousel">
+                <img :src="img" style="width: 100%" alt="">
+              </div>
+            </CarouselItem>
+          </Carousel>
+        </Modal>
+      </div>
       </Col>
     </Row>
     <FormItem>
       <Button size="large" icon="md-checkmark" type="success" @click="handleSubmit('formValidate2')" v-if="isChange">递 交</Button>
       <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px" v-if="isChange">重 置</Button> -->
-      <Button icon="md-create" size="large" type="primary" @click="doChange('formValidate2')" style="margin-left: 8px" v-if="isChange">修 改</Button>
+      <Button icon="md-create" size="large" type="primary" @click="doChange" style="margin-left: 8px">修 改</Button>
     </FormItem>
-    <Button size="large" icon="md-add" type="success" @click="showAddModal = true" v-if="isChange" style="margin:4px">新增保单</Button>
+    <Button size="large" icon="md-add" type="success" @click="showAddModal = true" style="margin:4px">新增保单</Button>
     <div class="tableList" style="margin:4px">
       <Table size="large" border stripe :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"></Table>
     </div>
@@ -69,19 +108,19 @@
           </Select>
         </FormItem>
         <FormItem label="合同日期">
-          <!-- <Row>
-                        <Col span="3"> -->
-          <FormItem prop="date">
-            <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-          </FormItem>
-          <!-- </Col>
-                        <Col span="2" style="text-align: center">结束日期</Col>
-                    <Col span="3">
-                    <FormItem prop="stopDate">
-                        <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
-                    </FormItem>
-                    </Col>
-                    </Row> -->
+          <Row>
+            <Col span="2">
+            <FormItem prop="date">
+              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+            </FormItem>
+            </Col>
+            <Col span="2" style="text-align: center">结束日期</Col>
+            <Col span="2">
+            <FormItem prop="stopDate">
+              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
+            </FormItem>
+            </Col>
+          </Row>
         </FormItem>
         <FormItem label="成本单价" prop="unitPrice">
           <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）" :disabled="!isChange"></Input>
@@ -99,10 +138,10 @@
           <div class="com-upload-img">
             <div class="img_group">
               <div class="img_box" v-if="allowAddImg">
-                <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
+                <input type="file" accept="image/*" multiple="multiple" @change="changeImg2($event)">
                 <div class="filter"></div>
               </div>
-              <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
+              <div class="demo-upload-list" v-for="(item,index) in imgArr2" :key='index'>
                 <img :src="item" alt="">
                 <div class="demo-upload-list-cover">
                   <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
@@ -112,7 +151,7 @@
             </div>
             <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
               <Carousel v-model="value1" loop>
-                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
+                <CarouselItem v-for='(img,index) in imgArr2' :key='index'>
                   <div class="demo-carousel">
                     <img :src="img" style="width: 100%" alt="">
                   </div>
@@ -129,7 +168,7 @@
   </Form>
 </template>
 <script>
-  import axios from 'axios'
+  import axios from '@/libs/api.request'
   export default {
     data() {
       return {
@@ -137,11 +176,13 @@
         visible: false,
         uploadList: [],
         imgData: '',
+        imgArr2: [],
         imgArr: [],
         imgSrc: '',
         allowAddImg: true,
+        allowAddImg2: true,
         showAddModal: false,
-        isChange: true,
+        isChange: false,
         formValidate2: {
           name: '',
           number: '',
@@ -164,237 +205,90 @@
             align: 'center',
             tooltip: true,
             title: '合同编号',
-            key: 'index'
+            key: 'contractnum'
           },
           {
             align: 'center',
             tooltip: true,
             title: '名称',
-            key: 'name'
+            key: 'insured'
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
-            key: 'type'
+            key: 'insurancetypename'
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
-            key: 'createTime'
+            key: 'buydate'
           },
           {
             align: 'center',
             tooltip: true,
             title: '金额',
-            key: 'amount'
+            key: 'je'
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
-            key: 'endTime'
+            key: 'maturitydate'
           },
           {
             align: 'center',
             tooltip: true,
             title: '手续费',
-            key: 'poundage'
+            key: 'cost'
           },
           {
             align: 'center',
             tooltip: true,
             title: '实际支付',
-            key: 'stno'
+            key: 'actualpayment'
           },
           {
             align: 'center',
             tooltip: true,
             title: '已使用',
-            key: 'on'
+            key: 'alreadyused'
           },
           {
             align: 'center',
             tooltip: true,
             title: '剩余',
-            key: 'remaining'
+            key: 'balance'
           }
         ],
-        tableLisr: [
-          {
-            index: '2051654',
-            name: '山东如意集团',
-            type: '五险，工伤保险',
-            createTime: '2016.12.20',
-            amount: '1000.00',
-            endTime: '2019.12.20',
-            poundage: '1000.00',
-            stno: '2000.00',
-            on: '1000.00',
-            remaining: '0.00'
-          }
-        ],
+        tableLisr: [],
         ruleValidate2: {
           name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
           address: [{ required: true, message: '地址不能为空', trigger: 'blur' }],
-          manager: [
-            {
-              required: true,
-              message: '联系人不能为空',
-              trigger: 'blur'
-            }
-          ],
-          phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }]
-          // mail: [
-          //     { required: true, message: '邮箱不能为空', trigger: 'blur' },
-          //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-          // ],
-          // gender: [
-          //     { required: true, message: '请选择性别', trigger: 'change' }
-          // ],
-          // date: [
-          //   {
-          //     required: true,
-          //     type: "date",
-          //     message: "请选择日期",
-          //     trigger: "change"
-          //   }
-          // ],
-          // desc: [
-          //   {
-          //     required: true,
-          //     message: "请输入备注",
-          //     trigger: "blur"
-          //   },
-          //   {
-          //     type: "string",
-          //     min: 20,
-          //     message: "最少10个字",
-          //     trigger: "blur"
-          //   }
-          // ]
+          contactperson: [{ required: true, message: '联系人不能为空', trigger: 'blur' }],
+          tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+          // mail: [{ required: true, message: '邮箱不能为空', trigger: 'blur' },
+          //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }],
+          // gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
+          sdate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }],
+          edate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }],
         },
-        insuranceList: [
-          {
-            value: '1',
-            label: '企财险'
-          },
-          {
-            value: '2',
-            label: '工程险'
-          },
-          {
-            value: '3',
-            label: '车险'
-          },
-          {
-            value: '4',
-            label: '医疗险'
-          },
-          {
-            value: '5',
-            label: '子女教育险'
-          },
-          {
-            value: '6',
-            label: '养老险'
-          }
-        ],
-        formValidate: {
-          name: '', // 姓名
-          number: '', // 编号
-          address: '', // 地址
-          manager: '', // 联系人
-          unitPrice: '', // 单价
-          duration: '', // 购买时长
-          payment: '', // 实际支付
-          phone: '', // 电话
-          mail: '', // 邮箱
-          insuranceType: '', // 保险类型
-          gender: '', // 性别
-          date: '', // 日期
-          time: '',
-          desc: '' // 备注
-        },
+        insuranceList: [],
+        formValidate: {},
         ruleValidate: {
           name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-          // address: [
-          //     { required: true, message: "地址不能为空", trigger: "blur" }
-          // ],
-          manager: [
-            {
-              required: true,
-              message: '联系人不能为空',
-              trigger: 'blur'
-            }
-          ],
-          number: [
-            {
-              required: true,
-              message: '合同编号不能为空',
-              trigger: 'blur'
-            }
-          ],
-          unitPrice: [
-            {
-              required: true,
-              message: '成本单价不能为空',
-              trigger: 'blur'
-            }
-          ],
-          duration: [
-            {
-              required: true,
-              message: '购买时长不能为空',
-              trigger: 'blur'
-            }
-          ],
-          payment: [
-            {
-              required: true,
-              message: '实际支付不能为空',
-              trigger: 'blur'
-            }
-          ],
-          phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-          insuranceType: [
-            {
-              required: true,
-              message: '请选择保险类型',
-              trigger: 'change'
-            }
-          ],
-          // mail: [
-          //     { required: true, message: '邮箱不能为空', trigger: 'blur' },
-          //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-          // ],
-          // gender: [
-          //     { required: true, message: '请选择性别', trigger: 'change' }
-          // ],
-          date: [
-            {
-              required: true,
-              type: 'date',
-              message: '请选择日期',
-              trigger: 'change'
-            }
-          ],
-          getValue: ''
-          // desc: [
-          //   {
-          //     required: true,
-          //     message: "请输入备注",
-          //     trigger: "blur"
-          //   },
-          //   {
-          //     type: "string",
-          //     min: 20,
-          //     message: "最少10个字",
-          //     trigger: "blur"
-          //   }
-          // ]
-        }
+          address: [{ required: true, message: "地址不能为空", trigger: "blur" }],
+          contactperson: [{ required: true, message: '联系人不能为空', trigger: 'blur' }],
+          num: [{ required: true, message: '合同编号不能为空', trigger: 'blur' }],
+          unitPrice: [{ required: true, message: '成本单价不能为空', trigger: 'blur' }],
+          duration: [{ required: true, message: '购买时长不能为空', trigger: 'blur' }],
+          payment: [{ required: true, message: '实际支付不能为空', trigger: 'blur' }],
+          tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+          insuranceType: [{ required: true, message: '请选择保险类型', trigger: 'change' }],
+          date: [{ required: true, type: 'date', message: '请选择日期', trigger: 'change' }]
+        },
+        getValue: ''
       }
     },
     created() {
@@ -406,49 +300,111 @@
         method: 'post',
         url: '/main/companyinfo',
         data: {
-          id: 1
+          id: that.getValue
         }
       }).then(function (res) {
-        that.formValidate = res.data.data
-        let indexs = res.data.data.stime.indexOf('T')
-        that.formValidate.stime = res.data.data.stime.slice(0, indexs)
-        indexs = res.data.data.etime.indexOf('T')
-        that.formValidate.etime = res.data.data.etime.slice(0, indexs)
+        console.log('请求企业信息返回值', res)
+        for (let i = 0; i < res.data.inslist.length; i++) {
+          that.tableLisr.push(res.data.inslist[i].fields)
+          that.tableLisr[i].id = res.data.inslist[i].pk
+          let indexs = res.data.inslist[i].fields.buydate.indexOf('T')
+          that.tableLisr[i].buydate = res.data.inslist[i].fields.buydate.slice(0, indexs)
+          indexs = res.data.inslist[i].fields.maturitydate.indexOf('T')
+          that.tableLisr[i].maturitydate = res.data.inslist[i].fields.maturitydate.slice(0, indexs)
+          indexs = res.data.inslist[i].fields.reminddate.indexOf('T')
+          that.tableLisr[i].reminddate = res.data.inslist[i].fields.reminddate.slice(0, indexs)
+        }
+        console.log('返回处理企业后下表', that.tableLisr)
+        that.total = res.data.count
+        that.formValidate2 = res.data.data[0].fields
+        that.formValidate2.id = res.data.data[0].pk
+        console.log('返回处理后的企业信息', that.formValidate2)
       }).catch(function (error) {
         console.log(error)
       })
       axios.request({
         method: 'post',
-        url: '/main/inslist',
+        url: '/main/getimg',
         data: {
-          page:1,
-          pagesize:15,
-          companyid: 1
+          companyid: that.getValue
         }
       }).then(function (res) {
-        if (res.data.state === 'true') {
-          console.log(res)
-          that.total = res.data.count
-          for (let i = 0; i < res.data.data.length; i++) {
-            that.tableLisr.push(res.data.data[i].fields)
-            that.tableLisr[i].id = res.data.data[i].pk
+        console.log('请求返回后的企业合同图片', res)
+        that.imgArr = res.data.data
+      }).catch(function (error) {
+        console.log(error)
+      })
+      axios.request({
+        method: 'post',
+        url: '/main/instype'
+      }).then(function (res) {
+        console.log('请求保险类型返回值', res)
+        that.insuranceList = []
+        for (let i = 0; i < res.data.data.length; i++) {
+          if (res.data.data[i].fields.iscompany === true) {
+            that.insuranceList.push(res.data.data[i].fields)
+            that.insuranceList[i].label = res.data.data[i].fields.name
+            that.insuranceList[i].value = res.data.data[i].pk
           }
-        }else{
-          that.$Message.error(res.data.msg)
         }
+        console.log('处理后的保险类型返回值', that.insuranceList)
       }).catch(function (error) {
         console.log(error)
       })
     },
     methods: {
-      handleSubmit(name) {
-        this.$refs[name].validate(valid => {
-          if (valid) {
-            this.$Message.success('成功!')
-          } else {
-            this.$Message.error('数据填写不正确!')
+      doChange() {
+        this.isChange = !this.isChange
+      },
+      handleSubmit(res) {
+        // this.$refs[res].Validate(valid => {
+        //   if (valid) {
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/addcompany',
+          data: {
+            id: that.formValidate2.id,
+            name: that.formValidate2.name,
+            psize: that.formValidate2.psize,
+            address: that.formValidate2.address,
+            stime: that.formValidate2.stime,
+            etime: that.formValidate2.etime,
+            contactperson: that.formValidate2.contactperson,
+            tel: that.formValidate2.tel,
+            remark: that.formValidate2.remark
           }
+        }).then(function (res) {
+          console.log('修改', res)
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
         })
+        axios.request({
+          method: 'post',
+          url: '/main/updataimg',
+          data: {
+            companyid: that.formValidate2.id,
+            contractimg: that.imgArr
+          }
+        }).then(function (res) {
+          console.log('上传图片', res)
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
+        // } else {
+        //   this.$Message.error('数据填写不正确!')
+        // }
+        // })
       },
       handleReset(name) {
         this.$refs[name].resetFields()
@@ -523,6 +479,69 @@
                   _this.imgArr.splice(0, 1, base64) // 替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
                   if (_this.imgArr.length >= 9) {
                     _this.allowAddImg = false
+                  }
+                }
+              }
+            }
+
+            if (dd < files.length - 1) {
+              dd++
+            } else {
+              clearInterval(timer)
+            }
+          }, 1000)
+        }
+      },
+      changeImg2: function (e) {
+        var _this = this
+        var imgLimit = 1024
+        var files = e.target.files
+        var image = new Image()
+        if (files.length > 0) {
+          var dd = 0
+          var timer = setInterval(function () {
+            if (
+              files.item(dd).type !== 'image/png' &&
+              files.item(dd).type !== 'image/jpeg' &&
+              files.item(dd).type !== 'image/jpg'
+            ) {
+              return false
+            }
+
+            if (files.item(dd).size > imgLimit * 102400) {
+              // to do sth
+            } else {
+              image.src = window.URL.createObjectURL(files.item(dd))
+              image.onload = function () {
+                // 默认按比例压缩
+                var w = image.width
+                var h = image.height
+                // var scale = w / h
+                // w = 200
+                // h = w / scale
+                // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
+                var quality = 1
+                // 生成canvas
+                var canvas = document.createElement('canvas')
+                var ctx = canvas.getContext('2d')
+                // 创建属性节点
+                var anw = document.createAttribute('width')
+                anw.nodeValue = w
+                var anh = document.createAttribute('height')
+                anh.nodeValue = h
+                canvas.setAttributeNode(anw)
+                canvas.setAttributeNode(anh)
+                ctx.drawImage(image, 0, 0, w, h)
+                var ext = image.src
+                  .substring(image.src.lastIndexOf('.') + 1)
+                  .toLowerCase() // 图片格式
+                var base64 = canvas.toDataURL('image/' + ext, quality)
+                // 回调函数返回base64的值
+                if (_this.imgArr2.length <= 8) {
+                  _this.imgArr2.unshift('')
+                  _this.imgArr2.splice(0, 1, base64) // 替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
+                  if (_this.imgArr2.length >= 9) {
+                    _this.allowAddImg2 = false
                   }
                 }
               }
