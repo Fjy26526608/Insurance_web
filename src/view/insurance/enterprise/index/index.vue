@@ -58,7 +58,7 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="error" @click="remove(row.id)">删除</Button>
+          <Button type="error" v-if="isAdmin" @click="remove(row.id)">删除</Button>
         </template>
       </Table>
     </div>
@@ -342,6 +342,11 @@
         loading: true
       }
     },
+    computed: {
+      isAdmin() {
+        return this.$store.state.user.access.indexOf('superadmin') >= 0 
+      }
+    },
     created() {
       console.log('完成创建')
       this.fetchCompanyList()
@@ -498,7 +503,6 @@
         })
       },
       rowClassName(row, index) {
-        console.log('row is', row)
         if (row.state === 2) {
           return 'demo-table-y-row'
         } else if (row.state === 3) {
