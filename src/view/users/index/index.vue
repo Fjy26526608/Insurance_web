@@ -231,34 +231,34 @@ export default {
     }
   },
   created() {
-    console.log('创建完成')
-    this.tableLisr = []
-    let that = this
-    axios.request({
-      method: 'post',
-      url: '/main/allUser',
-      data: {
-        page: 1,
-        pagesize: 15
-      }
-    }).then(function (res) {
-      for (let i = 0; i < res.data.data.length; i++) {
-        that.tableLisr.push(res.data.data[i].fields)
-        that.tableLisr[i].id = res.data.data[i].pk
-      }
-      that.total = res.data.count
-    }).catch(function (error) {
-      console.log(error)
-    })
-    console.log(this.tableLisr)
-    this.loading = false
+    this.fetchList()
   },
   methods: {
-    changePage(page) {
+    fetchList() {
+      this.tableLisr = []
+      let that = this
       this.loading = true
-      console.log(page)
-      this.pageNo = page
+      axios.request({
+        method: 'post',
+        url: '/main/allUser',
+        data: {
+          page: this.pageNo,
+          pagesize: this.pageSize
+        }
+      }).then(function (res) {
+        for (let i = 0; i < res.data.data.length; i++) {
+          that.tableLisr.push(res.data.data[i].fields)
+          that.tableLisr[i].id = res.data.data[i].pk
+        }
+        that.total = res.data.count
+      }).catch(function (error) {
+        console.log(error)
+      })
       this.loading = false
+    },
+    changePage(page) {
+      this.pageNo = page
+      this.fetchList()
     },
     pdet(e, index) {
       console.log('我的下标是', index, e)

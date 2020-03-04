@@ -108,41 +108,41 @@ export default {
     }
   },
   created() {
-    console.log('创建完成')
-    console.log('token值', getToken())
-    this.tableLisr = []
-    let that = this
-    axios.request({
-      method: 'post',
-      url: '/main/instypelist',
-      data: {
-        page: 1,
-        pagesize: 15
-      }
-    }).then(function (res) {
-      console.log('查询返回值', res)
-      for (let i = 0; i < res.data.data.length; i++) {
-        that.tableLisr.push(res.data.data[i].fields)
-        if (that.tableLisr[i].iscompany === true) {
-          that.tableLisr[i].typeName = '公司保险'
-        } else {
-          that.tableLisr[i].typeName = '个人保险'
-        }
-        that.tableLisr[i].id = res.data.data[i].pk
-      }
-      that.total = res.data.count
-    }).catch(function (error) {
-      console.log(error)
-    })
-    console.log(this.tableLisr)
-    this.loading = false
+    this.fetchList()
   },
   methods: {
-    changePage(page) {
+    fetchList() {
+      this.tableLisr = []
+      let that = this
       this.loading = true
-      console.log(page)
-      this.pageNo = page
+      axios.request({
+        method: 'post',
+        url: '/main/instypelist',
+        data: {
+          page: this.pageNo,
+          pagesize: this.pageSize
+        }
+      }).then(function (res) {
+        console.log('查询返回值', res)
+        for (let i = 0; i < res.data.data.length; i++) {
+          that.tableLisr.push(res.data.data[i].fields)
+          if (that.tableLisr[i].iscompany === true) {
+            that.tableLisr[i].typeName = '公司保险'
+          } else {
+            that.tableLisr[i].typeName = '个人保险'
+          }
+          that.tableLisr[i].id = res.data.data[i].pk
+        }
+        that.total = res.data.count
+      }).catch(function (error) {
+        console.log(error)
+      })
+      console.log(this.tableLisr)
       this.loading = false
+    },
+    changePage(page) {
+      this.pageNo = page
+      this.fetchList()
     },
     pdet(e, index) {
       console.log('我的下标是', index, e)

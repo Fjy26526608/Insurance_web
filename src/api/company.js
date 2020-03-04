@@ -27,3 +27,15 @@ export const addCompany = ({
     method: 'post'
   })
 }
+
+export const delCompany = (id) => {
+  const data = {
+    id
+  }
+
+  return axios.request({
+    url: '/main/delcompany',
+    data,
+    method: 'post'
+  })
+}
