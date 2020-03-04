@@ -20,7 +20,7 @@ export default {
     // dev: 'http://47.105.49.81:2222',
     // pro: 'http://47.105.49.81:2222'
     dev: '/api',
-    pro: 'http://47.105.49.81:2222/api'
+    pro: 'http://47.105.49.81:1123/api'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
