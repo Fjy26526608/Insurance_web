@@ -22,7 +22,7 @@
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
         show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加用户" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false"
+    <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false"
       ok-text='添加'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="保险名称" prop="name">
@@ -36,7 +36,7 @@
         </FormItem>
       </Form>
     </Modal>
-    <Modal v-model="showAddModal1" title="修改用户" @on-ok="ok1" @on-cancel="cancel1" :closable="false"
+    <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :closable="false"
       :mask-closable="false" ok-text='修改'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="保险名称" prop="name">
@@ -44,8 +44,8 @@
         </FormItem>
         <FormItem label="选择种类">
           <RadioGroup v-model="formValidate.radio">
-            <Radio label='true'>企业保险</Radio>
             <Radio label='false'>个人保险</Radio>
+            <Radio label='true'>企业保险</Radio>
           </RadioGroup>
         </FormItem>
       </Form>
@@ -149,7 +149,7 @@ export default {
       this.formValidate.radio = 'false'
     },
     ok() {
-      this.tableLisr = []
+      // this.tableLisr = []
       if (this.formValidate.radio === 'true') {
         this.formValidate.radio = 1
       } else if (this.formValidate.radio === 'false') {
@@ -166,43 +166,49 @@ export default {
         }
       }).then(function (res) {
         console.log(res)
-        if (res.data === true) {
+        if (res.data.state === 'true') {
           that.$Message.success(res.data.msg)
+          that.formValidate = {}
+          that.formValidate.radio = 'false'
+
+          setTimeout(() => {
+            that.$router.go(0)
+          }, 300)
         } else {
-          that.$Message.success(res.data.msg)
+          that.$Message.error(res.data.msg)
         }
       }).catch(function (error) {
         console.log(error)
       })
-      this.loading = true
-      setTimeout(() => {
-        axios.request({
-          method: 'post',
-          url: '/main/instype',
-          data: {
-            page: 1,
-            pagesize: 15
-          }
-        }).then(function (res) {
-          console.log('查询返回值', res)
-          for (let i = 0; i < res.data.data.length; i++) {
-            that.tableLisr.push(res.data.data[i].fields)
-            if (that.tableLisr[i].iscompany === true) {
-              that.tableLisr[i].typeName = '公司保险'
-            } else {
-              that.tableLisr[i].typeName = '个人保险'
-            }
-            that.tableLisr[i].id = res.data.data[i].pk
-          }
-          that.total = res.data.count
-        }).catch(function (error) {
-          console.log(error)
-        })
-        console.log(this.tableLisr)
-        this.loading = false
-      }, 500)
-      this.formValidate = {}
-      this.formValidate.radio = 'false'
+      // this.loading = true
+      // setTimeout(() => {
+      //   axios.request({
+      //     method: 'post',
+      //     url: '/main/instype',
+      //     data: {
+      //       page: 1,
+      //       pagesize: 15
+      //     }
+      //   }).then(function (res) {
+      //     console.log('查询返回值', res)
+      //     for (let i = 0; i < res.data.data.length; i++) {
+      //       that.tableLisr.push(res.data.data[i].fields)
+      //       if (that.tableLisr[i].iscompany === true) {
+      //         that.tableLisr[i].typeName = '公司保险'
+      //       } else {
+      //         that.tableLisr[i].typeName = '个人保险'
+      //       }
+      //       that.tableLisr[i].id = res.data.data[i].pk
+      //     }
+      //     that.total = res.data.count
+      //   }).catch(function (error) {
+      //     console.log(error)
+      //   })
+      //   console.log(this.tableLisr)
+      //   this.loading = false
+      // }, 500)
+      // this.formValidate = {}
+      // this.formValidate.radio = 'false'
     },
     cancel1() {
       this.$Message.success('点击取消!')
@@ -211,7 +217,7 @@ export default {
     },
     ok1() {
       let that = this
-      this.tableLisr = []
+      // this.tableLisr = []
       if (this.formValidate.radio === 'true') {
         this.formValidate.radio = 1
       } else if (this.formValidate.radio === 'false') {
@@ -227,44 +233,48 @@ export default {
         }
       }).then(function (res) {
         console.log(res)
-        if (res.data === true) {
+        if (res.data.state === 'true') {
           that.$Message.success(res.data.msg)
+
+          setTimeout(() => {
+            that.$router.go(0)
+          }, 300)
         } else {
-          that.$Message.success(res.data.msg)
+          that.$Message.error(res.data.msg)
         }
       }).catch(function (error) {
         console.log(error)
       })
-      this.loading = true
-      setTimeout(() => {
-        axios.request({
-          method: 'post',
-          url: '/main/instype',
-          data: {
-            page: 1,
-            pagesize: 15
-          }
-        }).then(function (res) {
-          console.log('查询返回值', res)
-          for (let i = 0; i < res.data.data.length; i++) {
-            that.tableLisr.push(res.data.data[i].fields)
-            if (that.tableLisr[i].iscompany === true) {
-              that.tableLisr[i].typeName = '公司保险'
-            } else {
-              that.tableLisr[i].typeName = '个人保险'
-            }
-            that.tableLisr[i].id = res.data.data[i].pk
-          }
-          that.total = res.data.count
-        }).catch(function (error) {
-          console.log(error)
-        })
-        console.log(this.tableLisr)
-        this.loading = false
-      }, 500)
-      this.loading = false
-      this.formValidate = {}
-      this.formValidate.radio = 'false'
+      // this.loading = true
+      // setTimeout(() => {
+      //   axios.request({
+      //     method: 'post',
+      //     url: '/main/instype',
+      //     data: {
+      //       page: 1,
+      //       pagesize: 15
+      //     }
+      //   }).then(function (res) {
+      //     console.log('查询返回值', res)
+      //     for (let i = 0; i < res.data.data.length; i++) {
+      //       that.tableLisr.push(res.data.data[i].fields)
+      //       if (that.tableLisr[i].iscompany === true) {
+      //         that.tableLisr[i].typeName = '公司保险'
+      //       } else {
+      //         that.tableLisr[i].typeName = '个人保险'
+      //       }
+      //       that.tableLisr[i].id = res.data.data[i].pk
+      //     }
+      //     that.total = res.data.count
+      //   }).catch(function (error) {
+      //     console.log(error)
+      //   })
+      //   console.log(this.tableLisr)
+      //   this.loading = false
+      // }, 500)
+      // this.loading = false
+      // this.formValidate = {}
+      // this.formValidate.radio = 'false'
     },
     cancel2() {
       this.$Message.success('点击取消!')
@@ -285,19 +295,26 @@ export default {
         }
       }).then(function (res) {
         console.log(res)
-        if (res.data === true) {
+        if (res.data.state === 'true') {
           that.$Message.success(res.data.msg)
+          that.remov = ''
+
+          setTimeout(() => {
+            that.$router.go(0)
+          }, 300)
         } else {
-          that.$Message.success(res.data.msg)
+          that.$Message.error(res.data.msg)
         }
       }).catch(function (error) {
         console.log(error)
       })
-      this.tableLisr.splice(this.remov, 1)
-      this.remov = ''
+      // this.tableLisr.splice(this.remov, 1)
+      // this.remov = ''
     },
     show(index) {
+      console.log(this.tableLisr[index])
       this.formValidate = this.tableLisr[index]
+      this.formValidate.radio = this.tableLisr[index].iscompany.toString()
       this.showAddModal1 = true
     },
     remove(index) {
