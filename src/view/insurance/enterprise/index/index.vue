@@ -54,6 +54,12 @@
     </Row>
     <div class="tableList">
       <Table size="large" :loading="loading" :row-class-name="rowClassName" border highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+        <template slot-scope="{ row }" slot="id">
+          <strong>{{ row.id }}</strong>
+        </template>
+        <template slot-scope="{ row }" slot="action">
+          <Button type="error" @click="remove(row.id)">删除</Button>
+        </template>
       </Table>
     </div>
     <div class="text-right pageList">
@@ -96,17 +102,22 @@
         </FormItem>
       </Form>
     </Modal>
+    <Modal v-model="deleteCompanyModal" title='警告！' @on-ok="deleteOk" @on-cancel="deleteCancel">
+      <p>删除后不可恢复，确认删除吗？</p>
+    </Modal>
   </div>
 </template>
 
 <script>
   import { getToken } from '@/libs/util'
   import axios from '@/libs/api.request'
-  import { addCompany } from '@/api/company'
+  import { addCompany, delCompany } from '@/api/company'
   export default {
     name: 'enterprise',
     data() {
       return {
+        deleteCompanyModal: false,
+        removeId: '',
         value1: 0,
         imgData: '',
         imgArr: [],
@@ -314,6 +325,11 @@
             key: 'remark',
             align: 'center',
             tooltip: true
+          },
+          {
+            title: '操作',
+            slot: 'action',
+            align: 'center'
           }
           // {
           //   title: '剩余',
@@ -328,34 +344,37 @@
     },
     created() {
       console.log('完成创建')
-      this.loading = true
-      this.tableLisr = []
-      let that = this
-      axios.request({
-        method: 'post',
-        url: '/main/companylist',
-        data: {
-          page: 1,
-          pagesize: 15
-        }
-      }).then(function (res) {
-        if (res.data.state === 'true') {
-          console.log(res)
-          that.total = res.data.count
-          for (let i = 0; i < res.data.data.length; i++) {
-            that.tableLisr.push(res.data.data[i].fields)
-            that.tableLisr[i].id = res.data.data[i].pk
-          }
-        } else {
-          that.$Message.error(res.data.msg)
-        }
-      }).catch(function (error) {
-        console.log(error)
-      })
-      console.log(this.tableLisr)
-      this.loading = false
+      this.fetchCompanyList()
     },
     methods: {
+      fetchCompanyList() {
+        this.loading = true
+        this.tableLisr = []
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/companylist',
+          data: {
+            page: 1,
+            pagesize: 15
+          }
+        }).then(function (res) {
+          if (res.data.state === 'true') {
+            console.log(res)
+            that.total = res.data.count
+            for (let i = 0; i < res.data.data.length; i++) {
+              that.tableLisr.push(res.data.data[i].fields)
+              that.tableLisr[i].id = res.data.data[i].pk
+            }
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
+        console.log(this.tableLisr)
+        this.loading = false
+      },
       changeImg: function (e) {
         var _this = this
         var imgLimit = 1024
@@ -492,6 +511,24 @@
         this.$router.push({
           path: '/insurance/enterprise/cdet',
           query: { value: e.id }
+        })
+      },
+      remove(id) {
+        this.deleteCompanyModal = true
+        this.removeId = id
+      },
+      deleteCancel() {},
+      deleteOk() {
+        delCompany(this.removeId).then((res) => {
+          if (res.data.state === 'true') {
+            this.$Message.success('删除成功')
+            this.fetchCompanyList()
+          } else {
+            this.$Message.error('删除操作失败')
+          }
+        }).catch((err) => {
+          console.error(err)
+          this.$Message.error('请求服务器异常')
         })
       }
     }
