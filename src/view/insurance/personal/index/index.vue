@@ -50,7 +50,7 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="error" @click="remove(row.id)">删除</Button>
+          <Button type="error" v-if="isAdmin" @click="remove(row.id)">删除</Button>
         </template>
       </Table>
     </div>
@@ -353,6 +353,11 @@ export default {
           }
         ]
       }
+    }
+  },
+  computed: {
+    isAdmin() {
+      return this.$store.state.user.access.indexOf('superadmin') >= 0 
     }
   },
   created() {},

@@ -43,7 +43,7 @@
               <img :src="item.url">
               <div class="demo-upload-list-cover">
                   <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                  <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                  <Icon type="ios-trash-outline" v-if="isAdmin" @click.native="handleRemove(item)"></Icon>
               </div>
           </template>
           <template v-else>
@@ -72,7 +72,7 @@
     <FormItem>
       <Button size="large" icon="md-checkmark" type="success" @click="handleSubmit('formValidate2')" v-if="isChange">递 交</Button>
       <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px" v-if="isChange">重 置</Button> -->
-      <Button icon="md-create" size="large" type="primary" @click="doChange" style="margin-left: 8px">修 改</Button>
+      <Button icon="md-create" size="large" type="primary" v-if="isAdmin" @click="doChange" style="margin-left: 8px">修 改</Button>
     </FormItem>
     <Button size="large" icon="md-add" type="success" @click="showAddModal = true" style="margin:4px">新增保单</Button>
     <div class="tableList">
@@ -294,6 +294,11 @@
           date: [{ required: true, type: 'date', message: '请选择日期', trigger: 'change' }]
         },
         getValue: ''
+      }
+    },
+    computed: {
+      isAdmin() {
+        return this.$store.state.user.access.indexOf('superadmin') >= 0 
       }
     },
     created() {
