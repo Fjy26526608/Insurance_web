@@ -360,12 +360,11 @@
           method: 'post',
           url: '/main/companylist',
           data: {
-            page: 1,
-            pagesize: 15
+            page: this.pageNo,
+            pagesize: this.pageSize
           }
         }).then(function (res) {
           if (res.data.state === 'true') {
-            console.log(res)
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {
               that.tableLisr.push(res.data.data[i].fields)
@@ -377,7 +376,6 @@
         }).catch(function (error) {
           console.log(error)
         })
-        console.log(this.tableLisr)
         this.loading = false
       },
       changeImg: function (e) {
@@ -452,8 +450,8 @@
         this.visible = true
       },
       changePage(page) {
-        // alert(page)
-
+        this.pageNo = page
+        this.fetchCompanyList()
       },
       cancel() {
       },
