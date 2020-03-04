@@ -51,7 +51,7 @@
               <img :src="item"  alt="">
               <div class="demo-upload-list-cover">
                 <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
-                <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
+                <Icon type="ios-trash-outline" v-if="isAdmin" @click.native="deleteImg(index)"></Icon>
               </div>
             </div>
             <!-- <Row>
@@ -80,7 +80,7 @@
     </Row>
     <FormItem>
       <Button size="large" icon="md-checkmark" type="success" @click="handleSubmit('formValidate')" v-if="isChange">递 交</Button>
-      <Button icon="md-create" size="large" type="primary" @click="doChange()" style="margin-left: 8px" v-if="!isChange">修 改</Button>
+      <Button icon="md-create" size="large" type="primary" @click="doChange()" style="margin-left: 8px" v-if="isAdmin && !isChange">修 改</Button>
     </FormItem>
   </Form>
 </template>
@@ -173,6 +173,11 @@ export default {
           }
         ]
       }
+    }
+  },
+  computed: {
+    isAdmin() {
+      return this.$store.state.user.access.indexOf('superadmin') >= 0 
     }
   },
   created() {

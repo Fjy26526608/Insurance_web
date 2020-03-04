@@ -13,8 +13,8 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row, index }" slot="action">
-          <Button type="primary" style="margin-right: 15px" @click="show(index)">修改</Button>
-          <Button type="error" @click="remove(index)">删除</Button>
+          <Button type="primary" style="margin-right: 15px" v-if="isAdmin" @click="show(index)">修改</Button>
+          <Button type="error" v-if="isAdmin" @click="remove(index)">删除</Button>
         </template>
       </Table>
     </div>
@@ -100,6 +100,11 @@ export default {
         radio: [{ required: true, message: '请选择权限类别', trigger: 'change' }]
       },
       remov: ''
+    }
+  },
+  computed: {
+    isAdmin() {
+      return this.$store.state.user.access.indexOf('superadmin') >= 0 
     }
   },
   created() {
