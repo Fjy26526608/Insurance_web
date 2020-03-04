@@ -43,90 +43,46 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" :loading="loading" :row-class-name="rowClassName" border highlight-row :columns="columns"
-        :data="tableLisr" @on-row-dblclick="cdet">
+      <Table size="large" :loading="loading" :row-class-name="rowClassName" border highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
       </Table>
     </div>
     <div class="text-right pageList">
-      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
-        show-elevator />
+      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
-      :mask-closable="false" width="60%" ok-text='添加' :styles="{top: '20px'}">
+    <Modal v-model="showAddModal" title="添加企业信息" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加' :styles="{top: '20px'}" :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-        <FormItem label="合同编号" prop="number">
-          <Input v-model="formValidate.number" placeholder="输入合同编号" :disabled="!isChange"></Input>
+        <FormItem label="名称" prop="name">
+          <Input v-model="formValidate.name" placeholder="输入公司名称"></Input>
         </FormItem>
-        <FormItem label="姓名" prop="name">
-          <Input v-model="formValidate.name" placeholder="输入被保人姓名" :disabled="!isChange"></Input>
+        <FormItem label="规模" prop="number">
+          <Input v-model="formValidate.number" placeholder="输入公司规模"></Input>
         </FormItem>
-        <FormItem label="电话" prop="phone">
-          <Input v-model="formValidate.phone" placeholder="输入被保人电话" :disabled="!isChange"></Input>
-        </FormItem>
-        <!-- <FormItem label="地址" prop="address">
-                <Input v-model="formValidate.address" placeholder="输入被保人地址" :disabled="!isChange"></Input>
-            </FormItem> -->
-        <FormItem label="保险类型" prop="insuranceType">
-          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型">
-            <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
+        <FormItem label="地址" prop="address">
+          <Input v-model="formValidate.address" placeholder="输入公司地址"></Input>
         </FormItem>
         <FormItem label="合同日期">
-          <!-- <Row>
-                        <Col span="3"> -->
-          <FormItem prop="date">
-            <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-          </FormItem>
-          <!-- </Col>
-                        <Col span="2" style="text-align: center">结束日期</Col>
-                    <Col span="3">
-                    <FormItem prop="stopDate">
-                        <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
-                    </FormItem>
-                    </Col>
-                    </Row> -->
+          <Row>
+            <Col span="4">
+            <FormItem prop="date">
+              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+            </FormItem>
+            </Col>
+            <Col span="2" style="text-align: center">结束日期</Col>
+            <Col span="4">
+            <FormItem prop="stopDate">
+              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
+            </FormItem>
+            </Col>
+          </Row>
         </FormItem>
-        <FormItem label="成本单价" prop="unitPrice">
-          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）" :disabled="!isChange"></Input>
+        <FormItem label="联系人" prop="manager">
+          <Input v-model="formValidate.manager" placeholder="输入公司联系人"></Input>
         </FormItem>
-        <FormItem label="购买时长" prop="duration">
-          <Input v-model="formValidate.duration" placeholder="输入购买时长（月）" :disabled="!isChange"></Input>
-        </FormItem>
-        <FormItem label="实际支付" prop="payment">
-          <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）" :disabled="!isChange"></Input>
-        </FormItem>
-        <!-- <FormItem label="邮箱" prop="mail">
-                <Input v-model="formValidate.mail" placeholder="输入电子邮箱"></Input>
-                </FormItem>-->
-        <FormItem label="合同文件" prop="desc">
-          <div class="com-upload-img">
-            <div class="img_group">
-              <div class="img_box" v-if="allowAddImg">
-                <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
-                <div class="filter"></div>
-              </div>
-              <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
-                <img :src="item" alt="">
-                <div class="demo-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
-                  <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
-                </div>
-              </div>
-            </div>
-            <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-              <Carousel v-model="value1" loop>
-                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
-                  <div class="demo-carousel">
-                    <img :src="img" style="width: 100%" alt="">
-                  </div>
-                </CarouselItem>
-              </Carousel>
-            </Modal>
-          </div>
+        <FormItem label="电话" prop="phone">
+          <Input v-model="formValidate.phone" placeholder="输入公司电话"></Input>
         </FormItem>
         <FormItem label="备注" prop="desc">
-          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."
-            :disabled="!isChange"></Input>
+          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -136,6 +92,7 @@
 <script>
   import { getToken } from '@/libs/util'
   import axios from '@/libs/api.request'
+  import { addCompany } from '@/api/company'
   export default {
     name: 'enterprise',
     data() {
@@ -147,6 +104,7 @@
         visible: false,
         allowAddImg: true,
         showAddModal: false,
+        modalLoading: true,
         total: 10, // 一共有多少行
         pageSize: 10, // 每页显示行数
         pageNo: 1, // 第几页
@@ -431,7 +389,7 @@
             that.tableLisr.push(res.data.data[i].fields)
             that.tableLisr[i].id = res.data.data[i].pk
           }
-        }else{
+        } else {
           that.$Message.error(res.data.msg)
         }
       }).catch(function (error) {
@@ -494,7 +452,6 @@
                 }
               }
             }
-
             if (dd < files.length - 1) {
               dd++
             } else {
