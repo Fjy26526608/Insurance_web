@@ -9,7 +9,7 @@ export default {
   enterpriseCustomer: '主顾责任险',
   enterpriseOther: '其他保险',
   _personal: '个人',
-  personal: '个人信息',
+  personal: '所有个人',
   personalOnce: '个人专柜',
   personalCommercial: '工伤保险',
   personalCustomer: '主顾责任险',
