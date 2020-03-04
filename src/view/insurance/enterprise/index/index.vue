@@ -496,10 +496,10 @@
         this.$Message.success('点击确定!')
       },
       rowClassName(row, index) {
-        console.log(row, index)
-        if (index === 0) {
+        console.log('row is', row)
+        if (row.state === 2) {
           return 'demo-table-y-row'
-        } else if (index === 1) {
+        } else if (row.state === 3) {
           return 'demo-table-r-row'
         }
         return ''
