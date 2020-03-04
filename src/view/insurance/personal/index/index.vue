@@ -148,7 +148,7 @@ export default {
       visible: false,
       allowAddImg: true,
       total: 100,
-      pageSize: 10,
+      pageSize: 15,
       pageNo: 1,
       typeList: [],
       typeObj: 1,
@@ -400,25 +400,24 @@ export default {
           'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         },
         data: {
-          page: 1,
-          pagesize: 15,
+          page: this.pageNo,
+          pagesize: this.pageSize,
           instypeid: this.typeId
         }
       }).then(function (res) {
-        console.log(res)
         for (let i = 0; i < res.data.data.length; i++) {
           that.tableLisr.push(res.data.data[i].fields)
           that.tableLisr[i].id = res.data.data[i].pk
         }
-        console.log('完成打印')
+        that.total = res.data.count
       }).catch(function (error) {
         console.log(error)
       })
-      console.log(this.tableLisr)
       this.loading = false
     },
     changePage(page) {
-      // alert(page)
+      this.pageNo = page
+      this.fetchPersonalInfo()
     },
     changeImg: function (e) {
       var _this = this
