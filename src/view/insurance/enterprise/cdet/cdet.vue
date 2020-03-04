@@ -157,6 +157,9 @@
         </FormItem>
       </Form>
     </Modal>
+    <Modal v-model="deleteInsuModal" title='警告！' @on-ok="deleteOk" @on-cancel="deleteCancel">
+      <p>删除后不可恢复，确认删除吗？</p>
+    </Modal>
   </Form>
 </template>
 <script>
@@ -166,6 +169,8 @@
   export default {
     data() {
       return {
+        deleteInsuModal: false,
+        removeId: '',
         value1: 0,
         defaultList: [],
         defaultList2: [],
@@ -258,6 +263,11 @@
             tooltip: true,
             title: '剩余',
             key: 'balance'
+          },
+          {
+            title: '操作',
+            slot: 'action',
+            align: 'center'
           }
         ],
         tableLisr: [],
@@ -374,7 +384,7 @@
           that.tableLisr[i].reminddate = res.data.inslist[i].fields.reminddate.slice(0, indexs)
         }
         console.log('返回处理企业后下表', that.tableLisr)
-        that.total = res.data.count
+        that.total = that.tableLisr.length
         that.formValidate2 = res.data.data[0].fields
         that.formValidate2.id = res.data.data[0].pk
         console.log('返回处理后的企业信息', that.formValidate2)
@@ -429,6 +439,24 @@
       },
       doChange() {
         this.isChange = !this.isChange
+      },
+      remove(id) {
+        this.deleteInsuModal = true
+        this.removeId = id
+      },
+      deleteCancel() { },
+      deleteOk() {
+        deleteInsuranceInfo(this.removeId).then((res) => {
+          if (res.data.state === 'true') {
+            this.$Message.success('删除成功')
+            this.fetchPersonalInfo()
+          } else {
+            this.$Message.error('删除操作失败')
+          }
+        }).catch((err) => {
+          console.error(err)
+          this.$Message.error('请求服务器异常')
+        })
       },
       handleSubmit(res) {
         // this.$refs[res].Validate(valid => {
