@@ -140,7 +140,7 @@
           </div>
           <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList2" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048"
                   :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{companyid:formValidate2.id,token:token}" multiple type="drag"
-                  action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" :disabled="!isChange">
+                  action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" >
             <div style="width: 58px;height:58px;line-height: 58px;">
               <Icon type="ios-camera" size="20"></Icon>
             </div>
