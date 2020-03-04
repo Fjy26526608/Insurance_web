@@ -141,7 +141,7 @@
         url: '/main/maturitylist10',
         data: {
           page: 1,
-          pagesize: 15,
+          pagesize: 8,
           iscompany: true
         }
       }).then(function (res) {
@@ -159,7 +159,7 @@
         url: '/main/maturitylist15',
         data: {
           page: 1,
-          pagesize: 15,
+          pagesize: 8,
           iscompany: true
         }
       }).then(function (res) {
@@ -201,7 +201,7 @@
           },
           data: {
             page: 1,
-            pagesize: 15,
+            pagesize: 8,
             iscompany: false
           }
         }).then(function (res) {
@@ -222,7 +222,7 @@
           },
           data: {
             page: 1,
-            pagesize: 15,
+            pagesize: 8,
             iscompany: false
           }
         }).then(function (res) {

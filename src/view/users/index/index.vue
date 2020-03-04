@@ -88,7 +88,7 @@ export default {
       showAddModal: false,
       showAddModal1: false,
       modal1: false,
-      total: 10,
+      total: 0,
       pageSize: 15,
       pageNo: 1,
       typeObj: 1,

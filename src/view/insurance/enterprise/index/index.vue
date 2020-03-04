@@ -126,7 +126,7 @@
         allowAddImg: true,
         showAddModal: false,
         modalLoading: true,
-        total: 10, // 一共有多少行
+        total: 0, // 一共有多少行
         pageSize: 15, // 每页显示行数
         pageNo: 1, // 第几页
         isChange: true,
