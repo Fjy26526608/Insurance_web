@@ -109,8 +109,8 @@ export default {
   name: 'personalCustomer',
   data() {
     return {
-      total: 100,
-      pageSize: 10,
+      total: 0,
+      pageSize: 15,
       pageNo: 1,
       typeList: [
         {

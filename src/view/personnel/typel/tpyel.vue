@@ -66,8 +66,8 @@ export default {
       showAddModal: false,
       showAddModal1: false,
       modal1: false,
-      total: 10,
-      pageSize: 5,
+      total: 0,
+      pageSize: 15,
       pageNo: 1,
       columns: [
         {

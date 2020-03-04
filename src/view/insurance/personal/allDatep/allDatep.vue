@@ -136,8 +136,8 @@ export default {
   data() {
     return {
       showAddModal: false,
-      total: 10,
-      pageSize: 5,
+      total: 0,
+      pageSize: 15,
       pageNo: 1,
       typeList: [
         {

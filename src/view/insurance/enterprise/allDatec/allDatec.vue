@@ -149,7 +149,7 @@ export default {
       allowAddImg: true,
       showAddModal: false,
       total: 0,
-      pageSize: 20,
+      pageSize: 15,
       pageNo: 1,
       typeList: [
         {

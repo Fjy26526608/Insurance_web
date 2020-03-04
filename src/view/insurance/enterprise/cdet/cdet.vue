@@ -38,17 +38,17 @@
       </Col>
       <Col span="1" style='text-align:center'>合同照片</Col>
       <Col span="5">
-        <div class="demo-upload-list" v-for="item in uploadList">
-          <template v-if="item.status === 'finished'">
-              <img :src="item.url">
-              <div class="demo-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                  <Icon type="ios-trash-outline" v-if="isAdmin" @click.native="handleRemove(item)"></Icon>
-              </div>
-          </template>
-          <template v-else>
-              <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-          </template>
+      <div class="demo-upload-list" v-for="item in uploadList">
+        <template v-if="item.status === 'finished'">
+          <img :src="item.url">
+          <div class="demo-upload-list-cover">
+            <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+            <Icon type="ios-trash-outline" v-if="isAdmin" @click.native="handleRemove(item)"></Icon>
+          </div>
+        </template>
+        <template v-else>
+          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+        </template>
       </div>
       <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError"
               :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{companyid:formValidate2.id,token:token}" multiple type="drag"
@@ -88,8 +88,7 @@
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
-      :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
           <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
@@ -108,9 +107,9 @@
         <FormItem label="合同日期">
           <Row>
             <Col span="5">
-              <FormItem prop="date">
-                <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-              </FormItem>
+            <FormItem prop="date">
+              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+            </FormItem>
             </Col>
           </Row>
         </FormItem>
@@ -127,51 +126,59 @@
           <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）"></Input>
         </FormItem>
         <FormItem label="合同文件" prop="desc">
-          <div class="com-upload-img">
-            <div class="img_group">
-              <div class="img_box" v-if="allowAddImg">
-                <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
-                <div class="filter"></div>
+          <div class="demo-upload-list" v-for="item in uploadList2">
+            <template v-if="item.status === 'finished'">
+              <img :src="item.url">
+              <div class="demo-upload-list-cover">
+                <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
               </div>
-              <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
-                <img :src="item" alt="">
-                <div class="demo-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
-                  <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
-                </div>
-              </div>
-            </div>
-            <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-              <Carousel v-model="value1" loop>
-                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
-                  <div class="demo-carousel">
-                    <img :src="img" style="width: 100%" alt="">
-                  </div>
-                </CarouselItem>
-              </Carousel>
-            </Modal>
+            </template>
+            <template v-else>
+              <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+            </template>
           </div>
+          <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList2" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048"
+                  :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{companyid:formValidate2.id,token:token}" multiple type="drag"
+                  action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" :disabled="!isChange">
+            <div style="width: 58px;height:58px;line-height: 58px;">
+              <Icon type="ios-camera" size="20"></Icon>
+            </div>
+          </Upload>
+          <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+            <Carousel v-if="visible" v-model="value1" loop>
+              <CarouselItem v-for='(img,index) in uploadList2' :key='index'>
+                <div class="demo-carousel">
+                  <img :src="img.url" style="width: 100%" alt="">
+                </div>
+              </CarouselItem>
+            </Carousel>
+          </Modal>
         </FormItem>
       </Form>
     </Modal>
   </Form>
 </template>
 <script>
-  import { getToken } from '@/libs/util'
+  import { getToken,formatDate  } from '@/libs/util'
   import axios from '@/libs/api.request'
+  import { getInsuranceTypes,saveOrModifyInsuranceInfo  } from '@/api/insurance'
   export default {
     data() {
       return {
         value1: 0,
         defaultList: [],
+        defaultList2: [],
         imgName: '',
         visible: false,
         uploadList: [],
+        uploadList2: [],
         imgData: '',
         imgSrc: '',
         allowAddImg: true,
         allowAddImg2: true,
         showAddModal: false,
+        modalLoading: true,
         isChange: false,
         formValidate2: {
           name: '',
@@ -187,8 +194,8 @@
           time: '',
           desc: ''
         },
-        total: 10,
-        pageSize: 10,
+        total: 0,
+        pageSize: 15,
         pageNo: 1,
         token: '',
         columns: [
@@ -253,7 +260,7 @@
             key: 'balance'
           }
         ],
-        tableLisr: [],  
+        tableLisr: [],
         ruleValidate2: {
           name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
           address: [{ required: true, message: '地址不能为空', trigger: 'blur' }],
@@ -266,25 +273,79 @@
           edate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }],
         },
         insuranceList: [],
-        formValidate: {},
+        formValidate: {
+          number: '', // 编号
+          name: '', // 姓名
+          phone: '', // 电话
+          insuranceType: '', // 保险类型
+          date: '', // 日期
+          unitPrice: '', // 单价
+          duration: '', // 购买时长
+          payment: '', // 实际支付
+          cost: '' // 总成本
+        },
+
         ruleValidate: {
           name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-          address: [{ required: true, message: "地址不能为空", trigger: "blur" }],
-          contactperson: [{ required: true, message: '联系人不能为空', trigger: 'blur' }],
-          num: [{ required: true, message: '合同编号不能为空', trigger: 'blur' }],
-          unitPrice: [{ required: true, message: '成本单价不能为空', trigger: 'blur' }],
-          duration: [{ required: true, message: '购买时长不能为空', trigger: 'blur' }],
-          payment: [{ required: true, message: '实际支付不能为空', trigger: 'blur' }],
-          tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-          insuranceType: [{ required: true, message: '请选择保险类型', trigger: 'change' }],
-          date: [{ required: true, type: 'date', message: '请选择日期', trigger: 'change' }]
+          number: [
+            {
+              required: true,
+              message: '合同编号不能为空',
+              trigger: 'blur'
+            }
+          ],
+          unitPrice: [
+            {
+              required: true,
+              message: '成本单价不能为空',
+              trigger: 'blur'
+            }
+          ],
+          duration: [
+            {
+              required: true,
+              message: '购买时长不能为空',
+              trigger: 'blur'
+            }
+          ],
+          payment: [
+            {
+              required: true,
+              message: '实际支付不能为空',
+              trigger: 'blur'
+            }
+          ],
+          phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+          insuranceType: [
+            {
+              type: 'number',
+              required: true,
+              message: '请选择保险类型',
+              trigger: 'blur'
+            }
+          ],
+          date: [
+            {
+              required: true,
+              type: 'date',
+              message: '请选择日期',
+              trigger: 'change'
+            }
+          ],
+          cost: [
+            {
+              required: true,
+              message: '保单总成本不能为空',
+              trigger: 'blur'
+            }
+          ]
         },
         getValue: ''
       }
     },
     computed: {
       isAdmin() {
-        return this.$store.state.user.access.indexOf('superadmin') >= 0 
+        return this.$store.state.user.access.indexOf('superadmin') >= 0
       }
     },
     created() {
@@ -332,25 +393,40 @@
       }).catch(function (error) {
         console.log(error)
       })
-      axios.request({
-        method: 'post',
-        url: '/main/instype'
-      }).then(function (res) {
-        console.log('请求保险类型返回值', res)
-        that.insuranceList = []
-        for (let i = 0; i < res.data.data.length; i++) {
-          if (res.data.data[i].fields.iscompany === true) {
-            that.insuranceList.push(res.data.data[i].fields)
-            that.insuranceList[i].label = res.data.data[i].fields.name
-            that.insuranceList[i].value = res.data.data[i].pk
-          }
-        }
-        console.log('处理后的保险类型返回值', that.insuranceList)
-      }).catch(function (error) {
-        console.log(error)
+
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.getInsuranceTypes()
       })
     },
     methods: {
+      getInsuranceTypes() {
+        getInsuranceTypes().then((res) => {
+          if (res.data.state === 'true') {
+            this.insuranceList = []
+            const types = res.data.data
+            for (const type of types) {
+              if (type.fields.iscompany) {
+                this.insuranceList.push({
+                  value: type.pk,
+                  label: type.fields.name
+                })
+              }
+            }
+          } else {
+            this.$Message.error('保险类型查询异常')
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
+      },
+      changeLoading() {
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+      },
       doChange() {
         this.isChange = !this.isChange
       },
@@ -408,41 +484,43 @@
         this.$Message.success('点击取消!')
       },
       ok() {
-      this.$refs['formValidate'].validate((valid) => {
-        if (!valid) {
-          return this.changeLoading()
-        }
-        // 请求服务端添加接口
-        const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
-        const data = {
-          contractnum: number,
-          insured: name,
-          tel: phone,
-          insurancetypeid: insuranceType,
-          buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
-          month: duration,
-          policyamount: unitPrice,
-          cost,
-          actualpayment: payment
-        }
-        saveOrModifyInsuranceInfo(data).then((res) => {
-          if (res.data.state === 'true') {
-            setTimeout(() => {
-              this.changeLoading()
-              this.showAddModal = false
-              this.$Message.success('添加成功')
-              this.fetchPersonalInfo()
-            }, 1000)
-          } else {
-            this.$Message.error('添加保险合同失败')
+        this.$refs['formValidate'].validate((valid) => {
+          if (!valid) {
+            return this.changeLoading()
           }
-        }).catch((err) => {
-          console.error(err)
-          this.$Message.error('请求服务器错误')
-          this.changeLoading()
+          // 请求服务端添加接口
+          const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
+          const data = {
+            contractnum: number,
+            insured: name,
+            tel: phone,
+            insurancetypeid: insuranceType,
+            buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
+            month: duration,
+            policyamount: unitPrice,
+            cost,
+            actualpayment: payment,
+            companyid: this.getValue
+          }
+          console.log(data)
+          saveOrModifyInsuranceInfo(data).then((res) => {
+            if (res.data.state === 'true') {
+              setTimeout(() => {
+                this.changeLoading()
+                this.showAddModal = false
+                this.$Message.success('添加成功')
+                this.fetchPersonalInfo()
+              }, 1000)
+            } else {
+              this.$Message.error('添加保险合同失败')
+            }
+          }).catch((err) => {
+            console.error(err)
+            this.$Message.error('请求服务器错误')
+            this.changeLoading()
+          })
         })
-      })
-    },
+      },
       handleSuccess(res, file) {
         console.log('上传后返回信息', res)
         file.url = 'http://47.105.49.81:2222/api/main/getimg' + '/' + res.id + '/' + this.token;

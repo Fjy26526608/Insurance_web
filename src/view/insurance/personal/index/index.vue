@@ -50,7 +50,7 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="error" v-if="isAdmin" @click="remove(row.id)">删除</Button>
+          <Button type="error" @click="remove(row.id)">删除</Button>
         </template>
       </Table>
     </div>
@@ -136,7 +136,6 @@ import axios from '@/libs/api.request'
 import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
 export default {
   name: 'personal',
-  props: ['typeId'],
   data() {
     return {
       deleteInsuModal: false,
@@ -147,8 +146,8 @@ export default {
       imgSrc: '',
       visible: false,
       allowAddImg: true,
-      total: 100,
-      pageSize: 10,
+      total: 0,
+      pageSize: 15,
       pageNo: 1,
       typeList: [],
       typeObj: 1,
@@ -355,23 +354,16 @@ export default {
       }
     }
   },
-  computed: {
-    isAdmin() {
-      return this.$store.state.user.access.indexOf('superadmin') >= 0 
-    }
-  },
-  created() {},
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      vm.getInsuranceTypes()
-      vm.fetchPersonalInfo()
-    })
+  created() {
+    console.log('完成创建')
+    // 查询保险类型
+    this.getInsuranceTypes()
+    this.fetchPersonalInfo()
   },
   methods: {
     getInsuranceTypes() {
       getInsuranceTypes().then((res) => {
         if (res.data.state === 'true') {
-          this.insuranceList = []
           const types = res.data.data
           for (const type of types) {
             if (!type.fields.iscompany) {
@@ -401,8 +393,7 @@ export default {
         },
         data: {
           page: 1,
-          pagesize: 15,
-          instypeid: this.typeId
+          pagesize: 15
         }
       }).then(function (res) {
         console.log(res)
