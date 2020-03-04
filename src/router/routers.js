@@ -138,7 +138,7 @@ export default [
             },
             component: () =>
               import('@/view/insurance/enterprise/other/other.vue')
-          },
+          }
         ]
       },
       {

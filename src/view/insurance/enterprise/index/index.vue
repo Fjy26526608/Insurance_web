@@ -51,82 +51,41 @@
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
         show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
-      :mask-closable="false" width="60%" ok-text='添加' :styles="{top: '20px'}">
+    <Modal v-model="showAddModal" title="添加企业信息" @on-ok="ok" @on-cancel="cancel" :closable="false"
+      :mask-closable="false" width="60%" ok-text='添加' :styles="{top: '20px'}" :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-        <FormItem label="合同编号" prop="number">
-          <Input v-model="formValidate.number" placeholder="输入合同编号" :disabled="!isChange"></Input>
+        <FormItem label="名称" prop="name">
+        <Input v-model="formValidate.name" placeholder="输入公司名称"></Input>
         </FormItem>
-        <FormItem label="姓名" prop="name">
-          <Input v-model="formValidate.name" placeholder="输入被保人姓名" :disabled="!isChange"></Input>
+        <FormItem label="规模" prop="number">
+          <Input v-model="formValidate.number" placeholder="输入公司规模"></Input>
         </FormItem>
-        <FormItem label="电话" prop="phone">
-          <Input v-model="formValidate.phone" placeholder="输入被保人电话" :disabled="!isChange"></Input>
-        </FormItem>
-        <!-- <FormItem label="地址" prop="address">
-                <Input v-model="formValidate.address" placeholder="输入被保人地址" :disabled="!isChange"></Input>
-            </FormItem> -->
-        <FormItem label="保险类型" prop="insuranceType">
-          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型">
-            <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
+        <FormItem label="地址" prop="address">
+          <Input v-model="formValidate.address" placeholder="输入公司地址"></Input>
         </FormItem>
         <FormItem label="合同日期">
-          <!-- <Row>
-                        <Col span="3"> -->
-          <FormItem prop="date">
-            <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-          </FormItem>
-          <!-- </Col>
-                        <Col span="2" style="text-align: center">结束日期</Col>
-                    <Col span="3">
-                    <FormItem prop="stopDate">
-                        <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
-                    </FormItem>
-                    </Col>
-                    </Row> -->
+          <Row>
+            <Col span="4">
+              <FormItem prop="date">
+                <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+              </FormItem>
+            </Col>
+            <Col span="2" style="text-align: center">结束日期</Col>
+            <Col span="4">
+              <FormItem prop="stopDate">
+                <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
+              </FormItem>
+            </Col>
+          </Row>
         </FormItem>
-        <FormItem label="成本单价" prop="unitPrice">
-          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）" :disabled="!isChange"></Input>
+        <FormItem label="联系人" prop="manager">
+          <Input v-model="formValidate.manager" placeholder="输入公司联系人"></Input>
         </FormItem>
-        <FormItem label="购买时长" prop="duration">
-          <Input v-model="formValidate.duration" placeholder="输入购买时长（月）" :disabled="!isChange"></Input>
-        </FormItem>
-        <FormItem label="实际支付" prop="payment">
-          <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）" :disabled="!isChange"></Input>
-        </FormItem>
-        <!-- <FormItem label="邮箱" prop="mail">
-                <Input v-model="formValidate.mail" placeholder="输入电子邮箱"></Input>
-                </FormItem>-->
-        <FormItem label="合同文件" prop="desc">
-          <div class="com-upload-img">
-            <div class="img_group">
-              <div class="img_box" v-if="allowAddImg">
-                <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
-                <div class="filter"></div>
-              </div>
-              <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
-                <img :src="item" alt="">
-                <div class="demo-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
-                  <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
-                </div>
-              </div>
-            </div>
-            <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-              <Carousel v-model="value1" loop>
-                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
-                  <div class="demo-carousel">
-                    <img :src="img" style="width: 100%" alt="">
-                  </div>
-                </CarouselItem>
-              </Carousel>
-            </Modal>
-          </div>
+        <FormItem label="电话" prop="phone">
+          <Input v-model="formValidate.phone" placeholder="输入公司电话"></Input>
         </FormItem>
         <FormItem label="备注" prop="desc">
-          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."
-            :disabled="!isChange"></Input>
+          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -136,6 +95,7 @@
 <script>
 import { getToken } from '@/libs/util'
 import axios from '@/libs/api.request'
+import { addCompany } from '@/api/company'
 export default {
   name: 'enterprise',
   data() {
@@ -147,6 +107,7 @@ export default {
       visible: false,
       allowAddImg: true,
       showAddModal: false,
+      modalLoading: true,
       total: 10, // 一共有多少行
       pageSize: 10, // 每页显示行数
       pageNo: 1, // 第几页
@@ -181,23 +142,17 @@ export default {
         name: '', // 姓名
         number: '', // 编号
         address: '', // 地址
+        date: '',
+        stopDate: '',
         manager: '', // 联系人
-        unitPrice: '', // 单价
-        duration: '', // 购买时长
-        payment: '', // 实际支付
         phone: '', // 电话
-        mail: '', // 邮箱
-        insuranceType: '', // 保险类型
-        gender: '', // 性别
-        date: '', // 日期
-        time: '',
         desc: '' // 备注
       },
       ruleValidate: {
-        name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-        // address: [
-        //     { required: true, message: "地址不能为空", trigger: "blur" }
-        // ],
+        name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
+        address: [
+          { required: true, message: '地址不能为空', trigger: 'blur' }
+        ],
         manager: [
           {
             required: true,
@@ -205,49 +160,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        number: [
-          {
-            required: true,
-            message: '合同编号不能为空',
-            trigger: 'blur'
-          }
-        ],
-        unitPrice: [
-          {
-            required: true,
-            message: '成本单价不能为空',
-            trigger: 'blur'
-          }
-        ],
-        duration: [
-          {
-            required: true,
-            message: '购买时长不能为空',
-            trigger: 'blur'
-          }
-        ],
-        payment: [
-          {
-            required: true,
-            message: '实际支付不能为空',
-            trigger: 'blur'
-          }
-        ],
         phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-        insuranceType: [
-          {
-            required: true,
-            message: '请选择保险类型',
-            trigger: 'change'
-          }
-        ],
-        // mail: [
-        //     { required: true, message: '邮箱不能为空', trigger: 'blur' },
-        //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-        // ],
-        // gender: [
-        //     { required: true, message: '请选择性别', trigger: 'change' }
-        // ],
         date: [
           {
             required: true,
@@ -255,20 +168,15 @@ export default {
             message: '请选择日期',
             trigger: 'change'
           }
+        ],
+        stopDate: [
+          {
+            required: true,
+            type: 'date',
+            message: '请选择日期',
+            trigger: 'change'
+          }
         ]
-        // desc: [
-        //   {
-        //     required: true,
-        //     message: "请输入备注",
-        //     trigger: "blur"
-        //   },
-        //   {
-        //     type: "string",
-        //     min: 20,
-        //     message: "最少10个字",
-        //     trigger: "blur"
-        //   }
-        // ]
       },
       typeList: [
         {
@@ -413,30 +321,7 @@ export default {
   },
   created() {
     console.log('完成创建')
-    this.loading = true
-    this.tableLisr = []
-    let that = this
-    axios.request({
-      method: 'post',
-      url: '/main/companylist',
-      headers: {
-        token: getToken(),
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
-      data: {
-        page: 1,
-        pagesize: 15
-      }
-    }).then(function (res) {
-      for (let i = 0; i < res.data.data.length; i++) {
-        that.tableLisr.push(res.data.data[i].fields)
-        that.tableLisr[i].id = res.data.data[i].pk
-      }
-    }).catch(function (error) {
-      console.log(error)
-    })
-    console.log(this.tableLisr)
-    this.loading = false
+    this.fetchList()
   },
   methods: {
     changeImg: function (e) {
@@ -501,10 +386,48 @@ export default {
         }, 1000)
       }
     },
+    fetchList() {
+      this.loading = true
+      this.tableLisr = []
+      let that = this
+      axios.request({
+        method: 'post',
+        url: '/main/companylist',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          page: 1,
+          pagesize: 15
+        }
+      }).then(function (res) {
+        for (let i = 0; i < res.data.data.length; i++) {
+          that.tableLisr.push(res.data.data[i].fields)
+          that.tableLisr[i].id = res.data.data[i].pk
+        }
+      }).catch(function (error) {
+        console.log(error)
+      })
+      console.log(this.tableLisr)
+      this.loading = false
+    },
     deleteImg: function(index) {
       this.imgArr.splice(index, 1)
       if (this.imgArr.length < 9) {
         this.allowAddImg = true
+      }
+    },
+    resetForm() {
+      this.formValidate = {
+        name: '',
+        number: '',
+        address: '',
+        date: '',
+        stopDate: '',
+        manager: '',
+        phone: '',
+        desc: ''
       }
     },
     handleView(index) {
@@ -516,31 +439,51 @@ export default {
 
     },
     cancel() {
-      let url = '47.105.49.81:2222/main/login'
-      let data = {
-        userName: 'superadmin',
-        password: '1'
-      }
-      axios
-        .post(url, data)
-        .then(res => {
-          console.log(res) // 返回的数据
-        })
-        .catch(err => {
-          console.log(err) // 错误信息
-        })
-      this.$Message.success('点击取消!')
     },
     cdet(e, index) {
       console.log('我的下标是', index, e)
       this.$router.push({ path: '/insurance/enterprise/cdet' })
     },
+    changeLoading() {
+      this.modalLoading = false
+      this.$nextTick(() => {
+        this.modalLoading = true
+      })
+    },
     ok() {
       console.log(this.formValidate)
-      this.$Message.success('点击确定!')
+      this.$refs['formValidate'].validate((valid) => {
+        if (!valid) {
+          return this.changeLoading()
+        }
+        // 请求服务端添加接口
+        const { name, number, address, date, stopDate, manager, phone, desc } = this.formValidate
+        const data = {
+          name: name,
+          psize: number,
+          addrss: address,
+          stime: date,
+          etime: stopDate,
+          contactperson: manager,
+          tel: phone,
+          remark: desc
+        }
+        addCompany(data).then(() => {
+          setTimeout(() => {
+            this.changeLoading()
+            this.showAddModal = false
+            this.$Message.success('添加成功')
+            this.fetchList()
+          }, 1000)
+        }).catch((err) => {
+          console.error(err)
+          this.$Message.error('请求服务器错误')
+          this.changeLoading()
+        })
+      })
     },
     rowClassName(row, index) {
-      console.log(row, index)
+      // console.log(row, index)
       if (index === 0) {
         return 'demo-table-y-row'
       } else if (index === 1) {
