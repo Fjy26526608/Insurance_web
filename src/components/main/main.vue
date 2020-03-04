@@ -87,7 +87,8 @@ export default {
       return this.$store.state.app.tagRouter
     },
     userAvatar () {
-      return this.$store.state.user.avatarImgPath
+      return 'http://b-ssl.duitang.com/uploads/item/201511/21/20151121171107_zMZcy.jpeg'
+      // return this.$store.state.user.avatarImgPath
     },
     cacheList () {
       const list = ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
