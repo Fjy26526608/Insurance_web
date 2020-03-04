@@ -138,7 +138,7 @@
               <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
             </template>
           </div>
-          <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList2" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048"
+          <Upload ref="upload2" :show-upload-list="false" :default-file-list="defaultList2" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048"
                   :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{companyid:formValidate2.id,token:token}" multiple type="drag"
                   action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" >
             <div style="width: 58px;height:58px;line-height: 58px;">
@@ -609,7 +609,8 @@
       }
     },
     mounted() {
-      this.uploadList = this.$refs.upload.fileList;
+      this.uploadList = this.$refs.upload.fileList
+      this.uploadList2 = this.$refs.upload2.fileList
     }
   }
 </script>
