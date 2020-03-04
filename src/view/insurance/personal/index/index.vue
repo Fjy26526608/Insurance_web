@@ -96,7 +96,6 @@
         <FormItem label="实际支付" prop="payment">
           <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）"></Input>
         </FormItem>
-
         <FormItem label="合同文件" prop="desc">
           <div class="com-upload-img">
             <div class="img_group">
