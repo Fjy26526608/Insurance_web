@@ -45,10 +45,13 @@ import Fullscreen from './components/fullscreen'
 import Language from './components/language'
 import ErrorStore from './components/error-store'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { getNewTagList, routeEqual } from '@/libs/util'
+import { getNewTagList, routeEqual, getMenuByRouter, copyArray } from '@/libs/util'
 import routers from '@/router/routers'
 import minLogo from '@/assets/images/logo-min.jpg'
 import maxLogo from '@/assets/images/logo.jpg'
+import Router from 'vue-router'
+import Main from '@/components/main'
+import parentView from '@/components/parent-view'
 import './main.less'
 export default {
   name: 'Main',
@@ -91,12 +94,6 @@ export default {
       const list = ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
       return list
     },
-    // menuList () {
-    //   let menuListTemp = this.$store.getters.menuList
-    //   console.log(menuListTemp)
-    //   return menuListTemp
-    //   // return this.$store.getters.menuList
-    // },
     local () {
       return this.$store.state.app.local
     },
@@ -109,63 +106,132 @@ export default {
   },
   created() {
     this.fetchInsuranceTypes().then(() => {
-      let menuListTemp = this.menuList
-      for (let i = 0; i < menuListTemp.length; i++) {
-        let item = menuListTemp[i]
+      // 重置当前路由表为默认静态路由
+      this.$router.match = new Router({ routers, mode: 'history' }).match
+      console.log(routers)
+      // 使用一份默认路由表的拷贝进行操作
+      let routersCopy = copyArray(routers)
+      console.log(routersCopy)
+      for (let i = 0; i < routersCopy.length; i++) {
+        let item = routersCopy[i]
         if (item.name === 'insurance') {
           let children = item.children
           for (let j = 0; j < children.length; j++) {
-            let innerItem = children[j]
-            if (innerItem.name === '_enterprise') {
-              let enterpriseChildren = innerItem.children
+            let innerRoute = children[j]
+            if (innerRoute.name === '_enterprise') {
+              let enterpriseChildren = innerRoute.children
               const enterpriseTypes = this.$store.getters.getEnterpiseInsuranceTypes
               for (const type of enterpriseTypes) {
-                // 添加保险菜单对应地址的映射关系
-                this.insuranceTypesRoutes.push({
-                  name: type.name,
-                  path: '/insurance/enterprise/common',
-                  params: {
-                    id: type.id
-                  }
-                })
-                // 添加企业合同类型菜单
                 enterpriseChildren.push({
-                  icon: 'md-options',
-                  name: type.name,
+                  path: 'common/' + type.id,
+                  name: '企业-' + type.name,
                   meta: {
                     icon: 'md-options',
-                    title: type.name
-                  }
+                    title: '企业-' + type.name
+                  },
+                  props: {
+                    id: type.id
+                  },
+                  component: () =>
+                    import('@/view/insurance/enterprise/common/common.vue')
                 })
+                this.$router.addRoutes([{
+                  path: '/insurance',
+                  name: 'insurance',
+                  meta: {
+                    icon: 'md-menu',
+                    title: '保险管理',
+                    showAlways: true
+                  },
+                  component: Main,
+                  children: [
+                    {
+                      path: 'enterprise',
+                      name: '_enterprise',
+                      meta: {
+                        icon: 'md-briefcase',
+                        showAlways: true,
+                        title: '企业'
+                      },
+                      component: parentView,
+                      redirect: { name: 'enterprise' },
+                      children: [{
+                        path: 'common/' + type.id,
+                        name: '企业-' + type.name,
+                        meta: {
+                          icon: 'md-options',
+                          title: '企业-' + type.name
+                        },
+                        props: {
+                          id: type.id
+                        },
+                        component: () =>
+                          import('@/view/insurance/enterprise/common/common.vue')
+                      }]
+                    }
+                  ]
+                }])
               }
-            } else if (innerItem.name === '_personal') {
-              let personalChildren = innerItem.children
+            } else if (innerRoute.name === '_personal') {
+              let personalChildren = innerRoute.children
               const personalTypes = this.$store.getters.getPersonalInsuranceTypes
               for (const type of personalTypes) {
-                // 添加保险菜单对应地址的映射关系
-                this.insuranceTypesRoutes.push({
-                  name: type.name,
-                  path: '/insurance/personal/common',
-                  params: {
-                    id: type.id
-                  }
-                })
-                // 添加企业合同类型菜单
                 personalChildren.push({
-                  icon: 'md-options',
-                  name: type.name,
+                  path: 'common/' + type.id,
+                  name: '个人-' + type.name,
                   meta: {
                     icon: 'md-options',
-                    title: type.name
-                  }
+                    title: '个人-' + type.name
+                  },
+                  props: {
+                    id: type.id
+                  },
+                  component: () =>
+                    import('@/view/insurance/personal/common/common.vue')
                 })
+                this.$router.addRoutes([{
+                  path: '/insurance',
+                  name: 'insurance',
+                  meta: {
+                    icon: 'md-menu',
+                    title: '保险管理',
+                    showAlways: true
+                  },
+                  component: Main,
+                  children: [
+                    {
+                      path: 'personal',
+                      name: '_personal',
+                      meta: {
+                        access: [],
+                        icon: 'ios-people-outline',
+                        showAlways: true,
+                        title: '个人'
+                      },
+                      redirect: { name: 'personal' },
+                      component: parentView,
+                      children: [{
+                        path: 'common/' + type.id,
+                        name: '个人-' + type.name,
+                        meta: {
+                          icon: 'md-options',
+                          title: '个人-' + type.name
+                        },
+                        props: {
+                          id: type.id
+                        },
+                        component: () =>
+                          import('@/view/insurance/enterprise/common/common.vue')
+                      }]
+                    }
+                  ]
+                }])
               }
             }
           }
-          break
         }
       }
-      this.menuList = menuListTemp
+      this.menuList = getMenuByRouter(routersCopy, this.$store.state.user.access)
     })
   },
   methods: {
@@ -232,20 +298,10 @@ export default {
   watch: {
     '$route' (newRoute) {
       const { name, query, params, meta } = newRoute
-      if (name === 'enterpriseCommon' || name === 'personalCommon') {
-        const currentTitle = this.currentTitle
-        let metaCopy = meta
-        metaCopy.title = currentTitle
-        this.addTag({
-          route: { name: currentTitle, query, params, meta: metaCopy },
-          type: 'push'
-        })
-      } else {
-        this.addTag({
-          route: { name, query, params, meta },
-          type: 'push'
-        })
-      }
+      this.addTag({
+        route: { name, query, params, meta },
+        type: 'push'
+      })
       this.setBreadCrumb(newRoute)
       this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
       this.$refs.sideMenu.updateOpenName(newRoute.name)

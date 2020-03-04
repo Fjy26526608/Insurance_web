@@ -397,3 +397,17 @@ export const setTitle = (routeItem, vm) => {
   const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
   window.document.title = resTitle
 }
+
+/**
+ * 拷贝一份对象数组
+ * @param {Array} arr 需要拷贝的数组
+ */
+export function copyArray(arr) {
+  return arr.map(e => {
+    if (typeof e === 'object') {
+      return Object.assign({}, e)
+    } else {
+      return e
+    }
+  })
+}

@@ -43,7 +43,7 @@
         </Select>
         <span>条</span>
       </i-col> -->
-      ID2:{{ $route.query.id }}
+      ID2:{{ id }}
     </Row>
     <div class="tableList">
       <Table border ref="selection" :columns="columns" :data="tableLisr"></Table>
@@ -57,6 +57,9 @@
 <script>
 export default {
   name: 'common',
+  props: {
+    id: Number
+  },
   data () {
     return {
       total: 100,

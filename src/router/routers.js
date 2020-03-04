@@ -139,17 +139,6 @@ export default [
             component: () =>
               import('@/view/insurance/enterprise/other/other.vue')
           },
-          {
-            path: 'common',
-            name: 'enterpriseCommon',
-            meta: {
-              icon: 'md-options',
-              title: '通用页面',
-              hideInMenu: true
-            },
-            component: () =>
-              import('@/view/insurance/enterprise/common/common.vue')
-          }
         ]
       },
       {
