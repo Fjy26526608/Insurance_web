@@ -14,8 +14,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/enterprise/allDatec', query: { type: 10 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" :row-class-name="rowClassName" size="large" border stripe :columns="ctableTitle"
-              :data="ctableDet10" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
+            <Table :loading="loading" size="large" border stripe :columns="ctableTitle" :data="ctableDet10" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0" ></table>-->
           </Card>
         </i-col>
@@ -26,8 +25,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/enterprise/allDatec', query: { type: 15 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe :columns="ctableTitle" :data="ctableDet15"
-              max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
+            <Table :loading="loading" size="large" border stripe :columns="ctableTitle" :data="ctableDet15" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0"></table> -->
           </Card>
         </i-col>
@@ -43,8 +41,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/personal/allDatep', query: { type: 10 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe :columns="ptableTitle" :data="ptableDet10"
-              max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
+            <Table :loading="loading" size="large" border stripe :columns="ptableTitle" :data="ptableDet10" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0" ></table>-->
           </Card>
         </i-col>
@@ -55,8 +52,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/personal/allDatep', query: { type: 15 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe :columns="ptableTitle" :data="ptableDet15"
-              max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
+            <Table :loading="loading" size="large" border stripe :columns="ptableTitle" :data="ptableDet15" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0"></table> -->
           </Card>
         </i-col>
@@ -66,160 +62,94 @@
 </template>
 
 <script>
-import { getToken } from '@/libs/util'
-// import axios from 'axios'
-import axios from '@/libs/api.request'
-export default {
-  name: 'home',
-  data() {
-    return {
-      changeType: 1,
-      hasShowSpin: false,
-      loading: true,
-      ctableTitle: [
-        {
-          title: '编号',
-          key: 'contractnum',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '名称',
-          key: 'insured',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '到期时间',
-          key: 'reminddate',
-          align: 'center',
-          tooltip: true
-        }
-      ],
-      ptableTitle: [
-        {
-          title: '编号',
-          key: 'contractnum',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '姓名',
-          key: 'insured',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '到期时间',
-          key: 'reminddate',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '待补金额',
-          key: 'policyamount',
-          align: 'center',
-          tooltip: true
-        }
-      ],
-      ctableDet10: [],
-      ctableDet15: [],
-      ptableDet10: [],
-      ptableDet15: [],
-      show: true
-    }
-  },
-  beforeCreate() {
-    console.log('创建前：')
-  },
-  created() {
-    console.log('创建完成')
-    this.loading = true
-    this.ctableDet10 = []
-    this.ctableDet15 = []
-    let that = this
-    console.log('值', that)
-    console.log('token值', getToken())
-    axios.request({
-      method: 'post',
-      url: '/main/maturitylist10',
-      headers: {
-        token: getToken(),
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
-      data: {
-        page: 1,
-        pagesize: 15,
-        iscompany: true
+  import { getToken } from '@/libs/util'
+  // import axios from 'axios'
+  import axios from '@/libs/api.request'
+  export default {
+    name: 'home',
+    data() {
+      return {
+        changeType: 1,
+        hasShowSpin: false,
+        loading: true,
+        ctableTitle: [
+          {
+            title: '编号',
+            key: 'contractnum',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '名称',
+            key: 'insured',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '到期时间',
+            key: 'reminddate',
+            align: 'center',
+            tooltip: true
+          }
+        ],
+        ptableTitle: [
+          {
+            title: '编号',
+            key: 'contractnum',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '姓名',
+            key: 'insured',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '到期时间',
+            key: 'reminddate',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '待补金额',
+            key: 'policyamount',
+            align: 'center',
+            tooltip: true
+          }
+        ],
+        ctableDet10: [],
+        ctableDet15: [],
+        ptableDet10: [],
+        ptableDet15: [],
+        show: true
       }
-    }).then(function (res) {
-      for (let i = 0; i < res.data.data.length; i++) {
-        let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
-        that.ctableDet10.push(res.data.data[i])
-        that.ctableDet10[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
-      }
-    }).catch(function (error) {
-      console.log(error)
-    })
-    axios.request({
-      method: 'post',
-      url: '/main/maturitylist15',
-      headers: {
-        token: getToken(),
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
-      data: {
-        page: 1,
-        pagesize: 15,
-        iscompany: true
-      }
-    }).then(function (res) {
-      for (let i = 0; i < res.data.data.length; i++) {
-        let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
-        that.ctableDet15.push(res.data.data[i])
-        that.ctableDet15[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
-      }
-    }).catch(function (error) {
-      console.log(error)
-    })
-    this.loading = false
-  },
-  beforeMount() {
-    console.log('挂载前：')
-  },
-  mounted() {
-    console.log('挂载完成：')
-  },
-  beforeUpdate() {
-    console.log('即将更新渲染')
-  },
-  updated() {
-    console.log('更新渲染成功')
-  },
-
-  methods: {
-    changeTopTab(type) {
-      // 切换类型
-      this.ptableDet10 = []
-      this.ptableDet15 = []
+    },
+    beforeCreate() {
+      console.log('创建前：')
+    },
+    created() {
+      console.log('创建完成')
+      this.loading = true
+      this.ctableDet10 = []
+      this.ctableDet15 = []
       let that = this
+      console.log('值', that)
+      console.log('token值', getToken())
       axios.request({
         method: 'post',
         url: '/main/maturitylist10',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
         data: {
           page: 1,
           pagesize: 15,
-          iscompany: false
+          iscompany: true
         }
       }).then(function (res) {
+        console.log('查询10天值',res)
         for (let i = 0; i < res.data.data.length; i++) {
-          let indexs = res.data.data[i].reminddate.indexOf('T')
-          that.ptableDet10.push(res.data.data[i])
-          that.ptableDet10[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+          let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
+          that.ctableDet10.push(res.data.data[i])
+          that.ctableDet10[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
         }
       }).catch(function (error) {
         console.log(error)
@@ -227,57 +157,111 @@ export default {
       axios.request({
         method: 'post',
         url: '/main/maturitylist15',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
         data: {
           page: 1,
           pagesize: 15,
-          iscompany: false
+          iscompany: true
         }
       }).then(function (res) {
+        console.log('查询15天值',res)
         for (let i = 0; i < res.data.data.length; i++) {
-          let indexs = res.data.data[i].reminddate.indexOf('T')
-          that.ptableDet15.push(res.data.data[i])
-          console.log(that.ptableDet15)
-          that.ptableDet15[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+          let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
+          that.ctableDet15.push(res.data.data[i])
+          that.ctableDet15[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
         }
       }).catch(function (error) {
         console.log(error)
       })
-      this.changeType = type
-      if (type === 1) {
-        this.show = true
-      } else {
-        this.show = false
+      this.loading = false
+    },
+    beforeMount() {
+      console.log('挂载前：')
+    },
+    mounted() {
+      console.log('挂载完成：')
+    },
+    beforeUpdate() {
+      console.log('即将更新渲染')
+    },
+    updated() {
+      console.log('更新渲染成功')
+    },
+    methods: {
+      changeTopTab(type) {
+        // 切换类型
+        this.ptableDet10 = []
+        this.ptableDet15 = []
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/maturitylist10',
+          headers: {
+            token: getToken(),
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+          },
+          data: {
+            page: 1,
+            pagesize: 15,
+            iscompany: false
+          }
+        }).then(function (res) {
+          for (let i = 0; i < res.data.data.length; i++) {
+            let indexs = res.data.data[i].reminddate.indexOf('T')
+            that.ptableDet10.push(res.data.data[i])
+            that.ptableDet10[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
+        axios.request({
+          method: 'post',
+          url: '/main/maturitylist15',
+          headers: {
+            token: getToken(),
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+          },
+          data: {
+            page: 1,
+            pagesize: 15,
+            iscompany: false
+          }
+        }).then(function (res) {
+          for (let i = 0; i < res.data.data.length; i++) {
+            let indexs = res.data.data[i].reminddate.indexOf('T')
+            that.ptableDet15.push(res.data.data[i])
+            console.log(that.ptableDet15)
+            that.ptableDet15[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
+        this.changeType = type
+        if (type === 1) {
+          this.show = true
+        } else {
+          this.show = false
+        }
+        this.hasShowSpin = true
+        setTimeout(() => {
+          this.hasShowSpin = false
+        }, 500)
+      },
+      cdet(e, index) {
+        console.log('我的下标是', index, e)
+        this.$router.push({
+          path: '/insurance/enterprise/cdet',
+          query: { value: e.id }
+        })
+      },
+      pdet(e, index) {
+        console.log('我的下标是', index, e)
+        this.$router.push({
+          path: '/insurance/personal/pdet',
+          query: { id: e.id }
+        })
       }
-      this.hasShowSpin = true
-      setTimeout(() => {
-        this.hasShowSpin = false
-      }, 500)
-    },
-    cdet(e, index) {
-      console.log('我的下标是', index, e)
-      this.$router.push({ path: '/insurance/enterprise/cdet' })
-    },
-    pdet(e, index) {
-      console.log('我的下标是', index, e)
-      this.$router.push({
-        path: '/insurance/personal/pdet',
-        query: { id: e.id }
-      })
-    },
-    rowClassName(row, index) {
-      if (index === 0) {
-        return 'demo-table-y-row'
-      } else if (index === 1) {
-        return 'demo-table-r-row'
-      }
-      return ''
     }
   }
-}
 </script>
 
 <style lang='less'>
