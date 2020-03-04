@@ -52,7 +52,7 @@
       </div>
       <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError"
               :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{companyid:formValidate2.id,token:token}" multiple type="drag"
-              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;">
+              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" :disabled="!isChange">
         <div style="width: 58px;height:58px;line-height: 58px;">
           <Icon type="ios-camera" size="20"></Icon>
         </div>
@@ -60,7 +60,7 @@
       <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
         <!-- <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%"> -->
         <Carousel v-if="visible" v-model="value1" loop>
-          <CarouselItem v-for='(img,index) in defaultList' :key='index'>
+          <CarouselItem v-for='(img,index) in uploadList' :key='index'>
             <div class="demo-carousel">
               <img :src="img.url" style="width: 100%" alt="">
             </div>
@@ -99,9 +99,9 @@
         <FormItem label="电话" prop="phone">
           <Input v-model="formValidate.phone" placeholder="输入被保人电话" :disabled="!isChange"></Input>
         </FormItem>
-        <!-- <FormItem label="地址" prop="address">
-                <Input v-model="formValidate.address" placeholder="输入被保人地址" :disabled="!isChange"></Input>
-            </FormItem> -->
+        <FormItem label="地址" prop="address">
+          <Input v-model="formValidate.address" placeholder="输入被保人地址" :disabled="!isChange"></Input>
+        </FormItem>
         <FormItem label="保险类型" prop="insuranceType">
           <Select v-model="formValidate.insuranceType" placeholder="选择保险类型">
             <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -131,38 +131,6 @@
         <FormItem label="实际支付" prop="payment">
           <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）" :disabled="!isChange"></Input>
         </FormItem>
-        <!-- <FormItem label="邮箱" prop="mail">
-                <Input v-model="formValidate.mail" placeholder="输入电子邮箱"></Input>
-                </FormItem>-->
-        <!-- <FormItem label="合同文件" prop="desc">
-          <div class="com-upload-img">
-            <div class="img_group">
-              <div class="img_box" v-if="allowAddImg">
-                <input type="file" accept="image/*" multiple="multiple" @change="changeImg2($event)">
-                <div class="filter"></div>
-              </div>
-              <div class="demo-upload-list" v-for="(item,index) in imgArr2" :key='index'>
-                <img :src="item" alt="">
-                <div class="demo-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
-                  <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
-                </div>
-              </div>
-            </div>
-            <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-              <Carousel v-model="value1" loop>
-                <CarouselItem v-for='(img,index) in imgArr2' :key='index'>
-                  <div class="demo-carousel">
-                    <img :src="img" style="width: 100%" alt="">
-                  </div>
-                </CarouselItem>
-              </Carousel>
-            </Modal>
-          </div>
-        </!--> -->
-        <FormItem label="备注" prop="desc">
-          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."></Input>
-        </FormItem>
       </Form>
     </Modal>
   </Form>
@@ -174,10 +142,7 @@
     data() {
       return {
         value1: 0,
-        defaultList: [{
-          'name': '7',
-          'url': 'http://47.105.49.81:2222/api/main/getimg/7/95K6GQ7zL2fXaTrD'
-        }],
+        defaultList: [],
         imgName: '',
         visible: false,
         uploadList: [],
@@ -396,23 +361,7 @@
         }).catch(function (error) {
           console.log(error)
         })
-        axios.request({
-          method: 'post',
-          url: '/main/updataimg',
-          data: {
-            companyid: that.formValidate2.id,
-            contractimg: that.imgArr
-          }
-        }).then(function (res) {
-          console.log('上传图片', res)
-          if (res.data.state === 'true') {
-            that.$Message.success(res.data.msg)
-          } else {
-            that.$Message.error(res.data.msg)
-          }
-        }).catch(function (error) {
-          console.log(error)
-        })
+
         // } else {
         //   this.$Message.error('数据填写不正确!')
         // }
@@ -469,13 +418,35 @@
         return check;
       },
       handleRemove(file) {
+        console.log(file)
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/delimg',
+          data: {
+            id: file.name,
+          }
+        }).then(function (res) {
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
         const fileList = this.$refs.upload.fileList;
         this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
       },
       handleView(index) {
         console.log(index)
-        this.value1 = index
-        this.visible = true
+        console.log(this.uploadList)
+        for (let i = 0; i < this.uploadList.length; i++) {
+          if (this.uploadList[i].name === index) {
+            this.value1 = i
+            this.visible = true
+          }
+        }
       }
     },
     mounted() {
