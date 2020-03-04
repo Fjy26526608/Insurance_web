@@ -88,19 +88,17 @@
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加'>
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
+      :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
-          <Input v-model="formValidate.number" placeholder="输入合同编号" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
         </FormItem>
         <FormItem label="姓名" prop="name">
-          <Input v-model="formValidate.name" placeholder="输入被保人姓名" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.name" placeholder="输入被保人姓名"></Input>
         </FormItem>
         <FormItem label="电话" prop="phone">
-          <Input v-model="formValidate.phone" placeholder="输入被保人电话" :disabled="!isChange"></Input>
-        </FormItem>
-        <FormItem label="地址" prop="address">
-          <Input v-model="formValidate.address" placeholder="输入被保人地址" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.phone" placeholder="输入被保人电话"></Input>
         </FormItem>
         <FormItem label="保险类型" prop="insuranceType">
           <Select v-model="formValidate.insuranceType" placeholder="选择保险类型">
@@ -109,27 +107,50 @@
         </FormItem>
         <FormItem label="合同日期">
           <Row>
-            <Col span="2">
-            <FormItem prop="date">
-              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-            </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center">结束日期</Col>
-            <Col span="2">
-            <FormItem prop="stopDate">
-              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
-            </FormItem>
+            <Col span="5">
+              <FormItem prop="date">
+                <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+              </FormItem>
             </Col>
           </Row>
         </FormItem>
         <FormItem label="成本单价" prop="unitPrice">
-          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）"></Input>
         </FormItem>
         <FormItem label="购买时长" prop="duration">
-          <Input v-model="formValidate.duration" placeholder="输入购买时长（月）" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.duration" placeholder="输入购买时长（月）"></Input>
+        </FormItem>
+        <FormItem label="保单总成本" prop="cost">
+          <Input v-model="formValidate.cost" placeholder="输入保单总成本金额（元）"></Input>
         </FormItem>
         <FormItem label="实际支付" prop="payment">
-          <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）"></Input>
+        </FormItem>
+        <FormItem label="合同文件" prop="desc">
+          <div class="com-upload-img">
+            <div class="img_group">
+              <div class="img_box" v-if="allowAddImg">
+                <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
+                <div class="filter"></div>
+              </div>
+              <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
+                <img :src="item" alt="">
+                <div class="demo-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
+                  <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
+                </div>
+              </div>
+            </div>
+            <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+              <Carousel v-model="value1" loop>
+                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
+                  <div class="demo-carousel">
+                    <img :src="img" style="width: 100%" alt="">
+                  </div>
+                </CarouselItem>
+              </Carousel>
+            </Modal>
+          </div>
         </FormItem>
       </Form>
     </Modal>
@@ -232,7 +253,7 @@
             key: 'balance'
           }
         ],
-        tableLisr: [],
+        tableLisr: [],  
         ruleValidate2: {
           name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
           address: [{ required: true, message: '地址不能为空', trigger: 'blur' }],
@@ -294,18 +315,18 @@
       }).catch(function (error) {
         console.log(error)
       })
-      // axios.request({
-      //   method: 'post',
-      //   url: '/main/getimg',
-      //   data: {
-      //     companyid: that.getValue
-      //   }
-      // }).then(function (res) {
-      //   console.log('请求返回后的企业合同图片', res)
-      //   that.imgArr = res.data.data
-      // }).catch(function (error) {
-      //   console.log(error)
-      // })
+      axios.request({
+        method: 'post',
+        url: '/main/getimg',
+        data: {
+          companyid: that.getValue
+        }
+      }).then(function (res) {
+        console.log('请求返回后的企业合同图片', res)
+        that.defaultList = res.data
+      }).catch(function (error) {
+        console.log(error)
+      })
       axios.request({
         method: 'post',
         url: '/main/instype'
@@ -382,9 +403,41 @@
         this.$Message.success('点击取消!')
       },
       ok() {
-        console.log(this.formValidate)
-        this.$Message.success('点击确定!')
-      },
+      this.$refs['formValidate'].validate((valid) => {
+        if (!valid) {
+          return this.changeLoading()
+        }
+        // 请求服务端添加接口
+        const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
+        const data = {
+          contractnum: number,
+          insured: name,
+          tel: phone,
+          insurancetypeid: insuranceType,
+          buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
+          month: duration,
+          policyamount: unitPrice,
+          cost,
+          actualpayment: payment
+        }
+        saveOrModifyInsuranceInfo(data).then((res) => {
+          if (res.data.state === 'true') {
+            setTimeout(() => {
+              this.changeLoading()
+              this.showAddModal = false
+              this.$Message.success('添加成功')
+              this.fetchPersonalInfo()
+            }, 1000)
+          } else {
+            this.$Message.error('添加保险合同失败')
+          }
+        }).catch((err) => {
+          console.error(err)
+          this.$Message.error('请求服务器错误')
+          this.changeLoading()
+        })
+      })
+    },
       handleSuccess(res, file) {
         console.log('上传后返回信息', res)
         file.url = 'http://47.105.49.81:2222/api/main/getimg' + '/' + res.id + '/' + this.token;

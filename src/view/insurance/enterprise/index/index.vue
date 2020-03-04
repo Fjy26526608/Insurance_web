@@ -503,6 +503,13 @@
           return 'demo-table-r-row'
         }
         return ''
+      },
+      cdet(e, index) {
+        console.log('我的下标是', index, e)
+        this.$router.push({
+          path: '/insurance/enterprise/cdet',
+          query: { value: e.id }
+        })
       }
     }
   }
