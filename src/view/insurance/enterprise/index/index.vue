@@ -1,3 +1,13 @@
+<style>
+  .ivu-table .demo-table-y-row td {
+    color: rgba(255, 153, 0, 1);
+  }
+
+  .ivu-table .demo-table-r-row td {
+    color: rgb(255, 0, 0, 1);
+  }
+</style>
+
 <template>
   <div>
     <Row :gutter="20">
@@ -555,15 +565,5 @@
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
-  }
-
-  .ivu-table .demo-table-y-row td {
-    background-color: rgba(255, 255, 0, 0.5);
-    color: rgb(0, 0, 0);
-  }
-
-  .ivu-table .demo-table-r-row td {
-    background-color: rgb(255, 0, 0, 0.2);
-    color: rgb(0, 0, 0);
   }
 </style>
