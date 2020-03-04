@@ -451,7 +451,6 @@ export default {
       })
     },
     ok() {
-      console.log(this.formValidate)
       this.$refs['formValidate'].validate((valid) => {
         if (!valid) {
           return this.changeLoading()

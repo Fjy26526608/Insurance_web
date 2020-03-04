@@ -46,6 +46,12 @@
     </Row>
     <div class="tableList">
       <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
+        <template slot-scope="{ row }" slot="id">
+          <strong>{{ row.id }}</strong>
+        </template>
+        <template slot-scope="{ row }" slot="action">
+          <Button type="error" @click="remove(row.id)">删除</Button>
+        </template>
       </Table>
     </div>
     <div class="text-right pageList">
@@ -53,52 +59,44 @@
         show-elevator />
     </div>
     <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
-      :mask-closable="false" width="60%" ok-text='添加'>
+      :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
-          <Input v-model="formValidate.number" placeholder="输入合同编号" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
         </FormItem>
         <FormItem label="姓名" prop="name">
-          <Input v-model="formValidate.name" placeholder="输入被保人姓名" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.name" placeholder="输入被保人姓名"></Input>
         </FormItem>
         <FormItem label="电话" prop="phone">
-          <Input v-model="formValidate.phone" placeholder="输入被保人电话" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.phone" placeholder="输入被保人电话"></Input>
         </FormItem>
-        <!-- <FormItem label="地址" prop="address">
-                <Input v-model="formValidate.address" placeholder="输入被保人地址" :disabled="!isChange"></Input>
-            </FormItem> -->
         <FormItem label="保险类型" prop="insuranceType">
           <Select v-model="formValidate.insuranceType" placeholder="选择保险类型">
             <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
         <FormItem label="合同日期">
-          <!-- <Row>
-                        <Col span="3"> -->
-          <FormItem prop="date">
-            <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-          </FormItem>
-          <!-- </Col>
-                        <Col span="2" style="text-align: center">结束日期</Col>
-                    <Col span="3">
-                    <FormItem prop="stopDate">
-                        <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
-                    </FormItem>
-                    </Col>
-                    </Row> -->
+          <Row>
+            <Col span="5">
+              <FormItem prop="date">
+                <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+              </FormItem>
+            </Col>
+          </Row>
         </FormItem>
         <FormItem label="成本单价" prop="unitPrice">
-          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）"></Input>
         </FormItem>
         <FormItem label="购买时长" prop="duration">
-          <Input v-model="formValidate.duration" placeholder="输入购买时长（月）" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.duration" placeholder="输入购买时长（月）"></Input>
+        </FormItem>
+        <FormItem label="保单总成本" prop="cost">
+          <Input v-model="formValidate.cost" placeholder="输入保单总成本金额（元）"></Input>
         </FormItem>
         <FormItem label="实际支付" prop="payment">
-          <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）" :disabled="!isChange"></Input>
+          <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）"></Input>
         </FormItem>
-        <!-- <FormItem label="邮箱" prop="mail">
-                <Input v-model="formValidate.mail" placeholder="输入电子邮箱"></Input>
-                </FormItem>-->
+
         <FormItem label="合同文件" prop="desc">
           <div class="com-upload-img">
             <div class="img_group">
@@ -125,22 +123,24 @@
             </Modal>
           </div>
         </FormItem>
-        <FormItem label="备注" prop="desc">
-          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."
-            :disabled="!isChange"></Input>
-        </FormItem>
       </Form>
+    </Modal>
+    <Modal v-model="deleteInsuModal" title='警告！' @on-ok="deleteOk" @on-cancel="deleteCancel">
+      <p>删除后不可恢复，确认删除吗？</p>
     </Modal>
   </div>
 </template>
 
 <script>
-import { getToken } from '@/libs/util'
+import { getToken, formatDate } from '@/libs/util'
 import axios from '@/libs/api.request'
+import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
 export default {
   name: 'personal',
   data() {
     return {
+      deleteInsuModal: false,
+      removeId: '',
       value1: 0,
       imgData: '',
       imgArr: [],
@@ -276,78 +276,30 @@ export default {
           tooltip: true,
           title: '剩余',
           key: 'balance'
-        }
-      ],
-      tableLisr: [
+        },
         {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
+          title: '操作',
+          slot: 'action',
+          align: 'center'
         }
       ],
+      tableLisr: [],
       showAddModal: false,
-      isChange: true,
-      insuranceList: [
-        {
-          value: '1',
-          label: '企财险'
-        },
-        {
-          value: '2',
-          label: '工程险'
-        },
-        {
-          value: '3',
-          label: '车险'
-        },
-        {
-          value: '4',
-          label: '医疗险'
-        },
-        {
-          value: '5',
-          label: '子女教育险'
-        },
-        {
-          value: '6',
-          label: '养老险'
-        }
-      ],
+      modalLoading: true,
+      insuranceList: [],
       formValidate: {
-        name: '', // 姓名
         number: '', // 编号
-        address: '', // 地址
-        manager: '', // 联系人
+        name: '', // 姓名
+        phone: '', // 电话
+        insuranceType: '', // 保险类型
+        date: '', // 日期
         unitPrice: '', // 单价
         duration: '', // 购买时长
         payment: '', // 实际支付
-        phone: '', // 电话
-        mail: '', // 邮箱
-        insuranceType: '', // 保险类型
-        gender: '', // 性别
-        date: '', // 日期
-        time: '',
-        desc: '' // 备注
+        cost: '' // 总成本
       },
       ruleValidate: {
         name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-        // address: [
-        //     { required: true, message: "地址不能为空", trigger: "blur" }
-        // ],
-        manager: [
-          {
-            required: true,
-            message: '联系人不能为空',
-            trigger: 'blur'
-          }
-        ],
         number: [
           {
             required: true,
@@ -379,18 +331,12 @@ export default {
         phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
         insuranceType: [
           {
+            type: 'number',
             required: true,
             message: '请选择保险类型',
-            trigger: 'change'
+            trigger: 'blur'
           }
         ],
-        // mail: [
-        //     { required: true, message: '邮箱不能为空', trigger: 'blur' },
-        //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-        // ],
-        // gender: [
-        //     { required: true, message: '请选择性别', trigger: 'change' }
-        // ],
         date: [
           {
             required: true,
@@ -398,69 +344,71 @@ export default {
             message: '请选择日期',
             trigger: 'change'
           }
+        ],
+        cost: [
+          {
+            required: true,
+            message: '保单总成本不能为空',
+            trigger: 'blur'
+          }
         ]
-        // desc: [
-        //   {
-        //     required: true,
-        //     message: "请输入备注",
-        //     trigger: "blur"
-        //   },
-        //   {
-        //     type: "string",
-        //     min: 20,
-        //     message: "最少10个字",
-        //     trigger: "blur"
-        //   }
-        // ]
       }
     }
   },
   created() {
     console.log('完成创建')
-    this.loading = true
-    this.tableLisr = []
-    let that = this
-    axios.request({
-      method: 'post',
-      url: '/main/instype',
-      headers: {
-        token: getToken(),
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
-      data: {
-      }
-    }).then(function (res) {
-      console.log('保险类型', res)
-      that.typeList.push(res.date.data)
-      console.log('完成保险类型打印')
-    }).catch(function (error) {
-      console.log(error)
-    })
-    axios.request({
-      method: 'post',
-      url: '/main/inslist',
-      headers: {
-        token: getToken(),
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
-      data: {
-        page: 1,
-        pagesize: 15
-      }
-    }).then(function (res) {
-      console.log(res)
-      for (let i = 0; i < res.data.data.length; i++) {
-        that.tableLisr.push(res.data.data[i].fields)
-        that.tableLisr[i].id = res.data.data[i].pk
-      }
-      console.log('完成打印')
-    }).catch(function (error) {
-      console.log(error)
-    })
-    console.log(this.tableLisr)
-    this.loading = false
+    // 查询保险类型
+    this.getInsuranceTypes()
+    this.fetchPersonalInfo()
   },
   methods: {
+    getInsuranceTypes() {
+      getInsuranceTypes().then((res) => {
+        if (res.data.state === 'true') {
+          const types = res.data.data
+          for (const type of types) {
+            if (!type.fields.iscompany) {
+              this.insuranceList.push({
+                value: type.pk,
+                label: type.fields.name
+              })
+            }
+          }
+        } else {
+          this.$Message.error('保险类型查询异常')
+        }
+      }).catch((err) => {
+        console.error(err)
+      })
+    },
+    fetchPersonalInfo() {
+      this.loading = true
+      this.tableLisr = []
+      let that = this
+      axios.request({
+        method: 'post',
+        url: '/main/inslist',
+        headers: {
+          token: getToken(),
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        data: {
+          page: 1,
+          pagesize: 15
+        }
+      }).then(function (res) {
+        console.log(res)
+        for (let i = 0; i < res.data.data.length; i++) {
+          that.tableLisr.push(res.data.data[i].fields)
+          that.tableLisr[i].id = res.data.data[i].pk
+        }
+        console.log('完成打印')
+      }).catch(function (error) {
+        console.log(error)
+      })
+      console.log(this.tableLisr)
+      this.loading = false
+    },
     changePage(page) {
       // alert(page)
     },
@@ -544,10 +492,66 @@ export default {
       })
     },
     cancel() {
-      this.$Message.success('点击取消!')
+    },
+    changeLoading() {
+      this.modalLoading = false
+      this.$nextTick(() => {
+        this.modalLoading = true
+      })
     },
     ok() {
-      this.$Message.success('点击确定!')
+      this.$refs['formValidate'].validate((valid) => {
+        if (!valid) {
+          return this.changeLoading()
+        }
+        // 请求服务端添加接口
+        const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
+        const data = {
+          contractnum: number,
+          insured: name,
+          tel: phone,
+          insurancetypeid: insuranceType,
+          buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
+          month: duration,
+          policyamount: unitPrice,
+          cost,
+          actualpayment: payment
+        }
+        saveOrModifyInsuranceInfo(data).then((res) => {
+          if (res.data.state === 'true') {
+            setTimeout(() => {
+              this.changeLoading()
+              this.showAddModal = false
+              this.$Message.success('添加成功')
+              this.fetchPersonalInfo()
+            }, 1000)
+          } else {
+            this.$Message.error('添加保险合同失败')
+          }
+        }).catch((err) => {
+          console.error(err)
+          this.$Message.error('请求服务器错误')
+          this.changeLoading()
+        })
+      })
+    },
+    remove(id) {
+      this.deleteInsuModal = true
+      this.removeId = id
+    },
+    deleteCancel() {},
+    deleteOk() {
+      deleteInsuranceInfo(this.removeId).then((res) => {
+        if (res.data.state === 'true') {
+          this.$Message.success('删除成功')
+          this.fetchPersonalInfo()
+        } else {
+          this.$Message.error('删除操作失败')
+        }
+      }).catch((err) => {
+        console.error(err)
+        this.$Message.error('请求服务器异常')
+      })
     }
   }
 }
