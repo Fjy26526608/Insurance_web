@@ -49,6 +49,7 @@ import { getNewTagList, routeEqual, getMenuByRouter, copyArray } from '@/libs/ut
 import routers from '@/router/routers'
 import minLogo from '@/assets/images/logo-min.jpg'
 import maxLogo from '@/assets/images/logo.jpg'
+import tx from '@/assets/images/tx.jpeg'
 import Router from 'vue-router'
 import Main from '@/components/main'
 import parentView from '@/components/parent-view'
@@ -87,7 +88,7 @@ export default {
       return this.$store.state.app.tagRouter
     },
     userAvatar () {
-      return 'http://b-ssl.duitang.com/uploads/item/201511/21/20151121171107_zMZcy.jpeg'
+      return tx
       // return this.$store.state.user.avatarImgPath
     },
     cacheList () {
