@@ -216,7 +216,8 @@
             tooltip: true,
             title: '名称',
             key: 'insured',
-            minWidth: 90
+            minWidth: 90,
+            fixed: 'left'
           },
           {
             align: 'center',
@@ -279,7 +280,7 @@
             slot: 'action',
             align: 'center',
             minWidth: 170,
-            maxWidth:170
+            maxWidth: 170
           }
         ],
         tableLisr: [],
@@ -595,7 +596,7 @@
             this.visible = true
           }
         }
-      }, 
+      },
       shen(id) {
         this.shModal = true
         this.shId = id

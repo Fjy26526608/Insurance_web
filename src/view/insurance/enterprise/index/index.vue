@@ -13,7 +13,7 @@
     <Row :gutter="20">
       <i-col span="5">
         <Input v-model="typeName">
-          <span slot="prepend">名称</span>
+        <span slot="prepend">名称</span>
         </Input>
       </i-col>
       <i-col span="5">
@@ -305,14 +305,15 @@
             key: 'name',
             align: 'center',
             tooltip: true,
-            minWidth:240
+            minWidth: 240,
+            fixed: 'left'
           },
           {
             title: '地址',
             key: 'addrss',
             align: 'center',
             tooltip: true,
-            minWidth:240
+            minWidth: 240
           },
           // {
           //   title: '公司规模',
@@ -326,32 +327,32 @@
             key: 'stime',
             align: 'center',
             tooltip: true,
-            minWidth:130,
-            maxWidth:130
+            minWidth: 130,
+            maxWidth: 130
           },
           {
             title: '合同结束时间',
             key: 'etime',
             align: 'center',
             tooltip: true,
-            minWidth:130,
-            maxWidth:130
+            minWidth: 130,
+            maxWidth: 130
           },
           {
             title: '负责人名字',
             key: 'contactperson',
             align: 'center',
             tooltip: true,
-            minWidth:110,
-            maxWidth:130
+            minWidth: 110,
+            maxWidth: 130
           },
           {
             title: '电话',
             key: 'tel',
             align: 'center',
             tooltip: true,
-            minWidth:130,
-            maxWidth:130
+            minWidth: 130,
+            maxWidth: 130
           },
           // {
           //   title: '备注',
@@ -363,8 +364,8 @@
             title: '操作',
             slot: 'action',
             align: 'center',
-            minWidth:170,
-            maxWidth:170
+            minWidth: 170,
+            maxWidth: 170
           }
           // {
           //   title: '剩余',
@@ -388,7 +389,7 @@
     created() {
       console.log('完成创建')
     },
-    beforeRouteEnter (to, from, next) {
+    beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.fetchCompanyList()
       })
@@ -407,7 +408,7 @@
             instypeid: this.typeId
           }
         }).then(function (res) {
-          console.log('********',res)
+          console.log('********', res)
           if (res.data.state === 'true') {
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {

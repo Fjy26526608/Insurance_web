@@ -3,7 +3,7 @@
     <Row :gutter="20">
       <i-col span="5">
         <Input v-model="typeName">
-          <span slot="prepend">名字</span>
+        <span slot="prepend">名字</span>
         </Input>
       </i-col>
       <i-col span="5">
@@ -87,8 +87,8 @@
           <!-- <Row>
             <Col span="15">
             <FormItem prop="date"> -->
-              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-            <!-- </FormItem>
+          <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+          <!-- </FormItem>
             </Col>
           </Row> -->
         </FormItem>
@@ -245,70 +245,71 @@
             tooltip: true,
             title: '名字',
             key: 'insured',
-            minWidth:90
+            minWidth: 90,
+            fixed: 'left'
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
             key: 'insurancetypename',
-            minWidth:130
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
             key: 'buydate',
-            minWidth:130
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '金额',
             key: 'je',
-            minWidth:100
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
             key: 'maturitydate',
-            minWidth:130
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '手续费',
             key: 'cost',
-            minWidth:100
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '实际支付',
             key: 'actualpayment',
-            minWidth:100
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '已使用',
             key: 'alreadyused',
-            minWidth:100
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '剩余',
             key: 'balance',
-            minWidth:100
+            minWidth: 100
           },
           {
             title: '操作',
             slot: 'action',
             align: 'center',
-            minWidth:170,
-            maxWidth:170
+            minWidth: 170,
+            maxWidth: 170
           }
         ],
         tableLisr: [],
@@ -394,7 +395,7 @@
     created() {
       console.log('完成创建')
     },
-    beforeRouteEnter (to, from, next) {
+    beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.getInsuranceTypes()
         vm.fetchPersonalInfo()
