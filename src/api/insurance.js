@@ -19,8 +19,9 @@ export const getInsuranceInfo = (id) => {
   })
 }
 
-export const saveOrModifyInsuranceInfo = ({ id, contractnum, insured, tel, insurancetypeid, buydate, month, policyamount, cost, actualpayment }) => {
+export const saveOrModifyInsuranceInfo = ({ companyid, id, contractnum, insured, tel, insurancetypeid, buydate, month, policyamount, cost, actualpayment }) => {
   const data = {
+    companyid,
     id,
     contractnum,
     insured,

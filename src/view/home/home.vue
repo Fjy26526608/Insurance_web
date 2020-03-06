@@ -14,7 +14,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/enterprise/allDatec', query: { type: 10 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe :columns="ctableTitle" :data="ctableDet10" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
+            <Table :loading="loading" size="large" border stripe highlight-row :columns="ctableTitle" :data="ctableDet10" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0" ></table>-->
           </Card>
         </i-col>
@@ -25,7 +25,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/enterprise/allDatec', query: { type: 15 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe :columns="ctableTitle" :data="ctableDet15" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
+            <Table :loading="loading" size="large" border stripe highlight-row :columns="ctableTitle" :data="ctableDet15" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0"></table> -->
           </Card>
         </i-col>
@@ -41,7 +41,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/personal/allDatep', query: { type: 10 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe :columns="ptableTitle" :data="ptableDet10" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
+            <Table :loading="loading" size="large" border stripe highlight-row :columns="ptableTitle" :data="ptableDet10" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0" ></table>-->
           </Card>
         </i-col>
@@ -52,7 +52,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/personal/allDatep', query: { type: 15 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe :columns="ptableTitle" :data="ptableDet15" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
+            <Table :loading="loading" size="large" border stripe highlight-row :columns="ptableTitle" :data="ptableDet15" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0"></table> -->
           </Card>
         </i-col>
@@ -62,8 +62,6 @@
 </template>
 
 <script>
-  import { getToken } from '@/libs/util'
-  // import axios from 'axios'
   import axios from '@/libs/api.request'
   export default {
     name: 'home',
@@ -134,8 +132,6 @@
       this.ctableDet10 = []
       this.ctableDet15 = []
       let that = this
-      console.log('值', that)
-      console.log('token值', getToken())
       axios.request({
         method: 'post',
         url: '/main/maturitylist10',
@@ -145,7 +141,7 @@
           iscompany: true
         }
       }).then(function (res) {
-        console.log('查询10天值',res)
+        console.log('查询10天值', res)
         for (let i = 0; i < res.data.data.length; i++) {
           let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
           that.ctableDet10.push(res.data.data[i])
@@ -163,7 +159,7 @@
           iscompany: true
         }
       }).then(function (res) {
-        console.log('查询15天值',res)
+        console.log('查询15天值', res)
         for (let i = 0; i < res.data.data.length; i++) {
           let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
           that.ctableDet15.push(res.data.data[i])
@@ -195,10 +191,6 @@
         axios.request({
           method: 'post',
           url: '/main/maturitylist10',
-          headers: {
-            token: getToken(),
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-          },
           data: {
             page: 1,
             pagesize: 8,
@@ -216,10 +208,6 @@
         axios.request({
           method: 'post',
           url: '/main/maturitylist15',
-          headers: {
-            token: getToken(),
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-          },
           data: {
             page: 1,
             pagesize: 8,

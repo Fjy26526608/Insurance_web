@@ -27,11 +27,11 @@
         <Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" />
       </i-col>
       <i-col span="24"></i-col> -->
-      <i-col span="12" class="mt20">
-        <Button type="primary" @click="showAddModal = true" class="mr15">新增</Button>
-        <!-- <Button type="warning" class="mr15">删除</Button>
+      <!-- <i-col span="12" class="mt20">
+        <Button type="primary" @click="showAddModal = true" class="mr15">新增</Button> -->
+      <!-- <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button> -->
-      </i-col>
+      <!-- </i-col> -->
       <!-- <i-col span="12" class="text-right mt20">
         <span class="mr15">排序</span>
         <Select class="typeSelList mr15" style="width: 160px; text-align: left;margin-right: 25px;" v-model="sortingObj">
@@ -45,15 +45,18 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet"><template slot-scope="{ row }" slot="id">
+        <strong>{{ row.id }}</strong>
+      </template>
+      <template slot-scope="{ row }" slot="action">
+        <Button type="error" @click="remove(row.id)" :disabled="!isAdmin">删除</Button>
+      </template>
       </Table>
     </div>
     <div class="text-right pageList">
-      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
-        show-elevator />
+      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
-      :mask-closable="false" width="60%" ok-text='添加'>
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
           <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
@@ -126,493 +129,293 @@
                 <Input v-model="formValidate.mail" placeholder="输入电子邮箱"></Input>
                 </FormItem>-->
         <FormItem label="备注" prop="desc">
-          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-            placeholder="输入备注..."></Input>
+          <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."></Input>
         </FormItem>
       </Form>
+    </Modal>
+    <Modal v-model="deleteInsuModal" title='警告！' @on-ok="deleteOk" @on-cancel="deleteCancel">
+      <p>删除后不可恢复，确认删除吗？</p>
     </Modal>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'allDate',
-  data() {
-    return {
-      type: 0,
-      value1: 0,
-      visible: false,
-      uploadList: [],
-      imgData: '',
-      imgArr: [],
-      imgSrc: '',
-      allowAddImg: true,
-      showAddModal: false,
-      total: 0,
-      pageSize: 15,
-      pageNo: 1,
-      typeList: [
-        {
-          label: '创建时间',
-          value: 1
-        },
-        {
-          label: '结束时间',
-          value: 2
-        }
-      ],
-      typeObj: 1,
-      statusList: [
-        {
-          label: '全部',
-          value: 0
-        },
-        {
-          label: '启动',
-          value: 1
-        },
-        {
-          label: '暂停',
-          value: 2
-        }
-      ],
-      statusObj: null,
-      queryList: [
-        {
-          label: '按名称：',
-          value: 1
-        },
-        {
-          label: '按编号：',
-          value: 2
-        }
-      ],
-      queryObj: 1,
-      queryStr: '',
-      sortingList: [
-        {
-          label: '序号正序',
-          value: 1
-        },
-        {
-          label: '序号倒叙',
-          value: 2
-        },
-        {
-          label: '日期正叙',
-          value: 3
-        },
-        {
-          label: '日期倒叙',
-          value: 4
-        }
-      ],
-      sortingObj: 1,
-      pageList: [
-        {
-          label: '10',
-          value: 10
-        },
-        {
-          label: '20',
-          value: 20
-        },
-        {
-          label: '50',
-          value: 50
-        },
-        {
-          label: '100',
-          value: 100
-        }
-      ],
-      insuranceList: [
-        {
-          value: '1',
-          label: '企财险'
-        },
-        {
-          value: '2',
-          label: '工程险'
-        },
-        {
-          value: '3',
-          label: '车险'
-        },
-        {
-          value: '4',
-          label: '医疗险'
-        },
-        {
-          value: '5',
-          label: '子女教育险'
-        },
-        {
-          value: '6',
-          label: '养老险'
-        }
-      ],
-      columns: [
-        {
-          align: 'center',
-          tooltip: true,
-          title: '合同编号',
-          key: 'index'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '名称',
-          key: 'name'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '保险类型',
-          key: 'type'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '购买日期',
-          key: 'createTime'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '金额',
-          key: 'amount'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '到期日期',
-          key: 'endTime'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '手续费',
-          key: 'poundage'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '实际支付',
-          key: 'stno'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '已使用',
-          key: 'on'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '剩余',
-          key: 'remaining'
-        }
-      ],
-      formValidate: {
-        name: '', // 姓名
-        number: '', // 编号
-        address: '', // 地址
-        manager: '', // 联系人
-        unitPrice: '', // 单价
-        duration: '', // 购买时长
-        payment: '', // 实际支付
-        phone: '', // 电话
-        mail: '', // 邮箱
-        insuranceType: '', // 保险类型
-        gender: '', // 性别
-        date: '', // 日期
-        time: '',
-        desc: '' // 备注
-      },
-      ruleValidate: {
-        name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-        // address: [
-        //     { required: true, message: "地址不能为空", trigger: "blur" }
-        // ],
-        manager: [
+  import axios from '@/libs/api.request'
+  import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
+  export default {
+    name: 'allDate',
+    data() {
+      return {
+        deleteInsuModal: false,
+        removeId: '',
+        type: 0,
+        value1: 0,
+        visible: false,
+        uploadList: [],
+        imgData: '',
+        imgArr: [],
+        imgSrc: '',
+        allowAddImg: true,
+        showAddModal: false,
+        total: 0,
+        pageSize: 15,
+        pageNo: 1,
+        insuranceList: [],
+        columns: [
           {
-            required: true,
-            message: '联系人不能为空',
-            trigger: 'blur'
+            align: 'center',
+            tooltip: true,
+            title: '合同编号',
+            key: 'contractnum'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '名称',
+            key: 'insured'
+          },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '保险类型',
+          //   key: 'type'
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '购买日期',
+          //   key: 'createTime'
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '金额',
+          //   key: 'amount'
+          // },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '到期日期',
+            key: 'reminddate'
+          },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '手续费',
+          //   key: 'poundage'
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '实际支付',
+          //   key: 'stno'
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '已使用',
+          //   key: 'on'
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '剩余',
+          //   key: 'remaining'
+          // },
+          {
+            title: '操作',
+            slot: 'action',
+            align: 'center'
           }
         ],
-        number: [
-          {
-            required: true,
-            message: '合同编号不能为空',
-            trigger: 'blur'
-          }
-        ],
-        unitPrice: [
-          {
-            required: true,
-            message: '成本单价不能为空',
-            trigger: 'blur'
-          }
-        ],
-        duration: [
-          {
-            required: true,
-            message: '购买时长不能为空',
-            trigger: 'blur'
-          }
-        ],
-        payment: [
-          {
-            required: true,
-            message: '实际支付不能为空',
-            trigger: 'blur'
-          }
-        ],
-        phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-        insuranceType: [
-          {
-            required: true,
-            message: '请选择保险类型',
-            trigger: 'change'
-          }
-        ],
-        // mail: [
-        //     { required: true, message: '邮箱不能为空', trigger: 'blur' },
-        //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-        // ],
-        // gender: [
-        //     { required: true, message: '请选择性别', trigger: 'change' }
-        // ],
-        date: [
-          {
-            required: true,
-            type: 'date',
-            message: '请选择日期',
-            trigger: 'change'
-          }
-        ]
-        // desc: [
-        //   {
-        //     required: true,
-        //     message: "请输入备注",
-        //     trigger: "blur"
-        //   },
-        //   {
-        //     type: "string",
-        //     min: 20,
-        //     message: "最少10个字",
-        //     trigger: "blur"
-        //   }
-        // ]
-      },
-      tableLisr: [
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
+        formValidate: {
+          name: '', // 姓名
+          number: '', // 编号
+          address: '', // 地址
+          manager: '', // 联系人
+          unitPrice: '', // 单价
+          duration: '', // 购买时长
+          payment: '', // 实际支付
+          phone: '', // 电话
+          mail: '', // 邮箱
+          insuranceType: '', // 保险类型
+          gender: '', // 性别
+          date: '', // 日期
+          time: '',
+          desc: '' // 备注
         },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        }
-      ]
-    }
-  },
-  created() {
-    console.log('接收的参数', this.$route.query.type)
-    this.type = this.$route.query.type
-    if (this.type === 10) {
-      axios({
-        method: 'post',
-        url: 'http://47.105.49.81:2222/main/maturitylist10',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
-        data: {
-          pagem: 1,
-          pagesize: 15,
-          iscompany: true
-        }
-      }).then(function (response) {
-        console.log(response)
-      }).catch(function (error) {
-        console.log(error)
-      })
-    } else if (this.type === 15) {
-      axios({
-        method: 'post',
-        url: 'http://47.105.49.81:2222/main/maturitylist15',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
-        data: {
-          pagem: 1,
-          pagesize: 15,
-          iscompany: true
-        }
-      }).then(function (response) {
-        console.log(response)
-      }).catch(function (error) {
-        console.log(error)
-      })
-    }
-  },
-  methods: {
-    changePage(page) {
-      alert(page)
-    },
-    cdet(e, index) {
-      console.log('我的下标是', index, e)
-      this.$router.push({ path: '/insurance/enterprise/cdet' })
-    },
-    cancel() {
-      this.$Message.success('点击取消!')
-    },
-    ok() {
-      this.$Message.success('点击确定!')
-    },
-    changeImg: function (e) {
-      var _this = this
-      var imgLimit = 1024
-      var files = e.target.files
-      var image = new Image()
-      if (files.length > 0) {
-        var dd = 0
-        var timer = setInterval(function () {
-          if (
-            files.item(dd).type !== 'image/png' &&
-              files.item(dd).type !== 'image/jpeg' &&
-              files.item(dd).type !== 'image/jpg'
-          ) {
-            return false
-          }
-
-          if (files.item(dd).size > imgLimit * 102400) {
-            // to do sth
-          } else {
-            image.src = window.URL.createObjectURL(files.item(dd))
-            image.onload = function () {
-              // 默认按比例压缩
-              var w = image.width
-              var h = image.height
-              // scale = w / h
-              // w = 200
-              // h = w / scale
-              // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
-              var quality = 1
-              // 生成canvas
-              var canvas = document.createElement('canvas')
-              var ctx = canvas.getContext('2d')
-              // 创建属性节点
-              var anw = document.createAttribute('width')
-              anw.nodeValue = w
-              var anh = document.createAttribute('height')
-              anh.nodeValue = h
-              canvas.setAttributeNode(anw)
-              canvas.setAttributeNode(anh)
-              ctx.drawImage(image, 0, 0, w, h)
-              var ext = image.src
-                .substring(image.src.lastIndexOf('.') + 1)
-                .toLowerCase() // 图片格式
-              var base64 = canvas.toDataURL('image/' + ext, quality)
-              // 回调函数返回base64的值
-              if (_this.imgArr.length <= 8) {
-                _this.imgArr.unshift('')
-                _this.imgArr.splice(0, 1, base64) // 替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
-                if (_this.imgArr.length >= 9) {
-                  _this.allowAddImg = false
-                }
-              }
+        ruleValidate: {
+          name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+          // address: [
+          //     { required: true, message: "地址不能为空", trigger: "blur" }
+          // ],
+          manager: [
+            {
+              required: true,
+              message: '联系人不能为空',
+              trigger: 'blur'
             }
-          }
-
-          if (dd < files.length - 1) {
-            dd++
+          ],
+          number: [
+            {
+              required: true,
+              message: '合同编号不能为空',
+              trigger: 'blur'
+            }
+          ],
+          unitPrice: [
+            {
+              required: true,
+              message: '成本单价不能为空',
+              trigger: 'blur'
+            }
+          ],
+          duration: [
+            {
+              required: true,
+              message: '购买时长不能为空',
+              trigger: 'blur'
+            }
+          ],
+          payment: [
+            {
+              required: true,
+              message: '实际支付不能为空',
+              trigger: 'blur'
+            }
+          ],
+          phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+          insuranceType: [
+            {
+              required: true,
+              message: '请选择保险类型',
+              trigger: 'change'
+            }
+          ],
+          // mail: [
+          //     { required: true, message: '邮箱不能为空', trigger: 'blur' },
+          //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+          // ],
+          // gender: [
+          //     { required: true, message: '请选择性别', trigger: 'change' }
+          // ],
+          date: [
+            {
+              required: true,
+              type: 'date',
+              message: '请选择日期',
+              trigger: 'change'
+            }
+          ]
+          // desc: [
+          //   {
+          //     required: true,
+          //     message: "请输入备注",
+          //     trigger: "blur"
+          //   },
+          //   {
+          //     type: "string",
+          //     min: 20,
+          //     message: "最少10个字",
+          //     trigger: "blur"
+          //   }
+          // ]
+        },
+        tableLisr: []
+      }
+    },
+    computed: {
+      isAdmin() {
+        return this.$store.state.user.access.indexOf('superadmin') >= 0
+      }
+    },
+    created() {
+      console.log('接收的参数', this.$route.query.type)
+      this.type = this.$route.query.type
+      this.fetchPersonalInfo()
+    },
+    methods: {remove(id) {
+        this.deleteInsuModal = true
+        this.removeId = id
+      },
+      deleteCancel() { },
+      deleteOk() {
+        deleteInsuranceInfo(this.removeId).then((res) => {
+          if (res.data.state === 'true') {
+            this.$Message.success('删除成功')
+            this.fetchPersonalInfo()
           } else {
-            clearInterval(timer)
+            this.$Message.error('删除操作失败')
           }
-        }, 1000)
-      }
-    },
-    deleteImg: function (index) {
-      this.imgArr.splice(index, 1)
-      if (this.imgArr.length < 9) {
-        this.allowAddImg = true
-      }
-    },
-    handleView(index) {
-      this.value1 = index
-      this.visible = true
+        }).catch((err) => {
+          console.error(err)
+          this.$Message.error('请求服务器异常')
+        })
+      },
+      fetchPersonalInfo() {
+        this.loading = true
+        this.tableLisr = []
+        let that = this
+        if (this.type === '10') {
+          axios.request({
+            method: 'post',
+            url: '/main/maturitylist10',
+            data: {
+              page: this.pageNo,
+              pagesize: this.pageSize,
+              iscompany: true
+            }
+          }).then(function (res) {
+            console.log('10返回值', res)
+            for (let i = 0; i < res.data.data.length; i++) {
+              that.tableLisr.push(res.data.data[i])
+              let indexs = res.data.data[i].reminddate.indexOf('T')
+              that.tableLisr[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+            }
+            that.total = res.data.count
+          }).catch(function (error) {
+            console.log(error)
+          })
+        } else if (this.type === '15') {
+          axios.request({
+            method: 'post',
+            url: '/main/maturitylist15',
+            data: {
+              page: this.pageNo,
+              pagesize: this.pageSize,
+              iscompany: true
+            }
+          }).then(function (res) {
+            console.log('15返回值', res)
+            for (let i = 0; i < res.data.data.length; i++) {
+              that.tableLisr.push(res.data.data[i])
+              let indexs = res.data.data[i].reminddate.indexOf('T')
+              that.tableLisr[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+            }
+            that.total = res.data.count
+          }).catch(function (error) {
+            console.log(error)
+          })
+        }
+        this.loading = false
+      },
+      changePage(page) {
+        this.pageNo = page
+        this.fetchPersonalInfo()
+      },
+      cdet(e, index) {
+        console.log('我的下标是', index, e)
+        this.$router.push({ path: '/insurance/enterprise/cdet' })
+      },
+      cancel() {
+        this.$Message.success('点击取消!')
+      },
+      ok() {
+        this.$Message.success('点击确定!')
+      },
+
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

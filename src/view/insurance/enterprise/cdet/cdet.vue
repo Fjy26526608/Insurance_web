@@ -18,12 +18,12 @@
             <DatePicker type="date" placeholder="选择日期" v-model="formValidate2.stime" :disabled="!isChange"></DatePicker>
           </FormItem>
           </Col>
-          <Col span="2" style="text-align: center">结束日期</Col>
+          <!-- <Col span="2" style="text-align: center">结束日期</Col>
           <Col span="2">
           <FormItem prop="dtime">
             <DatePicker type="date" placeholder="选择日期" v-model="formValidate2.etime" :disabled="!isChange"></DatePicker>
           </FormItem>
-          </Col>
+          </Col> -->
         </Row>
       </FormItem>
       <FormItem label="联系人" prop="contactperson">
@@ -32,9 +32,9 @@
       <FormItem label="电话" prop="tel">
         <Input v-model="formValidate2.tel" placeholder="输入公司电话" :disabled="!isChange"></Input>
       </FormItem>
-      <FormItem label="备注" prop="remark">
+      <!-- <FormItem label="备注" prop="remark">
         <Input v-model="formValidate2.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..." :disabled="!isChange"></Input>
-      </FormItem>
+      </FormItem> -->
       </Col>
       <Col span="1" style='text-align:center'>合同照片</Col>
       <Col span="5">
@@ -81,7 +81,7 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="error" @click="remove(row.id)">删除</Button>
+          <Button type="error" @click="remove(row.id)" :disabled="!isAdmin">删除</Button>
         </template>
       </Table>
     </div>
@@ -139,8 +139,8 @@
             </template>
           </div>
           <Upload ref="upload2" :show-upload-list="false" :default-file-list="defaultList2" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048"
-                  :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{companyid:formValidate2.id,token:token}" multiple type="drag"
-                  action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" >
+                  :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{number:formValidate2.number,token:token}" multiple type="drag"
+                  action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;">
             <div style="width: 58px;height:58px;line-height: 58px;">
               <Icon type="ios-camera" size="20"></Icon>
             </div>
@@ -163,9 +163,9 @@
   </Form>
 </template>
 <script>
-  import { getToken,formatDate  } from '@/libs/util'
+  import { getToken, formatDate } from '@/libs/util'
   import axios from '@/libs/api.request'
-  import { getInsuranceTypes,saveOrModifyInsuranceInfo  } from '@/api/insurance'
+  import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
   export default {
     data() {
       return {
@@ -276,11 +276,12 @@
           address: [{ required: true, message: '地址不能为空', trigger: 'blur' }],
           contactperson: [{ required: true, message: '联系人不能为空', trigger: 'blur' }],
           tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+          psize: [{ required: true, message: '公司规模不能为空', trigger: 'blur' }],
           // mail: [{ required: true, message: '邮箱不能为空', trigger: 'blur' },
           //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }],
           // gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
           sdate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }],
-          edate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }],
+          // edate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }],
         },
         insuranceList: [],
         formValidate: {
@@ -294,61 +295,16 @@
           payment: '', // 实际支付
           cost: '' // 总成本
         },
-
         ruleValidate: {
           name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-          number: [
-            {
-              required: true,
-              message: '合同编号不能为空',
-              trigger: 'blur'
-            }
-          ],
-          unitPrice: [
-            {
-              required: true,
-              message: '成本单价不能为空',
-              trigger: 'blur'
-            }
-          ],
-          duration: [
-            {
-              required: true,
-              message: '购买时长不能为空',
-              trigger: 'blur'
-            }
-          ],
-          payment: [
-            {
-              required: true,
-              message: '实际支付不能为空',
-              trigger: 'blur'
-            }
-          ],
+          number: [{ required: true, message: '合同编号不能为空', trigger: 'blur' }],
+          unitPrice: [{ required: true, message: '成本单价不能为空', trigger: 'blur' }],
+          duration: [{ required: true, message: '购买时长不能为空', trigger: 'blur' }],
+          payment: [{ required: true, message: '实际支付不能为空', trigger: 'blur' }],
           phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-          insuranceType: [
-            {
-              type: 'number',
-              required: true,
-              message: '请选择保险类型',
-              trigger: 'blur'
-            }
-          ],
-          date: [
-            {
-              required: true,
-              type: 'date',
-              message: '请选择日期',
-              trigger: 'change'
-            }
-          ],
-          cost: [
-            {
-              required: true,
-              message: '保单总成本不能为空',
-              trigger: 'blur'
-            }
-          ]
+          insuranceType: [{ type: 'number', required: true, message: '请选择保险类型', trigger: 'blur' }],
+          date: [{ required: true, type: 'date', message: '请选择日期', trigger: 'change' }],
+          cost: [{ required: true, message: '保单总成本不能为空', trigger: 'blur' }]
         },
         getValue: ''
       }
@@ -373,24 +329,13 @@
         }
       }).then(function (res) {
         console.log('请求企业信息返回值', res)
-        for (let i = 0; i < res.data.inslist.length; i++) {
-          that.tableLisr.push(res.data.inslist[i].fields)
-          that.tableLisr[i].id = res.data.inslist[i].pk
-          let indexs = res.data.inslist[i].fields.buydate.indexOf('T')
-          that.tableLisr[i].buydate = res.data.inslist[i].fields.buydate.slice(0, indexs)
-          indexs = res.data.inslist[i].fields.maturitydate.indexOf('T')
-          that.tableLisr[i].maturitydate = res.data.inslist[i].fields.maturitydate.slice(0, indexs)
-          indexs = res.data.inslist[i].fields.reminddate.indexOf('T')
-          that.tableLisr[i].reminddate = res.data.inslist[i].fields.reminddate.slice(0, indexs)
-        }
-        console.log('返回处理企业后下表', that.tableLisr)
-        that.total = that.tableLisr.length
         that.formValidate2 = res.data.data[0].fields
         that.formValidate2.id = res.data.data[0].pk
         console.log('返回处理后的企业信息', that.formValidate2)
       }).catch(function (error) {
         console.log(error)
       })
+      this.fetchPersonalInfo()
       axios.request({
         method: 'post',
         url: '/main/getimg',
@@ -459,38 +404,36 @@
         })
       },
       handleSubmit(res) {
-        // this.$refs[res].Validate(valid => {
-        //   if (valid) {
-        let that = this
-        axios.request({
-          method: 'post',
-          url: '/main/addcompany',
-          data: {
-            id: that.formValidate2.id,
-            name: that.formValidate2.name,
-            psize: that.formValidate2.psize,
-            address: that.formValidate2.address,
-            stime: that.formValidate2.stime,
-            etime: that.formValidate2.etime,
-            contactperson: that.formValidate2.contactperson,
-            tel: that.formValidate2.tel,
-            remark: that.formValidate2.remark
+        this.$refs['formValidate2'].validate((valid) => {
+          if (!valid) {
+            return this.changeLoading()
           }
-        }).then(function (res) {
-          console.log('修改', res)
-          if (res.data.state === 'true') {
-            that.$Message.success(res.data.msg)
-          } else {
-            that.$Message.error(res.data.msg)
-          }
-        }).catch(function (error) {
-          console.log(error)
+          let that = this
+          axios.request({
+            method: 'post',
+            url: '/main/addcompany',
+            data: {
+              id: that.formValidate2.id,
+              name: that.formValidate2.name,
+              psize: that.formValidate2.psize,
+              address: that.formValidate2.address,
+              stime: that.formValidate2.stime,
+              etime: that.formValidate2.etime,
+              contactperson: that.formValidate2.contactperson,
+              tel: that.formValidate2.tel,
+              // remark: that.formValidate2.remark
+            }
+          }).then(function (res) {
+            console.log('修改', res)
+            if (res.data.state === 'true') {
+              that.$Message.success(res.data.msg)
+            } else {
+              that.$Message.error(res.data.msg)
+            }
+          }).catch(function (error) {
+            console.log(error)
+          })
         })
-
-        // } else {
-        //   this.$Message.error('数据填写不正确!')
-        // }
-        // })
       },
       handleReset(name) {
         this.$refs[name].resetFields()
@@ -506,7 +449,8 @@
         })
       },
       changePage(page) {
-        // alert(page)
+        this.pageNo = page
+        this.fetchPersonalInfo()
       },
       cancel() {
         this.$Message.success('点击取消!')
@@ -519,6 +463,7 @@
           // 请求服务端添加接口
           const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
           const data = {
+            companyid: this.getValue,
             contractnum: number,
             insured: name,
             tel: phone,
@@ -527,8 +472,7 @@
             month: duration,
             policyamount: unitPrice,
             cost,
-            actualpayment: payment,
-            companyid: this.getValue
+            actualpayment: payment
           }
           console.log(data)
           saveOrModifyInsuranceInfo(data).then((res) => {
@@ -548,6 +492,36 @@
             this.changeLoading()
           })
         })
+      },
+      fetchPersonalInfo() {
+        this.loading = true
+        this.tableLisr = []
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/inslist',
+          data: {
+            page: this.pageNo,
+            pagesize: this.pageSize,
+            instypeid: this.typeId,
+            companyid: this.getValue
+          }
+        }).then(function (res) {
+          for (let i = 0; i < res.data.data.length; i++) {
+            that.tableLisr.push(res.data.data[i].fields)
+            that.tableLisr[i].id = res.data.data[i].pk
+            let indexs = res.data.data[i].fields.buydate.indexOf('T')
+            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
+            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
+            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
+            indexs = res.data.data[i].fields.reminddate.indexOf('T')
+            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
+          }
+          that.total = res.data.count
+        }).catch(function (error) {
+          console.log(error)
+        })
+        this.loading = false
       },
       handleSuccess(res, file) {
         console.log('上传后返回信息', res)

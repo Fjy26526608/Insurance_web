@@ -291,10 +291,6 @@ export default {
       axios.request({
         method: 'post',
         url: '/main/delinstype',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
         data: {
           id: that.tableLisr[this.remov].id
         }

@@ -391,10 +391,6 @@
         axios.request({
           method: 'post',
           url: '/main/inslist',
-          headers: {
-            token: getToken(),
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-          },
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,
@@ -404,6 +400,12 @@
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
             that.tableLisr[i].id = res.data.data[i].pk
+            let indexs = res.data.data[i].fields.buydate.indexOf('T')
+            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
+            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
+            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
+            indexs = res.data.data[i].fields.reminddate.indexOf('T')
+            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
           }
           that.total = res.data.count
         }).catch(function (error) {

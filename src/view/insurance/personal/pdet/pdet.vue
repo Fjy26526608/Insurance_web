@@ -53,8 +53,8 @@
         </template>
       </div>
       <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError"
-              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{insid:id,token:token}" multiple type="drag"
-              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" :disabled="!isChange">
+              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{number:formValidate.number,token:token}" multiple type="drag" action="http://47.105.49.81:2222/api/main/updataimg"
+              style="display: inline-block;width:58px;" :disabled="!isChange">
         <div style="width: 58px;height:58px;line-height: 58px;">
           <Icon type="ios-camera" size="20"></Icon>
         </div>
@@ -86,7 +86,7 @@
     data() {
       return {
         id: '',
-        token:'',
+        token: '',
         value1: 0,
         visible: false,
         uploadList: [],
@@ -176,7 +176,7 @@
     },
     created() {
       this.id = this.$route.query.id
-      this.token=getToken()
+      this.token = getToken()
       // 查询保险类型
       this.getInsuranceTypes()
       // 查询保险详情

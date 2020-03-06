@@ -53,7 +53,7 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" :loading="loading" :row-class-name="rowClassName" border highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+      <Table size="large" :loading="loading" :row-class-name="rowClassName" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
@@ -377,67 +377,6 @@
           console.log(error)
         })
         this.loading = false
-      },
-      changeImg: function (e) {
-        var _this = this
-        var imgLimit = 1024
-        var files = e.target.files
-        var image = new Image()
-        if (files.length > 0) {
-          var dd = 0
-          var timer = setInterval(function () {
-            if (
-              files.item(dd).type !== 'image/png' &&
-              files.item(dd).type !== 'image/jpeg' &&
-              files.item(dd).type !== 'image/jpg'
-            ) {
-              return false
-            }
-            if (files.item(dd).size > imgLimit * 102400) {
-              // to do sth
-            } else {
-              image.src = window.URL.createObjectURL(files.item(dd))
-              image.onload = function () {
-                // 默认按比例压缩
-                var w = image.width
-                var h = image.height
-                // scale = w / h
-                // w = 200
-                // h = w / scale
-                // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
-                var quality = 1
-                // 生成canvas
-                var canvas = document.createElement('canvas')
-                var ctx = canvas.getContext('2d')
-                // 创建属性节点
-                var anw = document.createAttribute('width')
-                anw.nodeValue = w
-                var anh = document.createAttribute('height')
-                anh.nodeValue = h
-                canvas.setAttributeNode(anw)
-                canvas.setAttributeNode(anh)
-                ctx.drawImage(image, 0, 0, w, h)
-                var ext = image.src
-                  .substring(image.src.lastIndexOf('.') + 1)
-                  .toLowerCase() // 图片格式
-                var base64 = canvas.toDataURL('image/' + ext, quality)
-                // 回调函数返回base64的值
-                if (_this.imgArr.length <= 8) {
-                  _this.imgArr.unshift('')
-                  _this.imgArr.splice(0, 1, base64) // 替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
-                  if (_this.imgArr.length >= 9) {
-                    _this.allowAddImg = false
-                  }
-                }
-              }
-            }
-            if (dd < files.length - 1) {
-              dd++
-            } else {
-              clearInterval(timer)
-            }
-          }, 1000)
-        }
       },
       deleteImg: function (index) {
         this.imgArr.splice(index, 1)
