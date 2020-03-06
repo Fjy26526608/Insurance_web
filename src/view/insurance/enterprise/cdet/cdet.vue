@@ -13,7 +13,7 @@
       </FormItem>
       <FormItem label="合同日期">
         <Row>
-          <Col span="2">
+          <Col span="5">
           <FormItem prop="stime">
             <DatePicker type="date" placeholder="选择日期" v-model="formValidate2.stime" :disabled="!isChange"></DatePicker>
           </FormItem>
@@ -81,7 +81,8 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="error" @click="remove(row.id)" :disabled="!isAdmin">删除</Button>
+          <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button>
+          <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
         </template>
       </Table>
     </div>
@@ -204,70 +205,80 @@
         pageNo: 1,
         token: '',
         columns: [
-          {
-            align: 'center',
-            tooltip: true,
-            title: '合同编号',
-            key: 'contractnum'
-          },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '合同编号',
+          //   key: 'contractnum'
+          // },
           {
             align: 'center',
             tooltip: true,
             title: '名称',
-            key: 'insured'
+            key: 'insured',
+            width: 90
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
-            key: 'insurancetypename'
+            key: 'insurancetypename',
+            width: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
-            key: 'buydate'
+            key: 'buydate',
+            width: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '金额',
-            key: 'je'
+            key: 'je',
+            width: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
-            key: 'maturitydate'
+            key: 'maturitydate',
+            width: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '手续费',
-            key: 'cost'
+            key: 'cost',
+            width: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '实际支付',
-            key: 'actualpayment'
+            key: 'actualpayment',
+            width: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '已使用',
-            key: 'alreadyused'
+            key: 'alreadyused',
+            width: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '剩余',
-            key: 'balance'
+            key: 'balance',
+            width: 100
           },
           {
             title: '操作',
             slot: 'action',
-            align: 'center'
+            align: 'center',
+            width: 170
           }
         ],
         tableLisr: [],
@@ -312,6 +323,9 @@
     computed: {
       isAdmin() {
         return this.$store.state.user.access.indexOf('superadmin') >= 0
+      },
+      iskj() {
+        return this.$store.state.user.access.indexOf('admin') >= 0
       }
     },
     created() {
@@ -580,6 +594,23 @@
             this.visible = true
           }
         }
+      }, 
+      shen(id) {
+        this.shModal = true
+        this.shId = id
+      },
+      shenOk() {
+        // delCompany(this.removeId).then((res) => {
+        //   if (res.data.state === 'true') {
+        this.$Message.success('删除成功')
+        //     this.fetchCompanyList()
+        //   } else {
+        //     this.$Message.error('删除操作失败')
+        //   }
+        // }).catch((err) => {
+        //   console.error(err)
+        //   this.$Message.error('请求服务器异常')
+        // })
       }
     },
     mounted() {

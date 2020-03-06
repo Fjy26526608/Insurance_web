@@ -36,7 +36,7 @@
       <i-col span="12" class="mt20"><Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" /></i-col>
       <i-col span="24"></i-col> -->
       <i-col span="12" class="mt20">
-        <Button type="primary" @click="showAddModal = true" class="mr15">新增企业</Button>
+        <Button type="primary" size="large" @click="showAddModal = true" class="mr15">新增企业</Button>
         <!-- <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button> -->
       </i-col>
@@ -288,43 +288,50 @@
             title: '名称',
             key: 'name',
             align: 'center',
-            tooltip: true
-          },
-          {
-            title: '公司规模',
-            key: 'psize',
-            align: 'center',
-            tooltip: true
+            tooltip: true,
+            width:240
           },
           {
             title: '地址',
             key: 'addrss',
             align: 'center',
-            tooltip: true
+            tooltip: true,
+            width:240
           },
+          // {
+          //   title: '公司规模',
+          //   key: 'psize',
+          //   align: 'center',
+          //   tooltip: true,
+          //   width:95
+          // },
           {
             title: '合同起始时间',
             key: 'stime',
             align: 'center',
-            tooltip: true
+            tooltip: true,
+            width:130
           },
           {
             title: '合同结束时间',
             key: 'etime',
             align: 'center',
-            tooltip: true
+            tooltip: true,
+            width:130
           },
           {
             title: '负责人名字',
             key: 'contactperson',
             align: 'center',
-            tooltip: true
+            tooltip: true,
+            width:110
           },
           {
             title: '电话',
             key: 'tel',
             align: 'center',
-            tooltip: true
+            tooltip: true,
+            width:130
           },
           // {
           //   title: '备注',
@@ -335,7 +342,8 @@
           {
             title: '操作',
             slot: 'action',
-            align: 'center'
+            align: 'center',
+            width:170
           }
           // {
           //   title: '剩余',

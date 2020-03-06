@@ -1,7 +1,7 @@
 <template>
   <div>
     <Row :gutter="20">
-      <!-- <i-col span="5">
+      <i-col span="5">
         <Select class="typeSelList" v-model="typeObj">
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
@@ -26,9 +26,9 @@
       <i-col span="12" class="mt20">
         <Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" />
       </i-col>
-      <i-col span="24"></i-col> -->
+      <i-col span="24"></i-col>
       <i-col span="12" class="mt20">
-        <Button type="primary" @click="showAddModal = true" class="mr15">新增</Button>
+        <Button type="primary"  size="large" @click="showAddModal = true" class="mr15">新增</Button>
         <!-- <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button> -->
       </i-col>
@@ -50,7 +50,8 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="error" @click="remove(row.id)">删除</Button>
+          <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button>
+          <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
         </template>
       </Table>
     </div>
@@ -73,14 +74,14 @@
             <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="合同日期">
-          <Row>
-            <Col span="5">
-            <FormItem prop="date">
+        <FormItem label="合同日期" prop="date">
+          <!-- <Row>
+            <Col span="15">
+            <FormItem prop="date"> -->
               <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-            </FormItem>
+            <!-- </FormItem>
             </Col>
-          </Row>
+          </Row> -->
         </FormItem>
         <FormItem label="成本单价" prop="unitPrice">
           <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）"></Input>
@@ -140,6 +141,8 @@
     name: 'personal',
     data() {
       return {
+        deleteCompanyModal: false,
+        shId: '',
         deleteInsuModal: false,
         removeId: '',
         value1: 0,
@@ -219,70 +222,80 @@
           }
         ],
         columns: [
-          {
-            align: 'center',
-            tooltip: true,
-            title: '合同编号',
-            key: 'contractnum'
-          },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '合同编号',
+          //   key: 'contractnum'
+          // },
           {
             align: 'center',
             tooltip: true,
             title: '名字',
-            key: 'insured'
+            key: 'insured',
+            width:90
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
-            key: 'insurancetypename'
+            key: 'insurancetypename',
+            width:130
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
-            key: 'buydate'
+            key: 'buydate',
+            width:130
           },
           {
             align: 'center',
             tooltip: true,
             title: '金额',
-            key: 'je'
+            key: 'je',
+            width:100
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
-            key: 'maturitydate'
+            key: 'maturitydate',
+            width:130
           },
           {
             align: 'center',
             tooltip: true,
             title: '手续费',
-            key: 'cost'
+            key: 'cost',
+            width:100
           },
           {
             align: 'center',
             tooltip: true,
             title: '实际支付',
-            key: 'actualpayment'
+            key: 'actualpayment',
+            width:100
           },
           {
             align: 'center',
             tooltip: true,
             title: '已使用',
-            key: 'alreadyused'
+            key: 'alreadyused',
+            width:100
           },
           {
             align: 'center',
             tooltip: true,
             title: '剩余',
-            key: 'balance'
+            key: 'balance',
+            width:100
           },
           {
             title: '操作',
             slot: 'action',
-            align: 'center'
+            align: 'center',
+            width:170
           }
         ],
         tableLisr: [],
@@ -355,6 +368,14 @@
             }
           ]
         }
+      }
+    },
+    computed: {
+      isAdmin() {
+        return this.$store.state.user.access.indexOf('superadmin') >= 0
+      },
+      iskj() {
+        return this.$store.state.user.access.indexOf('admin') >= 0
       }
     },
     created() {
@@ -543,6 +564,23 @@
             this.visible = true
           }
         }
+      },
+      shen(id) {
+        this.shModal = true
+        this.shId = id
+      },
+      shenOk() {
+        // delCompany(this.removeId).then((res) => {
+        //   if (res.data.state === 'true') {
+        this.$Message.success('删除成功')
+        //     this.fetchCompanyList()
+        //   } else {
+        //     this.$Message.error('删除操作失败')
+        //   }
+        // }).catch((err) => {
+        //   console.error(err)
+        //   this.$Message.error('请求服务器异常')
+        // })
       }
     },
     mounted() {
