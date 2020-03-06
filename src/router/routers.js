@@ -148,38 +148,28 @@ export default [
       }
     ]
   },
-  // {
-  //   path: '/personnel',
-  //   name: '_personnel',
-  //   meta: {
-  //     icon: 'md-albums',
-  //     title: '人事管理',
-  //     showAlways: true
-  //   },
-  //   component: Main,
-  //   redirect: { name: 'personnel' },
-  //   children: [
-  //     {
-  //       path: 'personnel',
-  //       name: 'personnel',
-  //       meta: {
-  //         icon: 'md-brush',
-  //         title: '人事'
-  //       },
-  //       component: () => import('@/view/personnel/index/index.vue')
-  //     },
-  //     {
-  //       path: 'typel',
-  //       name: '保险类型',
-  //       meta: {
-  //         access: ['superadmin'],
-  //         icon: 'md-brush',
-  //         title: '保险类型'
-  //       },
-  //       component: () => import('@/view/personnel/typel/tpyel.vue')
-  //     }
-  //   ]
-  // },
+  {
+    path: '/personnel',
+    name: '统计管理',
+    meta: {
+      icon: 'md-albums',
+      title: '统计管理',
+      showAlways: true
+    },
+    component: Main,
+    redirect: { name: 'personnel' },
+    children: [
+      {
+        path: 'example',
+        name: '报表',
+        meta: {
+          icon: 'md-brush',
+          title: '报表'
+        },
+        component: () => import('@/view/single-page/home/home.vue')
+      }
+    ]
+  },
   {
     path: '/user',
     name: '_user',

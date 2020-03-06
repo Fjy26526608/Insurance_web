@@ -36,7 +36,7 @@
       <i-col span="12" class="mt20"><Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" /></i-col>
       <i-col span="24"></i-col> -->
       <i-col span="12" class="mt20">
-        <Button type="primary" @click="showAddModal = true" class="mr15">新增</Button>
+        <Button type="primary" @click="showAddModal = true" class="mr15">新增企业</Button>
         <!-- <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button> -->
       </i-col>
@@ -58,7 +58,8 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="error" v-if="isAdmin" @click="remove(row.id)">删除</Button>
+          <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button>
+          <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
         </template>
       </Table>
     </div>
@@ -97,13 +98,16 @@
         <FormItem label="电话" prop="phone">
           <Input v-model="formValidate.phone" placeholder="输入公司电话"></Input>
         </FormItem>
-        <FormItem label="备注" prop="desc">
+        <!-- <FormItem label="备注" prop="desc">
           <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."></Input>
-        </FormItem>
+        </FormItem> -->
       </Form>
     </Modal>
     <Modal v-model="deleteCompanyModal" title='警告！' @on-ok="deleteOk" @on-cancel="deleteCancel">
       <p>删除后不可恢复，确认删除吗？</p>
+    </Modal>
+    <Modal v-model="shModal" title='警告！' @on-ok="shenOk" @on-cancel="cancel">
+      <p>确定通过审核吗？</p>
     </Modal>
   </div>
 </template>
@@ -117,6 +121,8 @@
     data() {
       return {
         deleteCompanyModal: false,
+        shId: '',
+        shModal: false,
         removeId: '',
         value1: 0,
         imgData: '',
@@ -169,7 +175,7 @@
         ruleValidate: {
           name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
           address: [
-              { required: true, message: "地址不能为空", trigger: "blur" }
+            { required: true, message: "地址不能为空", trigger: "blur" }
           ],
           manager: [
             {
@@ -320,12 +326,12 @@
             align: 'center',
             tooltip: true
           },
-          {
-            title: '备注',
-            key: 'remark',
-            align: 'center',
-            tooltip: true
-          },
+          // {
+          //   title: '备注',
+          //   key: 'remark',
+          //   align: 'center',
+          //   tooltip: true
+          // },
           {
             title: '操作',
             slot: 'action',
@@ -344,7 +350,10 @@
     },
     computed: {
       isAdmin() {
-        return this.$store.state.user.access.indexOf('superadmin') >= 0 
+        return this.$store.state.user.access.indexOf('superadmin') >= 0
+      },
+      iskj() {
+        return this.$store.state.user.access.indexOf('admin') >= 0
       }
     },
     created() {
@@ -364,11 +373,16 @@
             pagesize: this.pageSize
           }
         }).then(function (res) {
+          console.log('********',res)
           if (res.data.state === 'true') {
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {
               that.tableLisr.push(res.data.data[i].fields)
               that.tableLisr[i].id = res.data.data[i].pk
+              let indexs = res.data.data[i].fields.stime.indexOf('T')
+              that.tableLisr[i].stime = res.data.data[i].fields.stime.slice(0, indexs)
+              indexs = res.data.data[i].fields.etime.indexOf('T')
+              that.tableLisr[i].etime = res.data.data[i].fields.etime.slice(0, indexs)
             }
           } else {
             that.$Message.error(res.data.msg)
@@ -419,7 +433,7 @@
             etime: stopDate,
             contactperson: manager,
             tel: phone,
-            remark: desc
+            // remark: desc
           }
           addCompany(data).then((res) => {
             if (res.data.state === 'true') {
@@ -454,11 +468,15 @@
           query: { value: e.id }
         })
       },
+      shen(id) {
+        this.shModal = true
+        this.shId = id
+      },
       remove(id) {
         this.deleteCompanyModal = true
         this.removeId = id
       },
-      deleteCancel() {},
+      deleteCancel() { },
       deleteOk() {
         delCompany(this.removeId).then((res) => {
           if (res.data.state === 'true') {
@@ -471,6 +489,19 @@
           console.error(err)
           this.$Message.error('请求服务器异常')
         })
+      },
+      shenOk() {
+        // delCompany(this.removeId).then((res) => {
+        //   if (res.data.state === 'true') {
+        this.$Message.success('删除成功')
+        //     this.fetchCompanyList()
+        //   } else {
+        //     this.$Message.error('删除操作失败')
+        //   }
+        // }).catch((err) => {
+        //   console.error(err)
+        //   this.$Message.error('请求服务器异常')
+        // })
       }
     }
   }
