@@ -71,10 +71,10 @@ export default [
         children: [
           {
             path: 'allDatec',
-            name: '近期到期',
+            name: '企业近期到期',
             meta: {
               icon: 'md-funnel',
-              title: '近期到期',
+              title: '企业近期到期',
               hideInMenu: true
             },
             component: () =>
@@ -116,10 +116,10 @@ export default [
         children: [
           {
             path: 'allDatep',
-            name: '近期到期',
+            name: '个人近期到期',
             meta: {
               icon: 'md-funnel',
-              title: '近期到期',
+              title: '个人近期到期',
               hideInMenu: true
             },
             component: () =>
@@ -632,13 +632,5 @@ export default [
       hideInMenu: true
     },
     component: () => import('@/view/error-page/500.vue')
-  },
-  {
-    path: '*',
-    name: 'error_404',
-    meta: {
-      hideInMenu: true
-    },
-    component: () => import('@/view/error-page/404.vue')
   }
 ]

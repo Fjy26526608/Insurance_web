@@ -49,7 +49,6 @@ import { getNewTagList, routeEqual, getMenuByRouter, copyArray } from '@/libs/ut
 import routers from '@/router/routers'
 import minLogo from '@/assets/images/logo-min.jpg'
 import maxLogo from '@/assets/images/logo.jpg'
-import Router from 'vue-router'
 import Main from '@/components/main'
 import parentView from '@/components/parent-view'
 import './main.less'
@@ -105,13 +104,10 @@ export default {
     }
   },
   created() {
+    const R = require('ramda')
+    // 使用一份默认路由表的拷贝进行操作
+    let routersCopy = R.clone(routers)
     this.fetchInsuranceTypes().then(() => {
-      // 重置当前路由表为默认静态路由
-      this.$router.match = new Router({ routers, mode: 'history' }).match
-      console.log(routers)
-      // 使用一份默认路由表的拷贝进行操作
-      let routersCopy = copyArray(routers)
-      console.log(routersCopy)
       for (let i = 0; i < routersCopy.length; i++) {
         let item = routersCopy[i]
         if (item.name === 'insurance') {
@@ -135,42 +131,6 @@ export default {
                   component: () =>
                     import('@/view/insurance/enterprise/index/index.vue')
                 })
-                this.$router.addRoutes([{
-                  path: '/insurance',
-                  name: 'insurance',
-                  meta: {
-                    icon: 'md-menu',
-                    title: '保险管理',
-                    showAlways: true
-                  },
-                  component: Main,
-                  children: [
-                    {
-                      path: 'enterprise',
-                      name: '_enterprise',
-                      meta: {
-                        icon: 'md-briefcase',
-                        showAlways: true,
-                        title: '企业'
-                      },
-                      component: parentView,
-                      redirect: { name: 'enterprise' },
-                      children: [{
-                        path: 'index/' + type.id,
-                        name: type.name,
-                        meta: {
-                          icon: 'md-options',
-                          title: type.name
-                        },
-                        props: {
-                          typeId: type.id
-                        },
-                        component: () =>
-                          import('@/view/insurance/enterprise/index/index.vue')
-                      }]
-                    }
-                  ]
-                }])
               }
             } else if (innerRoute.name === '_personal') {
               let personalChildren = innerRoute.children
@@ -189,50 +149,18 @@ export default {
                   component: () =>
                     import('@/view/insurance/personal/index/index')
                 })
-                this.$router.addRoutes([{
-                  path: '/insurance',
-                  name: 'insurance',
-                  meta: {
-                    icon: 'md-menu',
-                    title: '保险管理',
-                    showAlways: true
-                  },
-                  component: Main,
-                  children: [
-                    {
-                      path: 'personal',
-                      name: '_personal',
-                      meta: {
-                        access: [],
-                        icon: 'ios-people-outline',
-                        showAlways: true,
-                        title: '个人'
-                      },
-                      redirect: { name: 'personal' },
-                      component: parentView,
-                      children: [{
-                        path: 'index/' + type.id,
-                        name: type.name,
-                        meta: {
-                          icon: 'md-options',
-                          title: type.name
-                        },
-                        props: {
-                          typeId: type.id
-                        },
-                        component: () =>
-                          import('@/view/insurance/personal/index/index')
-                      }]
-                    }
-                  ]
-                }])
               }
             }
           }
         }
       }
+      this.$router.addRoutes(routersCopy)
+      this.$router.options.routes = routersCopy
       this.menuList = getMenuByRouter(routersCopy, this.$store.state.user.access)
     })
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {})
   },
   methods: {
     ...mapMutations([
@@ -256,25 +184,14 @@ export default {
         params = route.params
         query = route.query
       }
-      // 根据name查询对应的路由参数，如果存在则拼接上
-      const insuranceRoute = this.insuranceTypesRoutes.find(r => r.name === name)
-      if (insuranceRoute) {
-        this.currentTitle = name
-        const { path, params } = insuranceRoute
-        this.$router.push({
-          path,
-          query: params
-        })
-      } else {
-        if (name.indexOf('isTurnByHref_') > -1) {
-          window.open(name.split('_')[1])
-        }
-        this.$router.push({
-          name,
-          params,
-          query
-        })
+      if (name.indexOf('isTurnByHref_') > -1) {
+        window.open(name.split('_')[1])
       }
+      this.$router.push({
+        name,
+        params,
+        query
+      })
     },
     handleCollapsedChange (state) {
       this.collapsed = state

@@ -18,9 +18,17 @@
 <script>
 import LoginForm from '_c/login-form'
 import { mapActions } from 'vuex'
+import routers from '@/router/routers'
+import Router from 'vue-router'
 export default {
   components: {
     LoginForm
+  },
+  created() {
+    // 重置路由
+    this.$router.options.routes = routers
+    // 重置当前路由表为默认静态路由
+    this.$router.match = new Router({ routers, mode: 'history' }).match
   },
   methods: {
     ...mapActions(['handleLogin', 'getUserInfo']),

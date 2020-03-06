@@ -397,11 +397,12 @@
       next(vm => {
         vm.getInsuranceTypes()
         vm.fetchPersonalInfo()
-        vm.token = vm.getToken()
+        vm.token = getToken()
       })
     },
     methods: {
       getInsuranceTypes() {
+        this.insuranceList = []
         getInsuranceTypes().then((res) => {
           if (res.data.state === 'true') {
             const types = res.data.data
