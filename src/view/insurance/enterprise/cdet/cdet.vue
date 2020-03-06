@@ -216,69 +216,70 @@
             tooltip: true,
             title: '名称',
             key: 'insured',
-            width: 90
+            minWidth: 90
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
             key: 'insurancetypename',
-            width: 130
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
             key: 'buydate',
-            width: 130
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '金额',
             key: 'je',
-            width: 100
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
             key: 'maturitydate',
-            width: 130
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '手续费',
             key: 'cost',
-            width: 100
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '实际支付',
             key: 'actualpayment',
-            width: 100
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '已使用',
             key: 'alreadyused',
-            width: 100
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '剩余',
             key: 'balance',
-            width: 100
+            minWidth: 100
           },
           {
             title: '操作',
             slot: 'action',
             align: 'center',
-            width: 170
+            minWidth: 170,
+            maxWidth:170
           }
         ],
         tableLisr: [],

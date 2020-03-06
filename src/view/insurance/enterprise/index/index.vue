@@ -305,14 +305,14 @@
             key: 'name',
             align: 'center',
             tooltip: true,
-            width:240
+            minWidth:240
           },
           {
             title: '地址',
             key: 'addrss',
             align: 'center',
             tooltip: true,
-            width:240
+            minWidth:240
           },
           // {
           //   title: '公司规模',
@@ -326,28 +326,32 @@
             key: 'stime',
             align: 'center',
             tooltip: true,
-            width:130
+            minWidth:130,
+            maxWidth:130
           },
           {
             title: '合同结束时间',
             key: 'etime',
             align: 'center',
             tooltip: true,
-            width:130
+            minWidth:130,
+            maxWidth:130
           },
           {
             title: '负责人名字',
             key: 'contactperson',
             align: 'center',
             tooltip: true,
-            width:110
+            minWidth:110,
+            maxWidth:130
           },
           {
             title: '电话',
             key: 'tel',
             align: 'center',
             tooltip: true,
-            width:130
+            minWidth:130,
+            maxWidth:130
           },
           // {
           //   title: '备注',
@@ -359,7 +363,8 @@
             title: '操作',
             slot: 'action',
             align: 'center',
-            width:170
+            minWidth:170,
+            maxWidth:170
           }
           // {
           //   title: '剩余',
