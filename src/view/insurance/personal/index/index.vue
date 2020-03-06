@@ -55,11 +55,9 @@
       </Table>
     </div>
     <div class="text-right pageList">
-      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total
-        show-elevator />
+      <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false"
-      :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
           <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
@@ -78,9 +76,9 @@
         <FormItem label="合同日期">
           <Row>
             <Col span="5">
-              <FormItem prop="date">
-                <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-              </FormItem>
+            <FormItem prop="date">
+              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+            </FormItem>
             </Col>
           </Row>
         </FormItem>
@@ -97,30 +95,34 @@
           <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）"></Input>
         </FormItem>
         <FormItem label="合同文件" prop="desc">
-          <div class="com-upload-img">
-            <div class="img_group">
-              <div class="img_box" v-if="allowAddImg">
-                <input type="file" accept="image/*" multiple="multiple" @change="changeImg($event)">
-                <div class="filter"></div>
+          <div class="demo-upload-list" v-for="item in uploadList">
+            <template v-if="item.status === 'finished'">
+              <img :src="item.url">
+              <div class="demo-upload-list-cover">
+                <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
               </div>
-              <div class="demo-upload-list" v-for="(item,index) in imgArr" :key='index'>
-                <img :src="item" alt="">
-                <div class="demo-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(index)"></Icon>
-                  <Icon type="ios-trash-outline" @click.native="deleteImg(index)"></Icon>
-                </div>
-              </div>
-            </div>
-            <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-              <Carousel v-model="value1" loop>
-                <CarouselItem v-for='(img,index) in imgArr' :key='index'>
-                  <div class="demo-carousel">
-                    <img :src="img" style="width: 100%" alt="">
-                  </div>
-                </CarouselItem>
-              </Carousel>
-            </Modal>
+            </template>
+            <template v-else>
+              <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+            </template>
           </div>
+          <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048"
+                  :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{token:token}" multiple type="drag"
+                  action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;">
+            <div style="width: 58px;height:58px;line-height: 58px;">
+              <Icon type="ios-camera" size="20"></Icon>
+            </div>
+          </Upload>
+          <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+            <Carousel v-if="visible" v-model="value1" loop>
+              <CarouselItem v-for='(img,index) in uploadList' :key='index'>
+                <div class="demo-carousel">
+                  <img :src="img.url" style="width: 100%" alt="">
+                </div>
+              </CarouselItem>
+            </Carousel>
+          </Modal>
         </FormItem>
       </Form>
     </Modal>
@@ -131,429 +133,422 @@
 </template>
 
 <script>
-import { getToken, formatDate } from '@/libs/util'
-import axios from '@/libs/api.request'
-import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
-export default {
-  name: 'personal',
-  data() {
-    return {
-      deleteInsuModal: false,
-      removeId: '',
-      value1: 0,
-      imgData: '',
-      imgArr: [],
-      imgSrc: '',
-      visible: false,
-      allowAddImg: true,
-      total: 0,
-      pageSize: 15,
-      pageNo: 1,
-      typeList: [],
-      typeObj: 1,
-      statusList: [
-        {
-          label: '全部',
-          value: 0
-        },
-        {
-          label: '启动',
-          value: 1
-        },
-        {
-          label: '暂停',
-          value: 2
-        }
-      ],
-      statusObj: null,
-      queryList: [
-        {
-          label: '按名称：',
-          value: 1
-        },
-        {
-          label: '按编号：',
-          value: 2
-        }
-      ],
-      queryObj: 1,
-      queryStr: '',
-      sortingList: [
-        {
-          label: '序号正序',
-          value: 1
-        },
-        {
-          label: '序号倒叙',
-          value: 2
-        },
-        {
-          label: '日期正叙',
-          value: 3
-        },
-        {
-          label: '日期倒叙',
-          value: 4
-        }
-      ],
-      sortingObj: 1,
-      pageList: [
-        {
-          label: '10',
-          value: 10
-        },
-        {
-          label: '20',
-          value: 20
-        },
-        {
-          label: '50',
-          value: 50
-        },
-        {
-          label: '100',
-          value: 100
-        }
-      ],
-      columns: [
-        {
-          align: 'center',
-          tooltip: true,
-          title: '合同编号',
-          key: 'contractnum'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '名字',
-          key: 'insured'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '保险类型',
-          key: 'insurancetypename'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '购买日期',
-          key: 'buydate'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '金额',
-          key: 'je'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '到期日期',
-          key: 'maturitydate'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '手续费',
-          key: 'cost'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '实际支付',
-          key: 'actualpayment'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '已使用',
-          key: 'alreadyused'
-        },
-        {
-          align: 'center',
-          tooltip: true,
-          title: '剩余',
-          key: 'balance'
-        },
-        {
-          title: '操作',
-          slot: 'action',
-          align: 'center'
-        }
-      ],
-      tableLisr: [],
-      showAddModal: false,
-      modalLoading: true,
-      insuranceList: [],
-      formValidate: {
-        number: '', // 编号
-        name: '', // 姓名
-        phone: '', // 电话
-        insuranceType: '', // 保险类型
-        date: '', // 日期
-        unitPrice: '', // 单价
-        duration: '', // 购买时长
-        payment: '', // 实际支付
-        cost: '' // 总成本
-      },
-      ruleValidate: {
-        name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-        number: [
+  import { getToken, formatDate } from '@/libs/util'
+  import axios from '@/libs/api.request'
+  import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
+  export default {
+    name: 'personal',
+    data() {
+      return {
+        deleteInsuModal: false,
+        removeId: '',
+        value1: 0,
+        token: '',
+        defaultList: [],
+        imgName: '',
+        visible: false,
+        uploadList: [],
+        allowAddImg: true,
+        total: 0,
+        pageSize: 15,
+        pageNo: 1,
+        typeList: [],
+        typeObj: 1,
+        statusList: [
           {
-            required: true,
-            message: '合同编号不能为空',
-            trigger: 'blur'
+            label: '全部',
+            value: 0
+          },
+          {
+            label: '启动',
+            value: 1
+          },
+          {
+            label: '暂停',
+            value: 2
           }
         ],
-        unitPrice: [
+        statusObj: null,
+        queryList: [
           {
-            required: true,
-            message: '成本单价不能为空',
-            trigger: 'blur'
+            label: '按名称：',
+            value: 1
+          },
+          {
+            label: '按编号：',
+            value: 2
           }
         ],
-        duration: [
+        queryObj: 1,
+        queryStr: '',
+        sortingList: [
           {
-            required: true,
-            message: '购买时长不能为空',
-            trigger: 'blur'
+            label: '序号正序',
+            value: 1
+          },
+          {
+            label: '序号倒叙',
+            value: 2
+          },
+          {
+            label: '日期正叙',
+            value: 3
+          },
+          {
+            label: '日期倒叙',
+            value: 4
           }
         ],
-        payment: [
+        sortingObj: 1,
+        pageList: [
           {
-            required: true,
-            message: '实际支付不能为空',
-            trigger: 'blur'
+            label: '10',
+            value: 10
+          },
+          {
+            label: '20',
+            value: 20
+          },
+          {
+            label: '50',
+            value: 50
+          },
+          {
+            label: '100',
+            value: 100
           }
         ],
-        phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-        insuranceType: [
+        columns: [
           {
-            type: 'number',
-            required: true,
-            message: '请选择保险类型',
-            trigger: 'blur'
+            align: 'center',
+            tooltip: true,
+            title: '合同编号',
+            key: 'contractnum'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '名字',
+            key: 'insured'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '保险类型',
+            key: 'insurancetypename'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '购买日期',
+            key: 'buydate'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '金额',
+            key: 'je'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '到期日期',
+            key: 'maturitydate'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '手续费',
+            key: 'cost'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '实际支付',
+            key: 'actualpayment'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '已使用',
+            key: 'alreadyused'
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '剩余',
+            key: 'balance'
+          },
+          {
+            title: '操作',
+            slot: 'action',
+            align: 'center'
           }
         ],
-        date: [
-          {
-            required: true,
-            type: 'date',
-            message: '请选择日期',
-            trigger: 'change'
-          }
-        ],
-        cost: [
-          {
-            required: true,
-            message: '保单总成本不能为空',
-            trigger: 'blur'
-          }
-        ]
-      }
-    }
-  },
-  created() {
-    console.log('完成创建')
-    // 查询保险类型
-    this.getInsuranceTypes()
-    this.fetchPersonalInfo()
-  },
-  methods: {
-    getInsuranceTypes() {
-      getInsuranceTypes().then((res) => {
-        if (res.data.state === 'true') {
-          const types = res.data.data
-          for (const type of types) {
-            if (!type.fields.iscompany) {
-              this.insuranceList.push({
-                value: type.pk,
-                label: type.fields.name
-              })
+        tableLisr: [],
+        showAddModal: false,
+        modalLoading: true,
+        insuranceList: [],
+        formValidate: {
+          number: '', // 编号
+          name: '', // 姓名
+          phone: '', // 电话
+          insuranceType: '', // 保险类型
+          date: '', // 日期
+          unitPrice: '', // 单价
+          duration: '', // 购买时长
+          payment: '', // 实际支付
+          cost: '' // 总成本
+        },
+        ruleValidate: {
+          name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+          number: [
+            {
+              required: true,
+              message: '合同编号不能为空',
+              trigger: 'blur'
             }
-          }
-        } else {
-          this.$Message.error('保险类型查询异常')
+          ],
+          unitPrice: [
+            {
+              required: true,
+              message: '成本单价不能为空',
+              trigger: 'blur'
+            }
+          ],
+          duration: [
+            {
+              required: true,
+              message: '购买时长不能为空',
+              trigger: 'blur'
+            }
+          ],
+          payment: [
+            {
+              required: true,
+              message: '实际支付不能为空',
+              trigger: 'blur'
+            }
+          ],
+          phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+          insuranceType: [
+            {
+              type: 'number',
+              required: true,
+              message: '请选择保险类型',
+              trigger: 'blur'
+            }
+          ],
+          date: [
+            {
+              required: true,
+              type: 'date',
+              message: '请选择日期',
+              trigger: 'change'
+            }
+          ],
+          cost: [
+            {
+              required: true,
+              message: '保单总成本不能为空',
+              trigger: 'blur'
+            }
+          ]
         }
-      }).catch((err) => {
-        console.error(err)
-      })
+      }
     },
-    fetchPersonalInfo() {
-      this.loading = true
-      this.tableLisr = []
-      let that = this
-      axios.request({
-        method: 'post',
-        url: '/main/inslist',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
-        data: {
-          page: this.pageNo,
-          pagesize: this.pageSize,
-          instypeid: this.typeId
-        }
-      }).then(function (res) {
-        for (let i = 0; i < res.data.data.length; i++) {
-          that.tableLisr.push(res.data.data[i].fields)
-          that.tableLisr[i].id = res.data.data[i].pk
-        }
-        that.total = res.data.count
-      }).catch(function (error) {
-        console.log(error)
-      })
-      this.loading = false
-    },
-    changePage(page) {
-      this.pageNo = page
+    created() {
+      console.log('完成创建')
+      // 查询保险类型
+      this.getInsuranceTypes()
       this.fetchPersonalInfo()
+      this.token = getToken()
     },
-    changeImg: function (e) {
-      var _this = this
-      var imgLimit = 1024
-      var files = e.target.files
-      var image = new Image()
-      if (files.length > 0) {
-        var dd = 0
-        var timer = setInterval(function () {
-          if (
-            files.item(dd).type !== 'image/png' &&
-              files.item(dd).type !== 'image/jpeg' &&
-              files.item(dd).type !== 'image/jpg'
-          ) {
-            return false
-          }
-          if (files.item(dd).size > imgLimit * 102400) {
-            // to do sth
-          } else {
-            image.src = window.URL.createObjectURL(files.item(dd))
-            image.onload = function () {
-              // 默认按比例压缩
-              var w = image.width
-              var h = image.height
-              // scale = w / h
-              // w = 200
-              // h = w / scale
-              // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
-              var quality = 1
-              // 生成canvas
-              var canvas = document.createElement('canvas')
-              var ctx = canvas.getContext('2d')
-              // 创建属性节点
-              var anw = document.createAttribute('width')
-              anw.nodeValue = w
-              var anh = document.createAttribute('height')
-              anh.nodeValue = h
-              canvas.setAttributeNode(anw)
-              canvas.setAttributeNode(anh)
-              ctx.drawImage(image, 0, 0, w, h)
-              var ext = image.src
-                .substring(image.src.lastIndexOf('.') + 1)
-                .toLowerCase() // 图片格式
-              var base64 = canvas.toDataURL('image/' + ext, quality)
-              // 回调函数返回base64的值
-              if (_this.imgArr.length <= 8) {
-                _this.imgArr.unshift('')
-                _this.imgArr.splice(0, 1, base64) // 替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
-                if (_this.imgArr.length >= 9) {
-                  _this.allowAddImg = false
-                }
+    methods: {
+      getInsuranceTypes() {
+        getInsuranceTypes().then((res) => {
+          if (res.data.state === 'true') {
+            const types = res.data.data
+            for (const type of types) {
+              if (!type.fields.iscompany) {
+                this.insuranceList.push({
+                  value: type.pk,
+                  label: type.fields.name
+                })
               }
             }
-          }
-
-          if (dd < files.length - 1) {
-            dd++
           } else {
-            clearInterval(timer)
-          }
-        }, 1000)
-      }
-    },
-    deleteImg: function (index) {
-      this.imgArr.splice(index, 1)
-      if (this.imgArr.length < 9) {
-        this.allowAddImg = true
-      }
-    },
-    handleView(index) {
-      this.value1 = index
-      this.visible = true
-    },
-    pdet(e, index) {
-      console.log('我的下标是', index, e)
-      this.$router.push({
-        path: '/insurance/personal/pdet',
-        query: { id: e.id }
-      })
-    },
-    cancel() {
-    },
-    changeLoading() {
-      this.modalLoading = false
-      this.$nextTick(() => {
-        this.modalLoading = true
-      })
-    },
-    ok() {
-      this.$refs['formValidate'].validate((valid) => {
-        if (!valid) {
-          return this.changeLoading()
-        }
-        // 请求服务端添加接口
-        const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
-        const data = {
-          contractnum: number,
-          insured: name,
-          tel: phone,
-          insurancetypeid: insuranceType,
-          buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
-          month: duration,
-          policyamount: unitPrice,
-          cost,
-          actualpayment: payment
-        }
-        saveOrModifyInsuranceInfo(data).then((res) => {
-          if (res.data.state === 'true') {
-            setTimeout(() => {
-              this.changeLoading()
-              this.showAddModal = false
-              this.$Message.success('添加成功')
-              this.fetchPersonalInfo()
-            }, 1000)
-          } else {
-            this.$Message.error('添加保险合同失败')
+            this.$Message.error('保险类型查询异常')
           }
         }).catch((err) => {
           console.error(err)
-          this.$Message.error('请求服务器错误')
-          this.changeLoading()
         })
-      })
-    },
-    remove(id) {
-      this.deleteInsuModal = true
-      this.removeId = id
-    },
-    deleteCancel() {},
-    deleteOk() {
-      deleteInsuranceInfo(this.removeId).then((res) => {
-        if (res.data.state === 'true') {
-          this.$Message.success('删除成功')
-          this.fetchPersonalInfo()
-        } else {
-          this.$Message.error('删除操作失败')
+      },
+      fetchPersonalInfo() {
+        this.loading = true
+        this.tableLisr = []
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/inslist',
+          data: {
+            page: this.pageNo,
+            pagesize: this.pageSize,
+            instypeid: this.typeId
+          }
+        }).then(function (res) {
+          for (let i = 0; i < res.data.data.length; i++) {
+            that.tableLisr.push(res.data.data[i].fields)
+            that.tableLisr[i].id = res.data.data[i].pk
+            let indexs = res.data.data[i].fields.buydate.indexOf('T')
+            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
+            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
+            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
+            indexs = res.data.data[i].fields.reminddate.indexOf('T')
+            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
+          }
+          that.total = res.data.count
+        }).catch(function (error) {
+          console.log(error)
+        })
+        this.loading = false
+      },
+      changePage(page) {
+        this.pageNo = page
+        this.fetchPersonalInfo()
+      },
+      pdet(e, index) {
+        console.log('我的下标是', index, e)
+        this.$router.push({
+          path: '/insurance/personal/pdet',
+          query: { id: e.id }
+        })
+      },
+      cancel() {
+      },
+      changeLoading() {
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+      },
+      ok() {
+        this.$refs['formValidate'].validate((valid) => {
+          if (!valid) {
+            return this.changeLoading()
+          }
+          // 请求服务端添加接口
+          const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
+          const data = {
+            contractnum: number,
+            insured: name,
+            tel: phone,
+            insurancetypeid: insuranceType,
+            buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
+            month: duration,
+            policyamount: unitPrice,
+            cost,
+            actualpayment: payment
+          }
+          saveOrModifyInsuranceInfo(data).then((res) => {
+            if (res.data.state === 'true') {
+              setTimeout(() => {
+                this.changeLoading()
+                this.showAddModal = false
+                this.$Message.success('添加成功')
+                this.fetchPersonalInfo()
+              }, 1000)
+            } else {
+              this.$Message.error('添加保险合同失败')
+            }
+          }).catch((err) => {
+            console.error(err)
+            this.$Message.error('请求服务器错误')
+            this.changeLoading()
+          })
+        })
+      },
+      remove(id) {
+        this.deleteInsuModal = true
+        this.removeId = id
+      },
+      deleteCancel() { },
+      deleteOk() {
+        deleteInsuranceInfo(this.removeId).then((res) => {
+          if (res.data.state === 'true') {
+            this.$Message.success('删除成功')
+            this.fetchPersonalInfo()
+          } else {
+            this.$Message.error('删除操作失败')
+          }
+        }).catch((err) => {
+          console.error(err)
+          this.$Message.error('请求服务器异常')
+        })
+      },
+      handleSuccess(res, file) {
+        console.log('上传后返回信息', res)
+        file.url = 'http://47.105.49.81:2222/api/main/getimg' + '/' + res.id + '/' + this.token;
+        console.log('图片地址', file.url)
+        file.name = res.id;
+      },
+      handleFormatError(file) {
+        this.$Notice.warning({
+          title: '文件格式不正确',
+          desc: '文件 ' + file.name + ' 的格式不正确，请选择jpg、jpeg或png格式的图片。'
+        });
+      },
+      handleMaxSize(file) {
+        this.$Notice.warning({
+          title: '超出文件大小限制',
+          desc: '文件  ' + file.name + ' 超出大小限制，文件最大为2MB。'
+        });
+      },
+      handleBeforeUpload() {
+        const check = this.uploadList.length < 5;
+        if (!check) {
+          this.$Notice.warning({
+            title: '最多可以上传5张图片。'
+          });
         }
-      }).catch((err) => {
-        console.error(err)
-        this.$Message.error('请求服务器异常')
-      })
+        return check;
+      },
+      handleRemove(file) {
+        console.log(file)
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/delimg',
+          data: {
+            id: file.name,
+          }
+        }).then(function (res) {
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
+        const fileList = this.$refs.upload.fileList;
+        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+      },
+      handleView(index) {
+        console.log(index)
+        console.log(this.uploadList)
+        for (let i = 0; i < this.uploadList.length; i++) {
+          if (this.uploadList[i].name === index) {
+            this.value1 = i
+            this.visible = true
+          }
+        }
+      }
+    },
+    mounted() {
+      this.uploadList = this.$refs.upload.fileList;
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

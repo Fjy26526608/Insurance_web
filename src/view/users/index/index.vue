@@ -274,10 +274,6 @@ export default {
       axios.request({
         method: 'post',
         url: '/main/addUser',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
         data: {
           loginname: that.formValidate.loginname,
           passwd: that.formValidate.passwd,
@@ -305,10 +301,6 @@ export default {
       axios.request({
         method: 'post',
         url: '/main/addUser',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
         data: {
           id: that.formValidate.id,
           loginname: that.formValidate.loginname,
@@ -337,10 +329,6 @@ export default {
       axios.request({
         method: 'post',
         url: '/main/delUser',
-        headers: {
-          token: getToken(),
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
         data: {
           id: that.tableLisr[this.remov].id
         }

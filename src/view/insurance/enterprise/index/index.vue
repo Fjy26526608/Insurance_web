@@ -36,7 +36,7 @@
       <i-col span="12" class="mt20"><Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" /></i-col>
       <i-col span="24"></i-col> -->
       <i-col span="12" class="mt20">
-        <Button type="primary" @click="showAddModal = true" class="mr15">新增</Button>
+        <Button type="primary" @click="showAddModal = true" class="mr15">新增企业</Button>
         <!-- <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button> -->
       </i-col>
@@ -53,12 +53,13 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" :loading="loading" :row-class-name="rowClassName" border highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+      <Table size="large" :loading="loading" :row-class-name="rowClassName" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="error" v-if="isAdmin" @click="remove(row.id)">删除</Button>
+          <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button>
+          <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
         </template>
       </Table>
     </div>
@@ -97,13 +98,16 @@
         <FormItem label="电话" prop="phone">
           <Input v-model="formValidate.phone" placeholder="输入公司电话"></Input>
         </FormItem>
-        <FormItem label="备注" prop="desc">
+        <!-- <FormItem label="备注" prop="desc">
           <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."></Input>
-        </FormItem>
+        </FormItem> -->
       </Form>
     </Modal>
     <Modal v-model="deleteCompanyModal" title='警告！' @on-ok="deleteOk" @on-cancel="deleteCancel">
       <p>删除后不可恢复，确认删除吗？</p>
+    </Modal>
+    <Modal v-model="shModal" title='警告！' @on-ok="shenOk" @on-cancel="cancel">
+      <p>确定通过审核吗？</p>
     </Modal>
   </div>
 </template>
@@ -117,6 +121,8 @@
     data() {
       return {
         deleteCompanyModal: false,
+        shId: '',
+        shModal: false,
         removeId: '',
         value1: 0,
         imgData: '',
@@ -169,7 +175,7 @@
         ruleValidate: {
           name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
           address: [
-              { required: true, message: "地址不能为空", trigger: "blur" }
+            { required: true, message: "地址不能为空", trigger: "blur" }
           ],
           manager: [
             {
@@ -320,12 +326,12 @@
             align: 'center',
             tooltip: true
           },
-          {
-            title: '备注',
-            key: 'remark',
-            align: 'center',
-            tooltip: true
-          },
+          // {
+          //   title: '备注',
+          //   key: 'remark',
+          //   align: 'center',
+          //   tooltip: true
+          // },
           {
             title: '操作',
             slot: 'action',
@@ -344,7 +350,10 @@
     },
     computed: {
       isAdmin() {
-        return this.$store.state.user.access.indexOf('superadmin') >= 0 
+        return this.$store.state.user.access.indexOf('superadmin') >= 0
+      },
+      iskj() {
+        return this.$store.state.user.access.indexOf('admin') >= 0
       }
     },
     created() {
@@ -364,11 +373,16 @@
             pagesize: this.pageSize
           }
         }).then(function (res) {
+          console.log('********',res)
           if (res.data.state === 'true') {
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {
               that.tableLisr.push(res.data.data[i].fields)
               that.tableLisr[i].id = res.data.data[i].pk
+              let indexs = res.data.data[i].fields.stime.indexOf('T')
+              that.tableLisr[i].stime = res.data.data[i].fields.stime.slice(0, indexs)
+              indexs = res.data.data[i].fields.etime.indexOf('T')
+              that.tableLisr[i].etime = res.data.data[i].fields.etime.slice(0, indexs)
             }
           } else {
             that.$Message.error(res.data.msg)
@@ -377,67 +391,6 @@
           console.log(error)
         })
         this.loading = false
-      },
-      changeImg: function (e) {
-        var _this = this
-        var imgLimit = 1024
-        var files = e.target.files
-        var image = new Image()
-        if (files.length > 0) {
-          var dd = 0
-          var timer = setInterval(function () {
-            if (
-              files.item(dd).type !== 'image/png' &&
-              files.item(dd).type !== 'image/jpeg' &&
-              files.item(dd).type !== 'image/jpg'
-            ) {
-              return false
-            }
-            if (files.item(dd).size > imgLimit * 102400) {
-              // to do sth
-            } else {
-              image.src = window.URL.createObjectURL(files.item(dd))
-              image.onload = function () {
-                // 默认按比例压缩
-                var w = image.width
-                var h = image.height
-                // scale = w / h
-                // w = 200
-                // h = w / scale
-                // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
-                var quality = 1
-                // 生成canvas
-                var canvas = document.createElement('canvas')
-                var ctx = canvas.getContext('2d')
-                // 创建属性节点
-                var anw = document.createAttribute('width')
-                anw.nodeValue = w
-                var anh = document.createAttribute('height')
-                anh.nodeValue = h
-                canvas.setAttributeNode(anw)
-                canvas.setAttributeNode(anh)
-                ctx.drawImage(image, 0, 0, w, h)
-                var ext = image.src
-                  .substring(image.src.lastIndexOf('.') + 1)
-                  .toLowerCase() // 图片格式
-                var base64 = canvas.toDataURL('image/' + ext, quality)
-                // 回调函数返回base64的值
-                if (_this.imgArr.length <= 8) {
-                  _this.imgArr.unshift('')
-                  _this.imgArr.splice(0, 1, base64) // 替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
-                  if (_this.imgArr.length >= 9) {
-                    _this.allowAddImg = false
-                  }
-                }
-              }
-            }
-            if (dd < files.length - 1) {
-              dd++
-            } else {
-              clearInterval(timer)
-            }
-          }, 1000)
-        }
       },
       deleteImg: function (index) {
         this.imgArr.splice(index, 1)
@@ -480,7 +433,7 @@
             etime: stopDate,
             contactperson: manager,
             tel: phone,
-            remark: desc
+            // remark: desc
           }
           addCompany(data).then((res) => {
             if (res.data.state === 'true') {
@@ -515,11 +468,15 @@
           query: { value: e.id }
         })
       },
+      shen(id) {
+        this.shModal = true
+        this.shId = id
+      },
       remove(id) {
         this.deleteCompanyModal = true
         this.removeId = id
       },
-      deleteCancel() {},
+      deleteCancel() { },
       deleteOk() {
         delCompany(this.removeId).then((res) => {
           if (res.data.state === 'true') {
@@ -532,6 +489,19 @@
           console.error(err)
           this.$Message.error('请求服务器异常')
         })
+      },
+      shenOk() {
+        // delCompany(this.removeId).then((res) => {
+        //   if (res.data.state === 'true') {
+        this.$Message.success('删除成功')
+        //     this.fetchCompanyList()
+        //   } else {
+        //     this.$Message.error('删除操作失败')
+        //   }
+        // }).catch((err) => {
+        //   console.error(err)
+        //   this.$Message.error('请求服务器异常')
+        // })
       }
     }
   }
