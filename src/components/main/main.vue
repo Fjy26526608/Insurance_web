@@ -124,10 +124,10 @@ export default {
               for (const type of enterpriseTypes) {
                 enterpriseChildren.push({
                   path: 'index/' + type.id,
-                  name: '企业-' + type.name,
+                  name: type.name,
                   meta: {
                     icon: 'md-options',
-                    title: '企业-' + type.name
+                    title: type.name
                   },
                   props: {
                     typeId: type.id
@@ -157,10 +157,10 @@ export default {
                       redirect: { name: 'enterprise' },
                       children: [{
                         path: 'index/' + type.id,
-                        name: '企业-' + type.name,
+                        name: type.name,
                         meta: {
                           icon: 'md-options',
-                          title: '企业-' + type.name
+                          title: type.name
                         },
                         props: {
                           typeId: type.id
@@ -178,10 +178,10 @@ export default {
               for (const type of personalTypes) {
                 personalChildren.push({
                   path: 'index/' + type.id,
-                  name: '个人-' + type.name,
+                  name: type.name,
                   meta: {
                     icon: 'md-options',
-                    title: '个人-' + type.name
+                    title: type.name
                   },
                   props: {
                     typeId: type.id
@@ -212,10 +212,10 @@ export default {
                       component: parentView,
                       children: [{
                         path: 'index/' + type.id,
-                        name: '个人-' + type.name,
+                        name: type.name,
                         meta: {
                           icon: 'md-options',
-                          title: '个人-' + type.name
+                          title: type.name
                         },
                         props: {
                           typeId: type.id
