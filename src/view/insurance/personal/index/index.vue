@@ -1,6 +1,15 @@
 <template>
   <div>
     <Row :gutter="20">
+      <i-col span="5">
+        <Input v-model="typeName">
+          <span slot="prepend">名字</span>
+        </Input>
+      </i-col>
+      <i-col span="5">
+        <DatePicker :clearable="true" class="typeSelList" type="date" v-model="typeEndDate" placeholder="选择结束时间"></DatePicker>
+      </i-col>
+      <i-col span="15"></i-col>
       <!-- <i-col span="5">
         <Select class="typeSelList" v-model="typeObj">
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -138,6 +147,7 @@
   import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
   export default {
     name: 'personal',
+    props: ['typeId'],
     data() {
       return {
         deleteInsuModal: false,
@@ -152,6 +162,8 @@
         total: 0,
         pageSize: 15,
         pageNo: 1,
+        typeName: '',
+        typeEndDate: '',
         typeList: [],
         typeObj: 1,
         statusList: [
@@ -359,10 +371,13 @@
     },
     created() {
       console.log('完成创建')
-      // 查询保险类型
-      this.getInsuranceTypes()
-      this.fetchPersonalInfo()
-      this.token = getToken()
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        vm.getInsuranceTypes()
+        vm.fetchPersonalInfo()
+        vm.token = vm.getToken()
+      })
     },
     methods: {
       getInsuranceTypes() {
