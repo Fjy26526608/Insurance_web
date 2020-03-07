@@ -296,7 +296,7 @@
           address: [{ required: true, message: '地址不能为空', trigger: 'blur' }],
           contactperson: [{ required: true, message: '联系人不能为空', trigger: 'blur' }],
           tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-          psize: [{ required: true, message: '公司规模不能为空', trigger: 'blur' }],
+          // psize: [{ required: true, message: '公司规模不能为空', trigger: 'blur' }],
           sdate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }]
           // mail: [{ required: true, message: '邮箱不能为空', trigger: 'blur' },
           //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }],
