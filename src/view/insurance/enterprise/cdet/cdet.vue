@@ -42,8 +42,8 @@
         <template v-if="item.status === 'finished'">
           <img :src="item.url">
           <div class="demo-upload-list-cover">
-            <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-            <Icon type="ios-trash-outline" v-if="isAdmin" @click.native="handleRemove(item)"></Icon>
+            <Icon type="ios-eye-outline" @click.native="handleView2(item.name)"></Icon>
+            <Icon type="ios-trash-outline" v-if="isAdmin" @click.native="handleRemove2(item)"></Icon>
           </div>
         </template>
         <template v-else>
@@ -57,9 +57,9 @@
           <Icon type="ios-camera" size="20"></Icon>
         </div>
       </Upload>
-      <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-        <!-- <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%"> -->
-        <Carousel v-if="visible" v-model="value1" loop>
+      <Modal title="合同文件预览" v-model="visible2" width='60%' :styles="{top: '20px'}">
+        <!-- <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible2" style="width: 100%"> -->
+        <Carousel v-if="visible2" v-model="value1" loop>
           <CarouselItem v-for='(img,index) in uploadList' :key='index'>
             <div class="demo-carousel">
               <img :src="img.url" style="width: 100%" alt="">
@@ -177,6 +177,7 @@
         defaultList2: [],
         imgName: '',
         visible: false,
+        visible2: false,
         uploadList: [],
         uploadList2: [],
         imgData: '',
@@ -354,7 +355,7 @@
       this.fetchPersonalInfo()
       axios.request({
         method: 'post',
-        url: '/main/getimg',
+        url: '/main/getimglist',
         data: {
           companyid: that.getValue
         }
@@ -584,16 +585,47 @@
         }).catch(function (error) {
           console.log(error)
         })
+        const fileList = this.$refs.upload2.fileList;
+        this.$refs.upload2.fileList.splice(fileList.indexOf(file), 1);
+      },
+      handleView(index) {
+        console.log(index)
+        console.log(this.uploadList2)
+        for (let i = 0; i < this.uploadList2.length; i++) {
+          if (this.uploadList2[i].name === index) {
+            this.value1 = i
+            this.visible = true
+          }
+        }
+      },
+      handleRemove2(file) {
+        console.log(file)
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/delimg',
+          data: {
+            id: file.name,
+          }
+        }).then(function (res) {
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
         const fileList = this.$refs.upload.fileList;
         this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
       },
-      handleView(index) {
+      handleView2(index) {
         console.log(index)
         console.log(this.uploadList)
         for (let i = 0; i < this.uploadList.length; i++) {
           if (this.uploadList[i].name === index) {
             this.value1 = i
-            this.visible = true
+            this.visible2 = true
           }
         }
       },
