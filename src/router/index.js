@@ -19,6 +19,77 @@ const turnTo = (to, access, next) => {
   else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
 }
 
+const regenRoutes = (to, from, next) => {
+  const R = require('ramda')
+  // 使用一份默认路由表的拷贝进行操作
+  let routersCopy = R.clone(routes)
+  store.dispatch('fetchInsuranceTypes').then(() => {
+    for (let i = 0; i < routersCopy.length; i++) {
+      let item = routersCopy[i]
+      if (item.name === 'insurance') {
+        let children = item.children
+        for (let j = 0; j < children.length; j++) {
+          let innerRoute = children[j]
+          if (innerRoute.name === '_enterprise') {
+            let enterpriseChildren = innerRoute.children
+            const enterpriseTypes = store.getters.getEnterpiseInsuranceTypes
+            for (const type of enterpriseTypes) {
+              enterpriseChildren.push({
+                path: 'index/' + type.id,
+                name: type.name,
+                meta: {
+                  icon: 'md-options',
+                  title: type.name
+                },
+                props: {
+                  typeId: type.id
+                },
+                component: () =>
+                  import('@/view/insurance/enterprise/index/index.vue')
+              })
+            }
+          } else if (innerRoute.name === '_personal') {
+            let personalChildren = innerRoute.children
+            const personalTypes = store.getters.getPersonalInsuranceTypes
+            for (const type of personalTypes) {
+              personalChildren.push({
+                path: 'index/' + type.id,
+                name: type.name,
+                meta: {
+                  icon: 'md-options',
+                  title: type.name
+                },
+                props: {
+                  typeId: type.id
+                },
+                component: () =>
+                  import('@/view/insurance/personal/index/index')
+              })
+            }
+          }
+        }
+      }
+    }
+    routersCopy.push(
+      {
+        path: '*',
+        name: 'error_404',
+        meta: {
+          hideInMenu: true
+        },
+        component: () => import('@/view/error-page/404.vue')
+      }
+    )
+    router.addRoutes(routersCopy)
+    router.options.routes = routersCopy
+    if (to.matched.length === 0) {
+      next({ ...to, replace: true })
+    } else {
+      next()
+    }
+  })
+}
+
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
   const token = getToken()
@@ -37,11 +108,23 @@ router.beforeEach((to, from, next) => {
     })
   } else {
     if (store.state.user.hasGetInfo) {
-      turnTo(to, store.state.user.access, next)
+      // FIXME 你TM没权限就不要显示了啊傻逼，操你妈显示出来还不让人跳转，是TM低能还是怎样，操你妈想好再做
+      // turnTo(to, store.state.user.access, next)
+      if (from.name == null) {
+        regenRoutes(to, from, next)
+      } else {
+        next()
+      }
     } else {
       store.dispatch('getUserInfo').then(user => {
         // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
-        turnTo(to, user.access, next)
+        // FIXME 你TM没权限就不要显示了啊傻逼，操你妈显示出来还不让人跳转，是TM低能还是怎样，操你妈想好再做
+        // turnTo(to, user.access, next)
+        if (from.name == null) {
+          regenRoutes(to, from, next)
+        } else {
+          next()
+        }
       }).catch(() => {
         setToken('')
         next({

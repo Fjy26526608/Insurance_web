@@ -399,20 +399,6 @@ export const setTitle = (routeItem, vm) => {
 }
 
 /**
- * 拷贝一份对象数组
- * @param {Array} arr 需要拷贝的数组
- */
-export function copyArray(arr) {
-  return arr.map(e => {
-    if (typeof e === 'object') {
-      return Object.assign({}, e)
-    } else {
-      return e
-    }
-  })
-}
-
-/**
  * 格式化日期
  * @param {Date} date 待转换的日期
  * @param {String} fmt 日期格式

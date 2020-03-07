@@ -78,8 +78,8 @@
           <!-- <Row>
             <Col span="15">
             <FormItem prop="date"> -->
-              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-            <!-- </FormItem>
+          <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+          <!-- </FormItem>
             </Col>
           </Row> -->
         </FormItem>
@@ -139,6 +139,7 @@
   import { getInsuranceTypes, saveOrModifyInsuranceInfo, deleteInsuranceInfo } from '@/api/insurance'
   export default {
     name: 'personal',
+    props: ['typeId'],
     data() {
       return {
         deleteCompanyModal: false,
@@ -155,6 +156,8 @@
         total: 0,
         pageSize: 15,
         pageNo: 1,
+        typeName: '',
+        typeEndDate: '',
         typeList: [],
         typeObj: 1,
         statusList: [
@@ -234,69 +237,76 @@
             tooltip: true,
             title: '名字',
             key: 'insured',
-            //width:90
+            minWidth: 90,
+            fixed: 'left'
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
             key: 'insurancetypename',
-            //maxWidth:130
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
             key: 'buydate',
-            maxWidth:130
+            maxWidth:130，
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
             key: 'maturitydate',
-            maxWidth:130
+            minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '金额(元)',
             key: 'policyamount',
-            //maxWidth:100
+            maxWidth:120
           },
           {
             align: 'center',
             tooltip: true,
             title: '手续费(元)',
             key: 'cost',
-            maxWidth:130
+            maxWidth:130，
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '实际支付(元)',
             key: 'actualpayment',
-            maxWidth:130
+            maxWidth:130，
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '已使用(元)',
             key: 'alreadyused',
-            maxWidth:130
+            maxWidth:130，
+            minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '剩余(元)',
             key: 'balance',
-            maxWidth: 100
+            maxWidth: 100，
+            minWidth: 100
           },
           {
             title: '操作',
             slot: 'action',
             align: 'center',
-            maxWidth:170
+            maxWidth:170，
+            minWidth: 170,
           }
         ],
         tableLisr: [],
@@ -381,13 +391,17 @@
     },
     created() {
       console.log('完成创建')
-      // 查询保险类型
-      this.getInsuranceTypes()
-      this.fetchPersonalInfo()
-      this.token = getToken()
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.getInsuranceTypes()
+        vm.fetchPersonalInfo()
+        vm.token = getToken()
+      })
     },
     methods: {
       getInsuranceTypes() {
+        this.insuranceList = []
         getInsuranceTypes().then((res) => {
           if (res.data.state === 'true') {
             const types = res.data.data

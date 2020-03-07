@@ -11,6 +11,18 @@
 <template>
   <div>
     <Row :gutter="20">
+      <i-col span="5">
+        <Input v-model="typeName">
+        <span slot="prepend">名称</span>
+        </Input>
+      </i-col>
+      <i-col span="5">
+        <DatePicker :clearable="true" class="typeSelList" type="date" v-model="typeStartDate" placeholder="选择开始时间"></DatePicker>
+      </i-col>
+      <i-col span="5">
+        <DatePicker :clearable="true" class="typeSelList" type="date" v-model="typeEndDate" placeholder="选择结束时间"></DatePicker>
+      </i-col>
+      <i-col span="9"></i-col>
       <!-- <i-col span="5">
         <Select class="typeSelList" v-model="typeObj">
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -118,6 +130,7 @@
   import { addCompany, delCompany } from '@/api/company'
   export default {
     name: 'enterprise',
+    props: ['typeId'],
     data() {
       return {
         deleteCompanyModal: false,
@@ -212,6 +225,9 @@
             value: 2
           }
         ],
+        typeName: '',
+        typeStartDate: '',
+        typeEndDate: '',
         typeObj: 1,
         statusList: [
           {
@@ -284,13 +300,15 @@
             align: 'center',
             tooltip: true,
             maxWidth: 65
+            fixed: 'left'
           },
           {
             title: '公司名称',
             key: 'name',
             align: 'center',
             tooltip: true
-            //width:240
+            tooltip: true,
+            minWidth: 240
           },
           // {
           //   title: '地址',
@@ -311,6 +329,7 @@
             key: 'stime',
             align: 'center',
             tooltip: true,
+            minWidth: 130,
             maxWidth: 130
           },
           {
@@ -318,6 +337,7 @@
             key: 'etime',
             align: 'center',
             tooltip: true,
+            minWidth: 130,
             maxWidth: 130
           },
           {
@@ -353,14 +373,16 @@
             key: 'alreadyused',
             align: 'center',
             tooltip: true,
-            maxWidth: 120
+            minWidth: 110,
+            maxWidth: 130
           },
           {
             title: '剩余',
             key: 'balance',
             align: 'center',
             tooltip: true,
-            maxWidth: 120
+            maxWidth: 130，
+            minWidth: 130,
           },
           // {
           //   title: '备注',
@@ -372,6 +394,7 @@
             title: '操作',
             slot: 'action',
             align: 'center',
+            minWidth: 170,
             maxWidth: 170
           }
 
@@ -390,7 +413,11 @@
     },
     created() {
       console.log('完成创建')
-      this.fetchCompanyList()
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.fetchCompanyList()
+      })
     },
     methods: {
       fetchCompanyList() {
@@ -402,10 +429,11 @@
           url: '/main/companylist',
           data: {
             page: this.pageNo,
-            pagesize: this.pageSize
+            pagesize: this.pageSize,
+            instypeid: this.typeId
           }
         }).then(function (res) {
-          console.log('********',res)
+          console.log('********', res)
           if (res.data.state === 'true') {
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {
