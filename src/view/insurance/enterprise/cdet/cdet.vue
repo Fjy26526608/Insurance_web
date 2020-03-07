@@ -296,7 +296,7 @@
           address: [{ required: true, message: '地址不能为空', trigger: 'blur' }],
           contactperson: [{ required: true, message: '联系人不能为空', trigger: 'blur' }],
           tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-          // psize: [{ required: true, message: '公司规模不能为空', trigger: 'blur' }],
+          psize: [{ required: true, message: '公司规模不能为空', trigger: 'blur' }],
           sdate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }]
           // mail: [{ required: true, message: '邮箱不能为空', trigger: 'blur' },
           //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }],
@@ -352,6 +352,7 @@
         }
       }).then(function (res) {
         console.log('请求企业信息返回值', res)
+        res.data.data[0].fields.psize = res.data.data[0].fields.psize.toString()
         that.formValidate2 = res.data.data[0].fields
         that.formValidate2.id = res.data.data[0].pk
         console.log('返回处理后的企业信息', that.formValidate2)
