@@ -53,14 +53,13 @@
         </template>
       </div>
       <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError"
-              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{number:formValidate.number,token:token}" multiple type="drag" action="http://47.105.49.81:2222/api/main/updataimg"
-              style="display: inline-block;width:58px;" :disabled="!isChange">
+              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{number:formValidate.number,token:token}" multiple type="drag"
+              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" :disabled="!isChange">
         <div style="width: 58px;height:58px;line-height: 58px;">
           <Icon type="ios-camera" size="20"></Icon>
         </div>
       </Upload>
       <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-        <!-- <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%"> -->
         <Carousel v-if="visible" v-model="value1" loop>
           <CarouselItem v-for='(img,index) in uploadList' :key='index'>
             <div class="demo-carousel">
@@ -181,8 +180,29 @@
       this.getInsuranceTypes()
       // 查询保险详情
       this.getInsuranceInfo()
-
-      this.imgArr = []
+      let that = this
+      axios.request({
+        method: 'post',
+        url: '/main/getimglist',
+        data: {
+          number: that.formValidate.number
+        }
+      }).then(function (res) {
+        console.log('请求返回后的企业合同图片', res)
+        let b=[]
+        that.defaultList=[]
+        for (let i = 0; i < 9; i++) {
+          b.push(res.data.data[i])
+          b[i].name = res.data.data[i].pk
+          b[i].url = 'http://47.105.49.81:2222/api/main/getimg/' + res.data.data[i].pk + '/' + that.token;
+          that.defaultList.push({})
+          that.defaultList[i].name=b[i].name
+          that.defaultList[i].url=b[i].url
+        }
+        console.log('处理后的请求企业合同图片', that.defaultList)
+      }).catch(function (error) {
+        console.log(error)
+      })
     },
     methods: {
       getInsuranceTypes() {
@@ -283,10 +303,10 @@
         });
       },
       handleBeforeUpload() {
-        const check = this.uploadList.length < 5;
+        const check = this.uploadList.length < 50;
         if (!check) {
           this.$Notice.warning({
-            title: '最多可以上传5张图片。'
+            title: '最多可以上传50张图片。'
           });
         }
         return check;

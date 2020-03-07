@@ -1,5 +1,5 @@
 <template>
-  <Form ref="formValidate2" :model="formValidate2" :rules="ruleValidate2" :label-width="80">
+  <Form ref="formValidate2" :model="formValidate2" :rules="ruleValidate2" :label-width="85">
     <Row>
       <Col span="18">
       <FormItem label="名称" prop="name">
@@ -42,8 +42,8 @@
         <template v-if="item.status === 'finished'">
           <img :src="item.url">
           <div class="demo-upload-list-cover">
-            <Icon type="ios-eye-outline" @click.native="handleView2(item.name)"></Icon>
-            <Icon type="ios-trash-outline" v-if="isAdmin" @click.native="handleRemove2(item)"></Icon>
+            <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+            <Icon type="ios-trash-outline" v-if="isAdmin" @click.native="handleRemove(item)"></Icon>
           </div>
         </template>
         <template v-else>
@@ -51,15 +51,15 @@
         </template>
       </div>
       <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError"
-              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{companyid:formValidate2.id,token:token}" multiple type="drag"
-              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" :disabled="!isChange">
+              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{number:formValidate.number,token:token}" multiple type="drag"
+              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;">
+        <!-- :disabled="!isChange" -->
         <div style="width: 58px;height:58px;line-height: 58px;">
           <Icon type="ios-camera" size="20"></Icon>
         </div>
       </Upload>
-      <Modal title="合同文件预览" v-model="visible2" width='60%' :styles="{top: '20px'}">
-        <!-- <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible2" style="width: 100%"> -->
-        <Carousel v-if="visible2" v-model="value1" loop>
+      <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
+        <Carousel v-if="visible" v-model="value1" loop>
           <CarouselItem v-for='(img,index) in uploadList' :key='index'>
             <div class="demo-carousel">
               <img :src="img.url" style="width: 100%" alt="">
@@ -131,8 +131,8 @@
             <template v-if="item.status === 'finished'">
               <img :src="item.url">
               <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                <Icon type="ios-eye-outline" @click.native="handleView2(item.name)"></Icon>
+                <Icon type="ios-trash-outline" @click.native="handleRemove2(item)"></Icon>
               </div>
             </template>
             <template v-else>
@@ -140,7 +140,7 @@
             </template>
           </div>
           <Upload ref="upload2" :show-upload-list="false" :default-file-list="defaultList2" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048"
-                  :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{number:formValidate2.number,token:token}" multiple type="drag"
+                  :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload2" :data="{number:formValidate2.number,token:token}" multiple type="drag"
                   action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;">
             <div style="width: 58px;height:58px;line-height: 58px;">
               <Icon type="ios-camera" size="20"></Icon>
@@ -177,7 +177,6 @@
         defaultList2: [],
         imgName: '',
         visible: false,
-        visible2: false,
         uploadList: [],
         uploadList2: [],
         imgData: '',
@@ -189,6 +188,7 @@
         isChange: false,
         formValidate2: {
           name: '',
+          psize: '',
           number: '',
           address: '',
           manager: '',
@@ -291,10 +291,10 @@
           contactperson: [{ required: true, message: '联系人不能为空', trigger: 'blur' }],
           tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
           psize: [{ required: true, message: '公司规模不能为空', trigger: 'blur' }],
+          sdate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }]
           // mail: [{ required: true, message: '邮箱不能为空', trigger: 'blur' },
           //     { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }],
           // gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
-          sdate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }],
           // edate: [{ required: true, type: "date", message: "请选择日期", trigger: "change" }],
         },
         insuranceList: [],
@@ -353,18 +353,23 @@
         console.log(error)
       })
       this.fetchPersonalInfo()
-      axios.request({
-        method: 'post',
-        url: '/main/getimglist',
-        data: {
-          companyid: that.getValue
-        }
-      }).then(function (res) {
-        console.log('请求返回后的企业合同图片', res)
-        that.defaultList = res.data
-      }).catch(function (error) {
-        console.log(error)
-      })
+      // axios.request({
+      //   method: 'post',
+      //   url: '/main/getimglist',
+      //   data: {
+      //     companyid: that.getValue
+      //   }
+      // }).then(function (res) {
+      //   console.log('请求返回后的企业合同图片', res)
+      //   for (let i = 0; i < res.data.data.length; i++) {
+      //     that.defaultList.push(res.data.data[i])
+      //     that.defaultList[i].name = res.data.data[i].pk
+      //     that.defaultList[i].url = 'http://47.105.49.81:2222/api/main/getimg/' + res.data.data[i].pk + '/' + that.token;
+      //   }
+      //   console.log('处理后的请求企业合同图片', that.defaultList)
+      // }).catch(function (error) {
+      //   console.log(error)
+      // })
 
     },
     beforeRouteEnter(to, from, next) {
@@ -542,7 +547,7 @@
       },
       handleSuccess(res, file) {
         console.log('上传后返回信息', res)
-        file.url = 'http://47.105.49.81:2222/api/main/getimg' + '/' + res.id + '/' + this.token;
+        file.url = 'http://47.105.49.81:2222/api/main/getimg/' + res.id + '/' + this.token;
         console.log('图片地址', file.url)
         file.name = res.id;
       },
@@ -559,10 +564,19 @@
         });
       },
       handleBeforeUpload() {
-        const check = this.uploadList.length < 5;
+        const check = this.uploadList.length < 50;
         if (!check) {
           this.$Notice.warning({
-            title: '最多可以上传5张图片。'
+            title: '最多可以上传50张图片。'
+          });
+        }
+        return check;
+      },
+      handleBeforeUpload2() {
+        const check = this.uploadList2.length < 50;
+        if (!check) {
+          this.$Notice.warning({
+            title: '最多可以上传50张图片。'
           });
         }
         return check;
@@ -585,14 +599,14 @@
         }).catch(function (error) {
           console.log(error)
         })
-        const fileList = this.$refs.upload2.fileList;
-        this.$refs.upload2.fileList.splice(fileList.indexOf(file), 1);
+        const fileList = this.$refs.upload.fileList;
+        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
       },
       handleView(index) {
         console.log(index)
-        console.log(this.uploadList2)
-        for (let i = 0; i < this.uploadList2.length; i++) {
-          if (this.uploadList2[i].name === index) {
+        console.log(this.uploadList)
+        for (let i = 0; i < this.uploadList.length; i++) {
+          if (this.uploadList[i].name === index) {
             this.value1 = i
             this.visible = true
           }
@@ -616,16 +630,16 @@
         }).catch(function (error) {
           console.log(error)
         })
-        const fileList = this.$refs.upload.fileList;
-        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+        const fileList = this.$refs.upload2.fileList;
+        this.$refs.upload2.fileList.splice(fileList.indexOf(file), 1);
       },
       handleView2(index) {
         console.log(index)
-        console.log(this.uploadList)
-        for (let i = 0; i < this.uploadList.length; i++) {
-          if (this.uploadList[i].name === index) {
+        console.log(this.uploadList2)
+        for (let i = 0; i < this.uploadList2.length; i++) {
+          if (this.uploadList2[i].name === index) {
             this.value1 = i
-            this.visible2 = true
+            this.visible = true
           }
         }
       },
@@ -636,7 +650,7 @@
       shenOk() {
         // delCompany(this.removeId).then((res) => {
         //   if (res.data.state === 'true') {
-        this.$Message.success('删除成功')
+        this.$Message.success('审核成功')
         //     this.fetchCompanyList()
         //   } else {
         //     this.$Message.error('删除操作失败')
@@ -648,7 +662,7 @@
       }
     },
     mounted() {
-      this.uploadList = this.$refs.upload.fileList
+      this.uploadList = this.$refs.upload.fileList;
       this.uploadList2 = this.$refs.upload2.fileList
     }
   }

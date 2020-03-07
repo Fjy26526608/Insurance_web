@@ -83,8 +83,8 @@
         <FormItem label="名称" prop="name">
           <Input v-model="formValidate.name" placeholder="输入公司名称"></Input>
         </FormItem>
-        <FormItem label="规模" prop="number">
-          <Input v-model="formValidate.number" placeholder="输入公司规模"></Input>
+        <FormItem label="规模" prop="psize">
+          <Input v-model="formValidate.psize" placeholder="输入公司规模"></Input>
         </FormItem>
         <FormItem label="地址" prop="address">
           <Input v-model="formValidate.address" placeholder="输入公司地址"></Input>
@@ -93,22 +93,22 @@
           <Row>
             <Col span="4">
             <FormItem prop="date">
-              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
+              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stime"></DatePicker>
             </FormItem>
             </Col>
             <Col span="2" style="text-align: center">结束日期</Col>
             <Col span="4">
             <FormItem prop="stopDate">
-              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.stopDate"></DatePicker>
+              <DatePicker type="date" placeholder="选择日期" v-model="formValidate.etime"></DatePicker>
             </FormItem>
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="联系人" prop="manager">
-          <Input v-model="formValidate.manager" placeholder="输入公司联系人"></Input>
+        <FormItem label="联系人" prop="contactperson">
+          <Input v-model="formValidate.contactperson" placeholder="输入公司联系人"></Input>
         </FormItem>
-        <FormItem label="电话" prop="phone">
-          <Input v-model="formValidate.phone" placeholder="输入公司电话"></Input>
+        <FormItem label="电话" prop="tel">
+          <Input v-model="formValidate.tel" placeholder="输入公司电话"></Input>
         </FormItem>
         <!-- <FormItem label="备注" prop="desc">
           <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="输入备注..."></Input>
@@ -190,15 +190,15 @@
           address: [
             { required: true, message: "地址不能为空", trigger: "blur" }
           ],
-          manager: [
+          contactperson: [
             {
               required: true,
               message: '联系人不能为空',
               trigger: 'blur'
             }
           ],
-          phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
-          date: [
+          tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+          stime: [
             {
               required: true,
               type: 'date',
@@ -206,7 +206,7 @@
               trigger: 'change'
             }
           ],
-          stopDate: [
+          etime: [
             {
               required: true,
               type: 'date',
@@ -310,7 +310,7 @@
           },
           {
             title: '地址',
-            key: 'addrss',
+            key: 'address',
             align: 'center',
             tooltip: true,
             minWidth: 240
@@ -528,7 +528,7 @@
       shenOk() {
         // delCompany(this.removeId).then((res) => {
         //   if (res.data.state === 'true') {
-        this.$Message.success('删除成功')
+        this.$Message.success('审核成功')
         //     this.fetchCompanyList()
         //   } else {
         //     this.$Message.error('删除操作失败')
