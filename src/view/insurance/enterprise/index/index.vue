@@ -15,7 +15,7 @@
         <Select class="typeSelList" v-model="typeObj">
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-      </i-col>
+      </i-col> -->
       <i-col span="5">
         <DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择开始时间"></DatePicker>
       </i-col>
@@ -34,7 +34,7 @@
         </Select>
       </i-col>
       <i-col span="12" class="mt20"><Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" /></i-col>
-      <i-col span="24"></i-col> -->
+      <i-col span="24"></i-col>
       <i-col span="12" class="mt20">
         <Button type="primary" size="large" @click="showAddModal = true" class="mr15">新增企业</Button>
         <!-- <Button type="warning" class="mr15">删除</Button>
@@ -215,16 +215,16 @@
         typeObj: 1,
         statusList: [
           {
-            label: '全部',
-            value: 0
-          },
-          {
-            label: '启动',
+            label: '正常',
             value: 1
           },
           {
-            label: '暂停',
+            label: '预到期',
             value: 2
+          },
+          {
+            label: '已过期',
+            value: 3
           }
         ],
         statusObj: null,
@@ -278,26 +278,27 @@
           }
         ],
         columns: [
-          // {
-          //   title: '合同编号',
-          //   key: 'id',
-          //   align: 'center',
-          //   tooltip: true
-          // },
           {
-            title: '名称',
+            title: '编号',
+            key: 'id',
+            align: 'center',
+            tooltip: true,
+            maxWidth: 65
+          },
+          {
+            title: '公司名称',
             key: 'name',
             align: 'center',
-            tooltip: true,
-            width:240
+            tooltip: true
+            //width:240
           },
-          {
-            title: '地址',
-            key: 'addrss',
-            align: 'center',
-            tooltip: true,
-            width:240
-          },
+          // {
+          //   title: '地址',
+          //   key: 'addrss',
+          //   align: 'center',
+          //   tooltip: true
+          //   //width:240
+          // },
           // {
           //   title: '公司规模',
           //   key: 'psize',
@@ -306,32 +307,60 @@
           //   width:95
           // },
           {
-            title: '合同起始时间',
+            title: '合同起始日期',
             key: 'stime',
             align: 'center',
             tooltip: true,
-            width:130
+            maxWidth: 130
           },
           {
-            title: '合同结束时间',
+            title: '合同结束日期',
             key: 'etime',
             align: 'center',
             tooltip: true,
-            width:130
+            maxWidth: 130
           },
           {
             title: '负责人名字',
             key: 'contactperson',
             align: 'center',
             tooltip: true,
-            width:110
+            maxWidth: 110
           },
           {
-            title: '电话',
-            key: 'tel',
+            title: '金额(元)',
+            key: 'policyamount',
             align: 'center',
             tooltip: true,
-            width:130
+            maxWidth: 100
+          },
+          {
+            title: '手续费(元)',
+            key: 'cost',
+            align: 'center',
+            tooltip: true,
+            maxWidth: 120
+          },
+          {
+            title: '实际支付(元)',
+            key: 'actualpayment',
+            align: 'center',
+            tooltip: true,
+            maxWidth: 150
+          },
+          {
+            title: '已使用(元)',
+            key: 'alreadyused',
+            align: 'center',
+            tooltip: true,
+            maxWidth: 120
+          },
+          {
+            title: '剩余',
+            key: 'balance',
+            align: 'center',
+            tooltip: true,
+            maxWidth: 120
           },
           // {
           //   title: '备注',
@@ -343,14 +372,9 @@
             title: '操作',
             slot: 'action',
             align: 'center',
-            width:170
+            maxWidth: 170
           }
-          // {
-          //   title: '剩余',
-          //   key: 'remaining',
-          //   align: 'center',
-          //   tooltip: true
-          // }
+
         ],
         tableLisr: [],
         loading: true
@@ -391,6 +415,11 @@
               that.tableLisr[i].stime = res.data.data[i].fields.stime.slice(0, indexs)
               indexs = res.data.data[i].fields.etime.indexOf('T')
               that.tableLisr[i].etime = res.data.data[i].fields.etime.slice(0, indexs)
+              that.tableLisr[i].policyamount = '1000.00'
+              that.tableLisr[i].alreadyused = '1000.00'
+              that.tableLisr[i].actualpayment = '1000.00'
+              that.tableLisr[i].balance = '1000.00'
+              that.tableLisr[i].cost = '1000.00' //这一行 是个 手续费
             }
           } else {
             that.$Message.error(res.data.msg)

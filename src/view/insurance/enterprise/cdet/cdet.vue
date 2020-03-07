@@ -205,80 +205,81 @@
         pageNo: 1,
         token: '',
         columns: [
-          // {
-          //   align: 'center',
-          //   tooltip: true,
-          //   title: '合同编号',
-          //   key: 'contractnum'
-          // },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '合同编号',
+            key: 'contractnum',
+            Width:130
+          },
           {
             align: 'center',
             tooltip: true,
             title: '名称',
             key: 'insured',
-            width: 90
+            //width: 90
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
             key: 'insurancetypename',
-            width: 130
+            //width: 130
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '金额(元)',
+            key: 'je',
+            //width: 100
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
             key: 'buydate',
-            width: 130
-          },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '金额',
-            key: 'je',
-            width: 100
+            maxwidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
             key: 'maturitydate',
-            width: 130
+            maxwidth: 130
           },
           {
             align: 'center',
             tooltip: true,
-            title: '手续费',
+            title: '手续费(元)',
             key: 'cost',
-            width: 100
+            maxwidth: 100
           },
           {
             align: 'center',
             tooltip: true,
-            title: '实际支付',
+            title: '实际支付(元)',
             key: 'actualpayment',
-            width: 100
+            maxwidth: 100
           },
           {
             align: 'center',
             tooltip: true,
-            title: '已使用',
+            title: '已使用(元)',
             key: 'alreadyused',
-            width: 100
+            maxwidth: 100
           },
           {
             align: 'center',
             tooltip: true,
-            title: '剩余',
+            title: '剩余(元)',
             key: 'balance',
-            width: 100
+            maxwidth: 100
           },
           {
             title: '操作',
             slot: 'action',
             align: 'center',
-            width: 170
+            maxwidth: 170
           }
         ],
         tableLisr: [],
@@ -352,7 +353,7 @@
       this.fetchPersonalInfo()
       axios.request({
         method: 'post',
-        url: '/main/getimg',
+        url: '/main/getimglist',
         data: {
           companyid: that.getValue
         }
@@ -594,7 +595,7 @@
             this.visible = true
           }
         }
-      }, 
+      },
       shen(id) {
         this.shModal = true
         this.shId = id

@@ -1,11 +1,11 @@
 <template>
   <div>
     <Row :gutter="20">
-      <i-col span="5">
+      <!-- <i-col span="5">
         <Select class="typeSelList" v-model="typeObj">
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-      </i-col>
+      </i-col> -->
       <i-col span="5">
         <DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择开始时间"></DatePicker>
       </i-col>
@@ -159,16 +159,16 @@
         typeObj: 1,
         statusList: [
           {
-            label: '全部',
-            value: 0
-          },
-          {
-            label: '启动',
+            label: '正常',
             value: 1
           },
           {
-            label: '暂停',
+            label: '预到期',
             value: 2
+          },
+          {
+            label: '已过期',
+            value: 3
           }
         ],
         statusObj: null,
@@ -222,80 +222,81 @@
           }
         ],
         columns: [
-          // {
-          //   align: 'center',
-          //   tooltip: true,
-          //   title: '合同编号',
-          //   key: 'contractnum'
-          // },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '编号',
+            key: 'id',
+            maxWidth:65
+          },
           {
             align: 'center',
             tooltip: true,
             title: '名字',
             key: 'insured',
-            width:90
+            //width:90
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
             key: 'insurancetypename',
-            width:130
+            //maxWidth:130
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
             key: 'buydate',
-            width:130
-          },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '金额',
-            key: 'je',
-            width:100
+            maxWidth:130
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
             key: 'maturitydate',
-            width:130
+            maxWidth:130
           },
           {
             align: 'center',
             tooltip: true,
-            title: '手续费',
+            title: '金额(元)',
+            key: 'policyamount',
+            //maxWidth:100
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '手续费(元)',
             key: 'cost',
-            width:100
+            maxWidth:130
           },
           {
             align: 'center',
             tooltip: true,
-            title: '实际支付',
+            title: '实际支付(元)',
             key: 'actualpayment',
-            width:100
+            maxWidth:130
           },
           {
             align: 'center',
             tooltip: true,
-            title: '已使用',
+            title: '已使用(元)',
             key: 'alreadyused',
-            width:100
+            maxWidth:130
           },
           {
             align: 'center',
             tooltip: true,
-            title: '剩余',
+            title: '剩余(元)',
             key: 'balance',
-            width:100
+            maxWidth: 100
           },
           {
             title: '操作',
             slot: 'action',
             align: 'center',
-            width:170
+            maxWidth:170
           }
         ],
         tableLisr: [],
