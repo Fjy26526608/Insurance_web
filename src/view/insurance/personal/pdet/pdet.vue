@@ -40,7 +40,7 @@
       </Col>
       <Col span="1" style='text-align:center'>合同照片</Col>
       <Col span="5">
-      <div class="demo-upload-list" v-for="item in uploadList">
+      <div class="demo-upload-list" v-for="item in defaultList">
         <template v-if="item.status === 'finished'">
           <img :src="item.url">
           <div class="demo-upload-list-cover">
@@ -54,14 +54,15 @@
       </div>
       <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError"
               :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{number:formValidate.number,token:token}" multiple type="drag"
-              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;" :disabled="!isChange">
+              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;">
+        <!-- :disabled="!isChange" -->
         <div style="width: 58px;height:58px;line-height: 58px;">
           <Icon type="ios-camera" size="20"></Icon>
         </div>
       </Upload>
       <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
         <Carousel v-if="visible" v-model="value1" loop>
-          <CarouselItem v-for='(img,index) in uploadList' :key='index'>
+          <CarouselItem v-for='(img,index) in defaultList' :key='index'>
             <div class="demo-carousel">
               <img :src="img.url" style="width: 100%" alt="">
             </div>
@@ -185,19 +186,14 @@
         method: 'post',
         url: '/main/getimglist',
         data: {
-          number: that.formValidate.number
+          companyid: that.getValue
         }
       }).then(function (res) {
         console.log('请求返回后的企业合同图片', res)
-        let b=[]
-        that.defaultList=[]
-        for (let i = 0; i < 9; i++) {
-          b.push(res.data.data[i])
-          b[i].name = res.data.data[i].pk
-          b[i].url = 'http://47.105.49.81:2222/api/main/getimg/' + res.data.data[i].pk + '/' + that.token;
-          that.defaultList.push({})
-          that.defaultList[i].name=b[i].name
-          that.defaultList[i].url=b[i].url
+        for (let i = 0; i < res.data.data.length; i++) {
+          that.defaultList.push(res.data.data[i])
+          that.defaultList[i].name = res.data.data[i].pk
+          that.defaultList[i].url = 'http://47.105.49.81:2222/api/main/getimg/' + res.data.data[i].pk + '/' + that.token;
         }
         console.log('处理后的请求企业合同图片', that.defaultList)
       }).catch(function (error) {
