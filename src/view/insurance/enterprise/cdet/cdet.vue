@@ -206,39 +206,41 @@
         pageNo: 1,
         token: '',
         columns: [
-          // {
-          //   align: 'center',
-          //   tooltip: true,
-          //   title: '合同编号',
-          //   key: 'contractnum'
-          // },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '编号',
+            key: 'id',
+            Width:70
+          },
           {
             align: 'center',
             tooltip: true,
             title: '名称',
             key: 'insured',
-            minWidth: 90,
-            fixed: 'left'
+            minWidth: 90
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
             key: 'insurancetypename',
-            minWidth: 130
+            minWidth: 130,
+            maxwidth: 200
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '金额(元)',
+            key: 'je',
+            width: 200
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
             key: 'buydate',
-            minWidth: 130
-          },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '金额',
-            key: 'je',
+            maxwidth: 130,
             minWidth: 100
           },
           {
@@ -246,42 +248,46 @@
             tooltip: true,
             title: '到期日期',
             key: 'maturitydate',
+            maxwidth: 130,
             minWidth: 130
           },
           {
             align: 'center',
             tooltip: true,
-            title: '手续费',
+            title: '手续费(元)',
             key: 'cost',
-            minWidth: 100
+            width: 100
           },
           {
             align: 'center',
             tooltip: true,
-            title: '实际支付',
+            title: '实际支付(元)',
             key: 'actualpayment',
+            maxwidth: 100,
             minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
-            title: '已使用',
+            title: '已使用(元)',
             key: 'alreadyused',
+            maxwidth: 100,
             minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
-            title: '剩余',
+            title: '剩余(元)',
             key: 'balance',
+            maxwidth: 100,
             minWidth: 100
           },
           {
             title: '操作',
             slot: 'action',
             align: 'center',
-            minWidth: 170,
-            maxWidth: 170
+            maxwidth: 170,
+            minWidth: 170
           }
         ],
         tableLisr: [],

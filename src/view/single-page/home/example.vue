@@ -20,7 +20,7 @@ export default {
   mounted () {
     const option = {
     legend: {
-        data: ['游戏/视频', '快递/电商']
+        data: ['保险总额', '成本总计']
     },
       tooltip: {
         trigger: 'axis',
@@ -52,33 +52,36 @@ export default {
       ],
       series: [
         {
-          name: '游戏/视频',
+          name: '保险总额',
           type: 'line',
           stack: '总量',
+          smooth: true,
           label: {
             normal: {
               show: true,
               position: 'top'
             }
           },
-          areaStyle: { normal: {
-            color: '#0C17A6'
-          } },
+          // areaStyle: { normal: {
+          //   color: '#0C17A6'
+          // } },
           data: [379, 268, 354, 269, 310, 478, 358]
         },
         {
-          name: '快递/电商',
+          name: '成本总计',
           type: 'line',
           stack: '总量',
+          smooth: true,
+          color: ['#58afed'],
           label: {
             normal: {
               show: true,
               position: 'top'
             }
           },
-          areaStyle: { normal: {
-            color: '#398DBF'
-          } },
+          // areaStyle: { normal: {
+          //   color: '#398DBF'
+          // } },
           data: [500, 645, 546, 745, 872, 624, 258]
         }
       ]
