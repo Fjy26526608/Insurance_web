@@ -11,7 +11,7 @@
 <template>
   <div>
     <Row :gutter="20">
-      <i-col span="5">
+      <!-- <i-col span="5">
         <Input v-model="typeName">
         <span slot="prepend">名称</span>
         </Input>
@@ -22,7 +22,7 @@
       <i-col span="5">
         <DatePicker :clearable="true" class="typeSelList" type="date" v-model="typeEndDate" placeholder="选择结束时间"></DatePicker>
       </i-col>
-      <i-col span="9"></i-col>
+      <i-col span="9"></i-col> -->
       <!-- <i-col span="5">
         <Select class="typeSelList" v-model="typeObj">
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -299,8 +299,7 @@
             key: 'id',
             align: 'center',
             tooltip: true,
-            maxWidth: 65,
-            fixed: 'left'
+            maxWidth: 65
           },
           {
             title: '公司名称',

@@ -218,8 +218,7 @@
             tooltip: true,
             title: '名称',
             key: 'insured',
-            minWidth: 90,
-            fixed: 'left'
+            minWidth: 90
           },
           {
             align: 'center',
@@ -234,7 +233,7 @@
             tooltip: true,
             title: '金额(元)',
             key: 'je',
-            maxwidth: 200
+            width: 200
           },
           {
             align: 'center',
@@ -257,8 +256,7 @@
             tooltip: true,
             title: '手续费(元)',
             key: 'cost',
-            minwidth: 100,
-            maxwidth: 100
+            width: 100
           },
           {
             align: 'center',
@@ -289,7 +287,7 @@
             slot: 'action',
             align: 'center',
             maxwidth: 170,
-            minWidth: 170,
+            minWidth: 170
           }
         ],
         tableLisr: [],

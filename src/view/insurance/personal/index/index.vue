@@ -230,7 +230,8 @@
             tooltip: true,
             title: '编号',
             key: 'id',
-            maxWidth:65
+            maxWidth:65,
+            minWidth:65
           },
           {
             align: 'center',
@@ -238,36 +239,35 @@
             title: '名字',
             key: 'insured',
             minWidth: 90,
-            fixed: 'left'
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
             key: 'insurancetypename',
-            minWidth: 130
+            minWidth: 130,
+            maxwidth: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '购买日期',
             key: 'buydate',
-            maxWidth:130,
-            minWidth: 130
+            width: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '到期日期',
             key: 'maturitydate',
-            minWidth: 130
+            width: 130
           },
           {
             align: 'center',
             tooltip: true,
             title: '金额(元)',
             key: 'policyamount',
-            maxWidth:120
+            minWidth:120
           },
           {
             align: 'center',
