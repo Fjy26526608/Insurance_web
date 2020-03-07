@@ -38,7 +38,7 @@
       </Col>
       <Col span="1" style='text-align:center'>合同照片</Col>
       <Col span="5">
-      <div class="demo-upload-list" v-for="item in uploadList">
+      <div class="demo-upload-list" v-for="item in defaultList">
         <template v-if="item.status === 'finished'">
           <img :src="item.url">
           <div class="demo-upload-list-cover">
@@ -60,7 +60,7 @@
       </Upload>
       <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
         <Carousel v-if="visible" v-model="value1" loop>
-          <CarouselItem v-for='(img,index) in uploadList' :key='index'>
+          <CarouselItem v-for='(img,index) in defaultList' :key='index'>
             <div class="demo-carousel">
               <img :src="img.url" style="width: 100%" alt="">
             </div>
@@ -360,23 +360,23 @@
         console.log(error)
       })
       this.fetchPersonalInfo()
-      // axios.request({
-      //   method: 'post',
-      //   url: '/main/getimglist',
-      //   data: {
-      //     companyid: that.getValue
-      //   }
-      // }).then(function (res) {
-      //   console.log('请求返回后的企业合同图片', res)
-      //   for (let i = 0; i < res.data.data.length; i++) {
-      //     that.defaultList.push(res.data.data[i])
-      //     that.defaultList[i].name = res.data.data[i].pk
-      //     that.defaultList[i].url = 'http://47.105.49.81:2222/api/main/getimg/' + res.data.data[i].pk + '/' + that.token;
-      //   }
-      //   console.log('处理后的请求企业合同图片', that.defaultList)
-      // }).catch(function (error) {
-      //   console.log(error)
-      // })
+      axios.request({
+        method: 'post',
+        url: '/main/getimglist',
+        data: {
+          companyid: that.getValue
+        }
+      }).then(function (res) {
+        console.log('请求返回后的企业合同图片', res)
+        for (let i = 0; i < res.data.data.length; i++) {
+          that.defaultList.push(res.data.data[i])
+          that.defaultList[i].name = res.data.data[i].pk
+          that.defaultList[i].url = 'http://47.105.49.81:2222/api/main/getimg/' + res.data.data[i].pk + '/' + that.token;
+        }
+        console.log('处理后的请求企业合同图片', that.defaultList)
+      }).catch(function (error) {
+        console.log(error)
+      })
 
     },
     beforeRouteEnter(to, from, next) {
@@ -611,9 +611,9 @@
       },
       handleView(index) {
         console.log(index)
-        console.log(this.uploadList)
-        for (let i = 0; i < this.uploadList.length; i++) {
-          if (this.uploadList[i].name === index) {
+        console.log(this.defaultList)
+        for (let i = 0; i < this.defaultList.length; i++) {
+          if (this.defaultList[i].name === index) {
             this.value1 = i
             this.visible = true
           }
