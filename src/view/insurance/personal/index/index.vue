@@ -252,7 +252,7 @@
             tooltip: true,
             title: '购买日期',
             key: 'buydate',
-            maxWidth:130，
+            maxWidth:130,
             minWidth: 130
           },
           {
@@ -274,7 +274,7 @@
             tooltip: true,
             title: '手续费(元)',
             key: 'cost',
-            maxWidth:130，
+            maxWidth:130,
             minWidth: 100
           },
           {
@@ -282,7 +282,7 @@
             tooltip: true,
             title: '实际支付(元)',
             key: 'actualpayment',
-            maxWidth:130，
+            maxWidth:130,
             minWidth: 100
           },
           {
@@ -290,7 +290,7 @@
             tooltip: true,
             title: '已使用(元)',
             key: 'alreadyused',
-            maxWidth:130，
+            maxWidth:130,
             minWidth: 100
           },
           {
@@ -298,14 +298,14 @@
             tooltip: true,
             title: '剩余(元)',
             key: 'balance',
-            maxWidth: 100，
+            maxWidth: 100,
             minWidth: 100
           },
           {
             title: '操作',
             slot: 'action',
             align: 'center',
-            maxWidth:170，
+            maxWidth:170,
             minWidth: 170,
           }
         ],

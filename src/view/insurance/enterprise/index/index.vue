@@ -299,14 +299,13 @@
             key: 'id',
             align: 'center',
             tooltip: true,
-            maxWidth: 65
+            maxWidth: 65,
             fixed: 'left'
           },
           {
             title: '公司名称',
             key: 'name',
             align: 'center',
-            tooltip: true
             tooltip: true,
             minWidth: 240
           },
@@ -381,8 +380,8 @@
             key: 'balance',
             align: 'center',
             tooltip: true,
-            maxWidth: 130，
-            minWidth: 130,
+            maxWidth: 130,
+            minWidth: 130
           },
           // {
           //   title: '备注',
