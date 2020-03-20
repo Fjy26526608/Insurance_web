@@ -254,7 +254,7 @@
           {
             align: 'center',
             tooltip: true,
-            title: '手续费(元)',
+            title: '管理费(元)',
             key: 'cost',
             width: 100
           },

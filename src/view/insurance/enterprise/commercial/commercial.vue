@@ -174,7 +174,7 @@ export default {
           tooltip: true
         },
         {
-          title: '手续费',
+          title: '管理费',
           key: 'poundage',
           align: 'center',
           tooltip: true

@@ -54,232 +54,232 @@
 </template>
 
 <script>
-export default {
-  name: 'enterpriseOther',
-  data () {
-    return {
-      total: 0,
-      pageSize: 15,
-      pageNo: 1,
-      typeList: [
-        {
-          label: '创建时间',
-          value: 1
-        },
-        {
-          label: '结束时间',
-          value: 2
-        }
-      ],
-      typeObj: 1,
-      statusList: [
-        {
-          label: '全部',
-          value: 0
-        },
-        {
-          label: '启动',
-          value: 1
-        },
-        {
-          label: '暂停',
-          value: 2
-        }
-      ],
-      statusObj: null,
-      queryList: [
-        {
-          label: '按名称：',
-          value: 1
-        },
-        {
-          label: '按编号：',
-          value: 2
-        }
-      ],
-      queryObj: 1,
-      queryStr: '',
-      sortingList: [
-        {
-          label: '序号正序',
-          value: 1
-        },
-        {
-          label: '序号倒叙',
-          value: 2
-        },
-        {
-          label: '日期正叙',
-          value: 3
-        },
-        {
-          label: '日期倒叙',
-          value: 4
-        }
-      ],
-      sortingObj: 1,
-      pageList: [
-        {
-          label: '10',
-          value: 10
-        },
-        {
-          label: '20',
-          value: 20
-        },
-        {
-          label: '50',
-          value: 50
-        },
-        {
-          label: '100',
-          value: 100
-        }
-      ],
-      columns: [
-        {
-          title: '合同编号',
-          key: 'index',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '名称',
-          key: 'name',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '保险类型',
-          key: 'type',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '购买日期',
-          key: 'createTime',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '金额',
-          key: 'amount',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '到期日期',
-          key: 'endTime',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '手续费',
-          key: 'poundage',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '实际支付',
-          key: 'stno',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '已使用',
-          key: 'on',
-          align: 'center',
-          tooltip: true
-        },
-        {
-          title: '剩余',
-          key: 'remaining',
-          align: 'center',
-          tooltip: true
-        }
-      ],
-      tableLisr: [
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        },
-        {
-          index: '2051654',
-          name: '山东如意集团',
-          type: '五险，工伤保险',
-          createTime: '2016.12.20',
-          amount: '1000.00',
-          endTime: '2019.12.20',
-          poundage: '1000.00',
-          stno: '2000.00',
-          on: '1000.00',
-          remaining: '0.00'
-        }
-      ]
-    }
-  },
-  methods: {
-    changePage (page) {
-      alert(page)
+  export default {
+    name: 'enterpriseOther',
+    data() {
+      return {
+        total: 0,
+        pageSize: 15,
+        pageNo: 1,
+        typeList: [
+          {
+            label: '创建时间',
+            value: 1
+          },
+          {
+            label: '结束时间',
+            value: 2
+          }
+        ],
+        typeObj: 1,
+        statusList: [
+          {
+            label: '全部',
+            value: 0
+          },
+          {
+            label: '启动',
+            value: 1
+          },
+          {
+            label: '暂停',
+            value: 2
+          }
+        ],
+        statusObj: null,
+        queryList: [
+          {
+            label: '按名称：',
+            value: 1
+          },
+          {
+            label: '按编号：',
+            value: 2
+          }
+        ],
+        queryObj: 1,
+        queryStr: '',
+        sortingList: [
+          {
+            label: '序号正序',
+            value: 1
+          },
+          {
+            label: '序号倒叙',
+            value: 2
+          },
+          {
+            label: '日期正叙',
+            value: 3
+          },
+          {
+            label: '日期倒叙',
+            value: 4
+          }
+        ],
+        sortingObj: 1,
+        pageList: [
+          {
+            label: '10',
+            value: 10
+          },
+          {
+            label: '20',
+            value: 20
+          },
+          {
+            label: '50',
+            value: 50
+          },
+          {
+            label: '100',
+            value: 100
+          }
+        ],
+        columns: [
+          {
+            title: '合同编号',
+            key: 'index',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '名称',
+            key: 'name',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '保险类型',
+            key: 'type',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '购买日期',
+            key: 'createTime',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '金额',
+            key: 'amount',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '到期日期',
+            key: 'endTime',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '管理费',
+            key: 'poundage',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '实际支付',
+            key: 'stno',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '已使用',
+            key: 'on',
+            align: 'center',
+            tooltip: true
+          },
+          {
+            title: '剩余',
+            key: 'remaining',
+            align: 'center',
+            tooltip: true
+          }
+        ],
+        tableLisr: [
+          {
+            index: '2051654',
+            name: '山东如意集团',
+            type: '五险，工伤保险',
+            createTime: '2016.12.20',
+            amount: '1000.00',
+            endTime: '2019.12.20',
+            poundage: '1000.00',
+            stno: '2000.00',
+            on: '1000.00',
+            remaining: '0.00'
+          },
+          {
+            index: '2051654',
+            name: '山东如意集团',
+            type: '五险，工伤保险',
+            createTime: '2016.12.20',
+            amount: '1000.00',
+            endTime: '2019.12.20',
+            poundage: '1000.00',
+            stno: '2000.00',
+            on: '1000.00',
+            remaining: '0.00'
+          },
+          {
+            index: '2051654',
+            name: '山东如意集团',
+            type: '五险，工伤保险',
+            createTime: '2016.12.20',
+            amount: '1000.00',
+            endTime: '2019.12.20',
+            poundage: '1000.00',
+            stno: '2000.00',
+            on: '1000.00',
+            remaining: '0.00'
+          },
+          {
+            index: '2051654',
+            name: '山东如意集团',
+            type: '五险，工伤保险',
+            createTime: '2016.12.20',
+            amount: '1000.00',
+            endTime: '2019.12.20',
+            poundage: '1000.00',
+            stno: '2000.00',
+            on: '1000.00',
+            remaining: '0.00'
+          },
+          {
+            index: '2051654',
+            name: '山东如意集团',
+            type: '五险，工伤保险',
+            createTime: '2016.12.20',
+            amount: '1000.00',
+            endTime: '2019.12.20',
+            poundage: '1000.00',
+            stno: '2000.00',
+            on: '1000.00',
+            remaining: '0.00'
+          },
+          {
+            index: '2051654',
+            name: '山东如意集团',
+            type: '五险，工伤保险',
+            createTime: '2016.12.20',
+            amount: '1000.00',
+            endTime: '2019.12.20',
+            poundage: '1000.00',
+            stno: '2000.00',
+            on: '1000.00',
+            remaining: '0.00'
+          }
+        ]
+      }
+    },
+    methods: {
+      changePage(page) {
+        alert(page)
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

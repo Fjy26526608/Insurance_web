@@ -29,23 +29,28 @@
         </Select>
       </i-col> -->
       <i-col span="5">
-        <DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择开始时间"></DatePicker>
+        <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doStart' v-model='startData' placeholder="选择开始时间"></DatePicker>
       </i-col>
       <i-col span="5">
-        <DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择结束时间"></DatePicker>
+        <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doEnd' v-model='endData' placeholder="选择结束时间"></DatePicker>
       </i-col>
       <i-col span="5">
-        <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj">
+        <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj" @on-change='selectStatus'>
           <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col>
       <i-col span="24"></i-col>
-      <i-col span="4" class="mt20">
+      <!-- <i-col span="4" class="mt20">
         <Select class="typeSelList" v-model="queryObj">
           <Option v-for="item in queryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
+      </i-col> -->
+      <i-col span="12" class="mt20"><Input clearable search enter-button="搜索" @on-search='doSearch' class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询">
+        <Select v-model="select1" slot="prepend" style="width: 80px">
+          <Option value="1">按名称：</Option>
+          <Option value="2">按编号：</Option>
+        </Select></Input>
       </i-col>
-      <i-col span="12" class="mt20"><Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" /></i-col>
       <i-col span="24"></i-col>
       <i-col span="12" class="mt20">
         <Button type="primary" size="large" @click="showAddModal = true" class="mr15">新增企业</Button>
@@ -139,12 +144,15 @@
         removeId: '',
         value1: 0,
         imgData: '',
+        startData: '',
+        endData: '',
         imgArr: [],
         imgSrc: '',
         visible: false,
         allowAddImg: true,
         showAddModal: false,
         modalLoading: true,
+        select1: '1',
         total: 0, // 一共有多少行
         pageSize: 15, // 每页显示行数
         pageNo: 1, // 第几页
@@ -299,7 +307,7 @@
             key: 'id',
             align: 'center',
             tooltip: true,
-            maxWidth: 65
+            width: 65
           },
           {
             title: '公司名称',
@@ -346,25 +354,25 @@
             maxWidth: 110
           },
           {
-            title: '金额(元)',
+            title: '总金额(元)',
             key: 'policyamount',
             align: 'center',
             tooltip: true,
-            maxWidth: 100
+            width: 110
           },
           {
-            title: '手续费(元)',
+            title: '管理费(元)',
             key: 'cost',
             align: 'center',
             tooltip: true,
-            maxWidth: 120
+            width: 120
           },
           {
             title: '实际支付(元)',
             key: 'actualpayment',
             align: 'center',
             tooltip: true,
-            maxWidth: 150
+            width: 150
           },
           {
             title: '已使用(元)',
@@ -418,6 +426,18 @@
       })
     },
     methods: {
+      doSearch() {
+        console.log('搜索值', this.queryStr, this.select1)
+      },
+      doStart() {
+        console.log('开始日期',this.startData)
+      },
+      doEnd() {
+        console.log('结束日期',this.endData)
+      },
+      selectStatus(){
+        console.log('状态选择',this.statusObj)
+      },
       fetchCompanyList() {
         this.loading = true
         this.tableLisr = []

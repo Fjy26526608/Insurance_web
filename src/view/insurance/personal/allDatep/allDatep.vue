@@ -46,11 +46,11 @@
     </Row>
     <div class="tableList">
       <Table :loading="loading" highlight-row size="large" border stripe :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"><template slot-scope="{ row }" slot="id">
-        <strong>{{ row.id }}</strong>
-      </template>
-      <template slot-scope="{ row }" slot="action">
-        <Button type="error" @click="remove(row.id)" :disabled="!isAdmin">删除</Button>
-      </template></Table>
+          <strong>{{ row.id }}</strong>
+        </template>
+        <template slot-scope="{ row }" slot="action">
+          <Button type="error" @click="remove(row.id)" :disabled="!isAdmin">删除</Button>
+        </template></Table>
     </div>
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
@@ -162,7 +162,7 @@
           // {
           //   tooltip: true,
           //   align: 'center',
-          //   title: '手续费',
+          //   title: '管理费',
           //   key: 'poundage'
           // },
           // {
@@ -302,7 +302,8 @@
       this.loading = false
       this.fetchPersonalInfo()
     },
-    methods: {remove(id) {
+    methods: {
+      remove(id) {
         this.deleteInsuModal = true
         this.removeId = id
       },
@@ -325,7 +326,7 @@
         this.tableLisr = []
         let that = this
         if (this.type === '10') {
-        console.log('*********************')
+          console.log('*********************')
           axios.request({
             method: 'post',
             url: '/main/maturitylist10',

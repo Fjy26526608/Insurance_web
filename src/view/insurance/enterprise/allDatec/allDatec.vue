@@ -46,11 +46,11 @@
     </Row>
     <div class="tableList">
       <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet"><template slot-scope="{ row }" slot="id">
-        <strong>{{ row.id }}</strong>
-      </template>
-      <template slot-scope="{ row }" slot="action">
-        <Button type="error" @click="remove(row.id)" :disabled="!isAdmin">删除</Button>
-      </template>
+          <strong>{{ row.id }}</strong>
+        </template>
+        <template slot-scope="{ row }" slot="action">
+          <Button type="error" @click="remove(row.id)" :disabled="!isAdmin">删除</Button>
+        </template>
       </Table>
     </div>
     <div class="text-right pageList">
@@ -201,7 +201,7 @@
           // {
           //   align: 'center',
           //   tooltip: true,
-          //   title: '手续费',
+          //   title: '管理费',
           //   key: 'poundage'
           // },
           // {
@@ -334,7 +334,8 @@
       this.type = this.$route.query.type
       this.fetchPersonalInfo()
     },
-    methods: {remove(id) {
+    methods: {
+      remove(id) {
         this.deleteInsuModal = true
         this.removeId = id
       },
