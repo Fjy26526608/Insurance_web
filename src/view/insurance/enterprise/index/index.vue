@@ -28,24 +28,24 @@
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col> -->
-      <i-col span="5">
+      <i-col span="4">
         <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doStart' v-model='startData' placeholder="选择开始时间"></DatePicker>
       </i-col>
-      <i-col span="5">
+      <i-col span="4">
         <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doEnd' v-model='endData' placeholder="选择结束时间"></DatePicker>
       </i-col>
-      <i-col span="5">
+      <i-col span="4">
         <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj" @on-change='selectStatus'>
           <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col>
-      <i-col span="24"></i-col>
+      <!-- <i-col span="24"></i-col> -->
       <!-- <i-col span="4" class="mt20">
         <Select class="typeSelList" v-model="queryObj">
           <Option v-for="item in queryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col> -->
-      <i-col span="12" class="mt20"><Input clearable search enter-button="搜索" @on-search='doSearch' class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询">
+      <i-col span="11"><Input clearable search enter-button="搜索" @on-search='doSearch' class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询">
         <Select v-model="select1" slot="prepend" style="width: 80px">
           <Option value="1">按名称：</Option>
           <Option value="2">按编号：</Option>
@@ -144,8 +144,6 @@
         removeId: '',
         value1: 0,
         imgData: '',
-        startData: '',
-        endData: '',
         imgArr: [],
         imgSrc: '',
         visible: false,
@@ -153,6 +151,8 @@
         showAddModal: false,
         modalLoading: true,
         select1: '1',
+        startData: '',
+        endData: '',
         total: 0, // 一共有多少行
         pageSize: 15, // 每页显示行数
         pageNo: 1, // 第几页
@@ -383,7 +383,7 @@
             maxWidth: 130
           },
           {
-            title: '剩余',
+            title: '剩余(元)',
             key: 'balance',
             align: 'center',
             tooltip: true,
@@ -430,13 +430,13 @@
         console.log('搜索值', this.queryStr, this.select1)
       },
       doStart() {
-        console.log('开始日期',this.startData)
+        console.log('开始日期', this.startData)
       },
       doEnd() {
-        console.log('结束日期',this.endData)
+        console.log('结束日期', this.endData)
       },
-      selectStatus(){
-        console.log('状态选择',this.statusObj)
+      selectStatus() {
+        console.log('状态选择', this.statusObj)
       },
       fetchCompanyList() {
         this.loading = true

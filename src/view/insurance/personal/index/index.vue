@@ -6,25 +6,28 @@
           <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col> -->
-      <i-col span="5">
-        <DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择开始时间"></DatePicker>
+      <i-col span="4">
+        <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doStart' v-model='startData' placeholder="选择开始时间"></DatePicker>
       </i-col>
-      <i-col span="5">
-        <DatePicker :clearable="true" class="typeSelList" type="date" placeholder="选择结束时间"></DatePicker>
+      <i-col span="4">
+        <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doEnd' v-model='endData' placeholder="选择结束时间"></DatePicker>
       </i-col>
-      <i-col span="5">
-        <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj">
+      <i-col span="4">
+        <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj" @on-change='selectStatus'>
           <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col>
-      <i-col span="24"></i-col>
+      <!-- <i-col span="24"></i-col>
       <i-col span="4" class="mt20">
         <Select class="typeSelList" v-model="queryObj">
           <Option v-for="item in queryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-      </i-col>
-      <i-col span="12" class="mt20">
-        <Input clearable search enter-button class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询" />
+      </i-col> -->
+      <i-col span="11"><Input clearable search enter-button="搜索" @on-search='doSearch' class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询">
+        <Select v-model="select1" slot="prepend" style="width: 80px">
+          <Option value="1">按名称：</Option>
+          <Option value="2">按编号：</Option>
+        </Select></Input>
       </i-col>
       <i-col span="24"></i-col>
       <i-col span="12" class="mt20">
@@ -153,6 +156,9 @@
         visible: false,
         uploadList: [],
         allowAddImg: true,
+        select1: '1',
+        startData: '',
+        endData: '',
         total: 0,
         pageSize: 15,
         pageNo: 1,
@@ -265,7 +271,7 @@
           {
             align: 'center',
             tooltip: true,
-            title: '金额(元)',
+            title: '总金额(元)',
             key: 'policyamount',
             minWidth:120
           },
@@ -400,6 +406,18 @@
       })
     },
     methods: {
+      doSearch() {
+        console.log('搜索值', this.queryStr, this.select1)
+      },
+      doStart() {
+        console.log('开始日期',this.startData)
+      },
+      doEnd() {
+        console.log('结束日期',this.endData)
+      },
+      selectStatus(){
+        console.log('状态选择',this.statusObj)
+      },
       getInsuranceTypes() {
         this.insuranceList = []
         getInsuranceTypes().then((res) => {
