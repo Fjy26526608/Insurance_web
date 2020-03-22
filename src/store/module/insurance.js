@@ -27,18 +27,20 @@ export default {
       return new Promise((resolve, reject) => {
         getInsuranceTypes(getToken())
           .then(res => {
+            console.log('++++++')
+            console.log(res.data.data)
             if (res.data.state) {
               const insuranceTypes = res.data.data
               let enterpriseTypes = []
               let personalTypes = []
               for (let i = 0; i < insuranceTypes.length; i++) {
                 const insuranceType = insuranceTypes[i]
-                let { fields } = insuranceType
-                fields.id = insuranceType.pk
-                if (fields.iscompany) {
-                  enterpriseTypes.push(fields)
+                // let { fields } = insuranceType
+                // fields.id = insuranceType.pk
+                if (insuranceType.iscompany) {
+                  enterpriseTypes.push(insuranceType)
                 } else {
-                  personalTypes.push(fields)
+                  personalTypes.push(insuranceType)
                 }
               }
               commit('setInsuranceTypes', res.data.data)

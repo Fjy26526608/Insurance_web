@@ -74,13 +74,13 @@
         </FormItem>
         <FormItem label="保险类型" prop="insuranceType">
           <i-col span="10">
-          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型">
+          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" @on-change='chan'>
             <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select></i-col>
           <i-col span="2"  offset="1">保险档次</i-col>
           <i-col span="11">
-          <Select v-model="formValidate.insuranceType" placeholder="选择保险档次">
-            <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Select v-model="formLeval" placeholder="选择保险档次">
+            <Option v-for="item in formLeval" :value="item.typeid" :key="item.id">{{ item.label }}</Option>
           </Select></i-col>
         </FormItem>
         <FormItem label="合同日期" prop="date">
@@ -390,7 +390,8 @@
               trigger: 'blur'
             }
           ]
-        }
+        },
+        formLeval:[]
       }
     },
     computed: {
@@ -412,8 +413,49 @@
       })
     },
     methods: {
+      chan(res){
+        console.log('/////////////',res)
+        for(let i=0;i<this.insuranceList.length;i++){
+          if(this.insuranceList[i].value===res){
+            this.formLeval=this.insuranceList[i].levellist
+            for (let j=0;j<this.formLeval.length;j++){
+              this.formLeval[i].label=this.formLeval[i].jishu+' - '+this.formLeval[i].bili+'%'
+            }
+          }
+        }
+      },
       doSearch() {
         console.log('搜索值', this.queryStr, this.select1)
+        this.loading = true
+        this.tableLisr = []
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/inslist',
+          data: {
+            page: this.pageNo,
+            pagesize: this.pageSize,
+            instypeid: this.typeId,
+            startdata:this.startdata,
+            enddata:this.endData,
+            status:this.statusObj
+          }
+        }).then(function (res) {
+          for (let i = 0; i < res.data.data.length; i++) {
+            that.tableLisr.push(res.data.data[i].fields)
+            that.tableLisr[i].id = res.data.data[i].pk
+            let indexs = res.data.data[i].fields.buydate.indexOf('T')
+            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
+            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
+            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
+            indexs = res.data.data[i].fields.reminddate.indexOf('T')
+            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
+          }
+          that.total = res.data.count
+        }).catch(function (error) {
+          console.log(error)
+        })
+        this.loading = false
       },
       doStart() {
         console.log('开始日期',this.startData)
@@ -431,16 +473,18 @@
             const types = res.data.data
             console.log('返回的保险类型',res)
             for (const type of types) {
-              if (!type.fields.iscompany) {
+              if (!type.iscompany) {
                 this.insuranceList.push({
-                  value: type.pk,
-                  label: type.fields.name
+                  value: type.id,
+                  label: type.name,
+                  levellist: type.levellist
                 })
               }
             }
           } else {
             this.$Message.error('保险类型查询异常')
           }
+        console.log('*****',this.insuranceList)
         }).catch((err) => {
           console.error(err)
         })

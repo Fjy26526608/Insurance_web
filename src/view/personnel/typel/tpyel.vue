@@ -21,7 +21,7 @@
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :styles="{top: '20px'}" :mask-closable="false" ok-text='添加' width='50%'>
+    <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :styles="{top: '20px'}" :mask-closable="false" ok-text='添加' width='60%'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="90">
         <FormItem label="保险名称:" prop="name">
           <Input v-model="formValidate.name" placeholder="输入保险名称"></Input>
@@ -36,7 +36,7 @@
           <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性:'" :prop="'items.' + index + '.bili'"
                     :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
             <Row>
-              <Col span="2">比例：</Col>
+              <Col span="2">比例(%)：</Col>
               <Col span="5">
               <Input type="text" v-model="item.bili" placeholder="保险比例"></Input>
               </Col>
@@ -59,7 +59,7 @@
         </Form>
       </Form>
     </Modal>
-    <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :styles="{top: '20px'}" :closable="false" :mask-closable="false" ok-text='修改' width='50%'>
+    <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :styles="{top: '20px'}" :closable="false" :mask-closable="false" ok-text='修改' width='60%'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="保险名称" prop="name">
           <Input v-model="formValidate.name" placeholder="输入保险名称"></Input>
@@ -74,7 +74,7 @@
           <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性:'" :prop="'items.' + index + '.bili'"
                     :rules="{required: true, message: 'Item ' + item.index +' can not be empty', trigger: 'blur'}">
             <Row>
-              <Col span="2">比例：</Col>
+              <Col span="2">比例(%)：</Col>
               <Col span="5">
               <Input type="text" v-model="item.bili" placeholder="保险比例"></Input>
               </Col>
@@ -398,7 +398,11 @@
         console.log(this.tableLisr[index])
         this.formValidate = this.tableLisr[index]
         this.formValidate.radio = this.tableLisr[index].iscompany.toString()
-        this.formDynamic=this.tableLisr[index].levellist
+        this.formDynamic.items=this.tableLisr[index].levellist
+        for (let i=0;i<this.tableLisr[index].levellist.length;i++){
+          // this.formDynamic.push(this.tableLisr[index].levellist[i])
+          this.formDynamic.items[i].index=this.tableLisr[index].levellist[i].id
+        }
         this.showAddModal1 = true
       },
       remove(index) {
