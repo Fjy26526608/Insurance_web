@@ -33,7 +33,7 @@
           </RadioGroup>
         </FormItem>
         <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性 ' + item.index + ':'" :prop="'items.' + index + '.bili'"
+          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性:'" :prop="'items.' + index + '.bili'"
                     :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
             <Row>
               <Col span="2">比例：</Col>
@@ -71,7 +71,7 @@
           </RadioGroup>
         </FormItem>
         <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性 ' + item.index + ':'" :prop="'items.' + index + '.bili'"
+          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性:'" :prop="'items.' + index + '.bili'"
                     :rules="{required: true, message: 'Item ' + item.index +' can not be empty', trigger: 'blur'}">
             <Row>
               <Col span="2">比例：</Col>
@@ -203,13 +203,12 @@
         }).then(function (res) {
           console.log('查询返回值', res)
           for (let i = 0; i < res.data.data.length; i++) {
-            that.tableLisr.push(res.data.data[i].fields)
+            that.tableLisr.push(res.data.data[i])
             if (that.tableLisr[i].iscompany === true) {
               that.tableLisr[i].typeName = '公司保险'
             } else {
               that.tableLisr[i].typeName = '个人保险'
             }
-            that.tableLisr[i].id = res.data.data[i].pk
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -399,7 +398,7 @@
         console.log(this.tableLisr[index])
         this.formValidate = this.tableLisr[index]
         this.formValidate.radio = this.tableLisr[index].iscompany.toString()
-        
+        this.formDynamic=this.tableLisr[index].levellist
         this.showAddModal1 = true
       },
       remove(index) {
