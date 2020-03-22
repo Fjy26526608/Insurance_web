@@ -61,7 +61,7 @@
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :styles="{top: '20px'}" :closable="false" :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
           <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
@@ -73,9 +73,15 @@
           <Input v-model="formValidate.phone" placeholder="输入被保人电话"></Input>
         </FormItem>
         <FormItem label="保险类型" prop="insuranceType">
+          <i-col span="10">
           <Select v-model="formValidate.insuranceType" placeholder="选择保险类型">
             <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
+          </Select></i-col>
+          <i-col span="2"  offset="1">保险档次</i-col>
+          <i-col span="11">
+          <Select v-model="formValidate.insuranceType" placeholder="选择保险档次">
+            <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select></i-col>
         </FormItem>
         <FormItem label="合同日期" prop="date">
           <!-- <Row>
@@ -423,6 +429,7 @@
         getInsuranceTypes().then((res) => {
           if (res.data.state === 'true') {
             const types = res.data.data
+            console.log('返回的保险类型',res)
             for (const type of types) {
               if (!type.fields.iscompany) {
                 this.insuranceList.push({

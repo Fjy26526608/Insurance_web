@@ -21,7 +21,7 @@
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" ok-text='添加' width='50%'>
+    <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :styles="{top: '20px'}" :mask-closable="false" ok-text='添加' width='50%'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="90">
         <FormItem label="保险名称:" prop="name">
           <Input v-model="formValidate.name" placeholder="输入保险名称"></Input>
@@ -59,7 +59,7 @@
         </Form>
       </Form>
     </Modal>
-    <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :closable="false" :mask-closable="false" ok-text='修改' width='50%'>
+    <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :styles="{top: '20px'}" :closable="false" :mask-closable="false" ok-text='修改' width='50%'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="保险名称" prop="name">
           <Input v-model="formValidate.name" placeholder="输入保险名称"></Input>
@@ -240,10 +240,8 @@
         }
         console.log('表单值', this.formValidate,this.formDynamic.items)
         let that = this
-        // let tp=''
-        // for (let i =0;i<this.formDynamic.items.length;i++){
-        //   tp=this.
-        // }
+        let tp=JSON.stringify(this.formDynamic.items)
+        console.log('转码后的数组',tp)
         axios.request({
           method: 'post',
           url: '/main/addinstype',
@@ -251,7 +249,7 @@
             name: that.formValidate.name,
             iscompany: that.formValidate.radio,
             length:that.formDynamic.items.length,
-            data:that.formDynamic.items
+            data:tp
           }
         }).then(function (res) {
           console.log(res)
