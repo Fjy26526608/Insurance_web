@@ -33,16 +33,16 @@
           </RadioGroup>
         </FormItem>
         <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性 ' + item.index + ':'" :prop="'items.' + index + '.value'"
+          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性 ' + item.index + ':'" :prop="'items.' + index + '.bili'"
                     :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
             <Row>
               <Col span="2">比例：</Col>
               <Col span="5">
-              <Input type="text" v-model="item.value" placeholder="保险比例"></Input>
+              <Input type="text" v-model="item.bili" placeholder="保险比例"></Input>
               </Col>
               <Col span="2" offset="1">基数：</Col>
               <Col span="5">
-              <Input type="text" v-model="item.obs" placeholder="保险基数"></Input>
+              <Input type="text" v-model="item.jishu" placeholder="保险基数"></Input>
               </Col>
               <Col span="3" offset="1">
               <Button @click="handleRemove(index)">删除</Button>
@@ -59,7 +59,7 @@
         </Form>
       </Form>
     </Modal>
-    <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :closable="false" :mask-closable="false" ok-text='修改'>
+    <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :closable="false" :mask-closable="false" ok-text='修改' width='50%'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="保险名称" prop="name">
           <Input v-model="formValidate.name" placeholder="输入保险名称"></Input>
@@ -71,16 +71,16 @@
           </RadioGroup>
         </FormItem>
         <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性 ' + item.index + ':'" :prop="'items.' + index + '.value'"
+          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性 ' + item.index + ':'" :prop="'items.' + index + '.bili'"
                     :rules="{required: true, message: 'Item ' + item.index +' can not be empty', trigger: 'blur'}">
             <Row>
               <Col span="2">比例：</Col>
               <Col span="5">
-              <Input type="text" v-model="item.value" placeholder="保险比例"></Input>
+              <Input type="text" v-model="item.bili" placeholder="保险比例"></Input>
               </Col>
               <Col span="2" offset="1">基数：</Col>
               <Col span="5">
-              <Input type="text" v-model="item.obs" placeholder="保险基数"></Input>
+              <Input type="text" v-model="item.jishu" placeholder="保险基数"></Input>
               </Col>
               <Col span="3" offset="1">
               <Button @click="handleRemove(index)">删除</Button>
@@ -120,9 +120,9 @@
         formDynamic: {
           items: [
             {
-              value: '',
+              bili: '',
               index: 1,
-              obs: ''
+              jishu: ''
             }
           ]
         },
@@ -176,9 +176,9 @@
       handleAdd() {
         this.index++;
         this.formDynamic.items.push({
-          value: '',
+          bili: '',
           index: this.index,
-          obs: ''
+          jishu: ''
         });
       },
       handleRemove(index) {
@@ -240,13 +240,18 @@
         }
         console.log('表单值', this.formValidate,this.formDynamic.items)
         let that = this
+        // let tp=''
+        // for (let i =0;i<this.formDynamic.items.length;i++){
+        //   tp=this.
+        // }
         axios.request({
           method: 'post',
           url: '/main/addinstype',
           data: {
             name: that.formValidate.name,
             iscompany: that.formValidate.radio,
-            // data:that.formDynamic.items
+            length:that.formDynamic.items.length,
+            data:that.formDynamic.items
           }
         }).then(function (res) {
           console.log(res)
@@ -256,7 +261,7 @@
             that.formValidate.radio = 'false'
 
             setTimeout(() => {
-              that.$router.go(0)
+              // that.$router.go(0)
             }, 300)
           } else {
             that.$Message.error(res.data.msg)
@@ -396,6 +401,7 @@
         console.log(this.tableLisr[index])
         this.formValidate = this.tableLisr[index]
         this.formValidate.radio = this.tableLisr[index].iscompany.toString()
+        
         this.showAddModal1 = true
       },
       remove(index) {
