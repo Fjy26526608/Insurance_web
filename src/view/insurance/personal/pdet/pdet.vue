@@ -197,7 +197,7 @@
         method: 'post',
         url: '/main/getimglist',
         data: {
-          companyid: that.getValue
+          companyid: that.id
         }
       }).then(function (res) {
         console.log('请求返回后的企业合同图片', res)
