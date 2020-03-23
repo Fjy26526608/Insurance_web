@@ -452,8 +452,10 @@
           method: 'post',
           url: '/main/inslist',
           data: {
+            iscompany:False,
             page: this.pageNo,
             pagesize: this.pageSize,
+            instypeid: this.typeId,
             name: this.queryStr,
             btime: sd,
             etime: ed
@@ -506,6 +508,7 @@
           method: 'post',
           url: '/main/inslist',
           data: {
+            iscompany:False,
             page: this.pageNo,
             pagesize: this.pageSize,
             instypeid: this.typeId

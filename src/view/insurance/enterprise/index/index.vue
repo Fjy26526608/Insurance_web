@@ -447,7 +447,8 @@
             pagesize: this.pageSize,
             name: this.queryStr,
             btime: sd,
-            etime: ed
+            etime: ed,
+            instypeid: this.typeId
           }
         }).then(function (res) {
           console.log('查询返回值', res)
