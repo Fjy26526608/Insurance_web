@@ -353,7 +353,7 @@
             key: 'contactperson',
             align: 'center',
             tooltip: true,
-            maxWidth: 110
+            width: 110
           },
           {
             title: '总金额(元)',
