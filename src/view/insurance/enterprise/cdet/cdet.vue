@@ -592,6 +592,7 @@
         file.url = 'http://47.105.49.81:2222/api/main/getimg/' + res.id + '/' + this.token;
         console.log('图片地址', file.url)
         file.name = res.id;
+        this.defaultList.push(file)
       },
       handleFormatError(file) {
         this.$Notice.warning({
@@ -635,6 +636,8 @@
         }).then(function (res) {
           if (res.data.state === 'true') {
             that.$Message.success(res.data.msg)
+            let i = that.defaultList.findIndex(e => e.name === file.name)
+            that.defaultList.splice(i, 1)
           } else {
             that.$Message.error(res.data.msg)
           }
