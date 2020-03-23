@@ -12,9 +12,15 @@
         <Input v-model="formValidate.phone" placeholder="输入被保人电话" :disabled="!isChange"></Input>
       </FormItem>
       <FormItem label="保险类型" prop="insuranceType">
-        <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" :disabled="!isChange">
-          <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
+        <i-col span="10">
+          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" @on-change='chan' :disabled="!isChange">
+            <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select></i-col>
+        <i-col span="2" offset="1">保险档次</i-col>
+        <i-col span="11">
+          <Select v-model="formValidate.level" placeholder="选择保险档次" @on-change='doLevel' :disabled="!isChange">
+            <Option v-for="item in formLeval" :value="item.id" :key="item.id">{{ item.label }}</Option>
+          </Select></i-col>
       </FormItem>
       <FormItem label="合同日期">
         <Row>
@@ -166,7 +172,10 @@
               trigger: 'blur'
             }
           ]
-        }
+        },
+        levelB: '',
+        levelJ: '',
+        formLeval: []
       }
     },
     computed: {
@@ -201,15 +210,37 @@
       })
     },
     methods: {
+      doLevel(res) {
+        console.log(';;;;;;;;;;;;;;;;;', res)
+        for (let i = 0; i < this.formLeval.length; i++) {
+          if (this.formLeval[i].id === res) {
+            this.levelB = this.formLeval[i].bili
+            this.levelJ = this.formLeval[i].jishu
+          }
+        }
+        console.log('>>>>>>>>', this.levelB, this.levelJ)
+      },
+      chan(res) {
+        console.log('/////////////', res)
+        for (let i = 0; i < this.insuranceList.length; i++) {
+          if (this.insuranceList[i].value === res) {
+            this.formLeval = this.insuranceList[i].levellist
+            for (let j = 0; j < this.formLeval.length; j++) {
+              this.formLeval[j].label = this.formLeval[j].jishu + ' - ' + this.formLeval[j].bili + '%'
+            }
+          }
+        }
+      },
       getInsuranceTypes() {
         getInsuranceTypes().then((res) => {
           if (res.data.state === 'true') {
             const types = res.data.data
             for (const type of types) {
-              if (!type.fields.iscompany) {
+              if (!type.iscompany) {
                 this.insuranceList.push({
-                  value: type.pk,
-                  label: type.fields.name
+                  value: type.id,
+                  label: type.name,
+                  levellist: type.levellist
                 })
               }
             }
@@ -256,6 +287,8 @@
               month: duration,
               policyamount: unitPrice,
               cost,
+              bili: this.levelB,
+              jishu: this.levelJ,
               actualpayment: payment
             }
             saveOrModifyInsuranceInfo(data).then((res) => {

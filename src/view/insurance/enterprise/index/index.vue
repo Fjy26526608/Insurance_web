@@ -34,22 +34,24 @@
       <i-col span="4">
         <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doEnd' v-model='endData' placeholder="选择结束时间"></DatePicker>
       </i-col>
-      <i-col span="4">
+      <!-- <i-col span="4">
         <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj" @on-change='selectStatus'>
           <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-      </i-col>
+      </i-col> -->
       <!-- <i-col span="24"></i-col> -->
       <!-- <i-col span="4" class="mt20">
         <Select class="typeSelList" v-model="queryObj">
           <Option v-for="item in queryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </i-col> -->
-      <i-col span="11"><Input clearable search enter-button="搜索" @on-search='doSearch' class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询">
-        <Select v-model="select1" slot="prepend" style="width: 80px">
+      <i-col span="11">
+        <Input clearable search enter-button="搜索" @on-search='doSearch' class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询">
+        <!-- <Select v-model="select1" slot="prepend" style="width: 80px">
           <Option value="1">按名称：</Option>
           <Option value="2">按编号：</Option>
-        </Select></Input>
+        </Select> -->
+        </Input>
       </i-col>
       <i-col span="24"></i-col>
       <i-col span="12" class="mt20">
@@ -88,9 +90,9 @@
         <FormItem label="名称" prop="name">
           <Input v-model="formValidate.name" placeholder="输入公司名称"></Input>
         </FormItem>
-        <FormItem label="规模" prop="psize">
+        <!-- <FormItem label="规模" prop="psize">
           <Input v-model="formValidate.psize" placeholder="输入公司规模"></Input>
-        </FormItem>
+        </FormItem> -->
         <FormItem label="地址" prop="address">
           <Input v-model="formValidate.address" placeholder="输入公司地址"></Input>
         </FormItem>
@@ -362,7 +364,7 @@
           },
           {
             title: '管理费(元)',
-            key: 'cost',
+            key: 'glf',
             align: 'center',
             tooltip: true,
             width: 120
@@ -427,7 +429,37 @@
     },
     methods: {
       doSearch() {
-        console.log('搜索值', this.queryStr, this.select1)
+        console.log('搜索值', this.queryStr, JSON.stringify(this.startData),this.endData)
+        this.loading = true
+        this.tableLisr = []
+        let indexs = JSON.stringify(this.startData).indexOf('T')
+        this.startData = JSON.stringify(this.startData).slice(0, indexs)
+        this.startData =  this.startData.slice(1,this.startData.length)
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/companylist',
+          data: {
+            page: this.pageNo,
+            pagesize: this.pageSize,
+            name: this.queryStr,
+            btime: this.startData,
+            etime: this.endData
+          }
+        }).then(function (res) {
+          console.log('查询返回值', res)
+          for (let i = 0; i < res.data.data.length; i++) {
+            that.tableLisr.push(res.data.data[i])
+            let indexs = res.data.data[i].stime.indexOf('T')
+            that.tableLisr[i].stime = res.data.data[i].stime.slice(0, indexs)
+            indexs = res.data.data[i].etime.indexOf('T')
+            that.tableLisr[i].etime = res.data.data[i].etime.slice(0, indexs)
+          }
+          that.total = res.data.count
+        }).catch(function (error) {
+          console.log(error)
+        })
+        this.loading = false
       },
       doStart() {
         console.log('开始日期', this.startData)
@@ -455,17 +487,16 @@
           if (res.data.state === 'true') {
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {
-              that.tableLisr.push(res.data.data[i].fields)
-              that.tableLisr[i].id = res.data.data[i].pk
-              let indexs = res.data.data[i].fields.stime.indexOf('T')
-              that.tableLisr[i].stime = res.data.data[i].fields.stime.slice(0, indexs)
-              indexs = res.data.data[i].fields.etime.indexOf('T')
-              that.tableLisr[i].etime = res.data.data[i].fields.etime.slice(0, indexs)
+              that.tableLisr.push(res.data.data[i])
+              let indexs = res.data.data[i].stime.indexOf('T')
+              that.tableLisr[i].stime = res.data.data[i].stime.slice(0, indexs)
+              indexs = res.data.data[i].etime.indexOf('T')
+              that.tableLisr[i].etime = res.data.data[i].etime.slice(0, indexs)
               that.tableLisr[i].policyamount = '1000.00'
-              that.tableLisr[i].alreadyused = '1000.00'
-              that.tableLisr[i].actualpayment = '1000.00'
-              that.tableLisr[i].balance = '1000.00'
-              that.tableLisr[i].cost = '1000.00' //这一行 是个 手续费
+              // that.tableLisr[i].alreadyused = '1000.00'
+              // that.tableLisr[i].actualpayment = '1000.00'
+              // that.tableLisr[i].balance = '1000.00'
+              // that.tableLisr[i].cost = '1000.00' //这一行 是个 手续费
             }
           } else {
             that.$Message.error(res.data.msg)
@@ -507,15 +538,15 @@
             return this.changeLoading()
           }
           // 请求服务端添加接口
-          const { name, number, address, manager, phone, date, stopDate, desc } = this.formValidate
+          const { name, number, address, contactperson, tel, stime, etime, desc } = this.formValidate
           const data = {
             name,
-            psize: number,
+            // psize: number,
             address,
-            stime: date,
-            etime: stopDate,
-            contactperson: manager,
-            tel: phone,
+            stime: stime,
+            etime: etime,
+            contactperson: contactperson,
+            tel: tel,
             // remark: desc
           }
           addCompany(data).then((res) => {

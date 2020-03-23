@@ -256,9 +256,8 @@
             that.$Message.success(res.data.msg)
             that.formValidate = {}
             that.formValidate.radio = 'false'
-
             setTimeout(() => {
-              // that.$router.go(0)
+              that.$router.go(0)
             }, 300)
           } else {
             that.$Message.error(res.data.msg)
@@ -266,36 +265,6 @@
         }).catch(function (error) {
           console.log(error)
         })
-
-        // this.loading = true
-        // setTimeout(() => {
-        //   axios.request({
-        //     method: 'post',
-        //     url: '/main/instype',
-        //     data: {
-        //       page: 1,
-        //       pagesize: 15
-        //     }
-        //   }).then(function (res) {
-        //     console.log('查询返回值', res)
-        //     for (let i = 0; i < res.data.data.length; i++) {
-        //       that.tableLisr.push(res.data.data[i].fields)
-        //       if (that.tableLisr[i].iscompany === true) {
-        //         that.tableLisr[i].typeName = '公司保险'
-        //       } else {
-        //         that.tableLisr[i].typeName = '个人保险'
-        //       }
-        //       that.tableLisr[i].id = res.data.data[i].pk
-        //     }
-        //     that.total = res.data.count
-        //   }).catch(function (error) {
-        //     console.log(error)
-        //   })
-        //   console.log(this.tableLisr)
-        //   this.loading = false
-        // }, 500)
-        // this.formValidate = {}
-        // this.formValidate.radio = 'false'
       },
       cancel1() {
         this.$Message.success('点击取消!')
@@ -310,19 +279,20 @@
         } else if (this.formValidate.radio === 'false') {
           this.formValidate.radio = 0
         }
+        let tp=JSON.stringify(this.formDynamic.items)
         axios.request({
           method: 'post',
           url: '/main/addinstype',
           data: {
             id: that.formValidate.id,
             name: that.formValidate.name,
-            iscompany: that.formValidate.radio
+            iscompany: that.formValidate.radio,
+            data:tp
           }
         }).then(function (res) {
           console.log(res)
           if (res.data.state === 'true') {
             that.$Message.success(res.data.msg)
-
             setTimeout(() => {
               that.$router.go(0)
             }, 300)
@@ -332,36 +302,6 @@
         }).catch(function (error) {
           console.log(error)
         })
-        // this.loading = true
-        // setTimeout(() => {
-        //   axios.request({
-        //     method: 'post',
-        //     url: '/main/instype',
-        //     data: {
-        //       page: 1,
-        //       pagesize: 15
-        //     }
-        //   }).then(function (res) {
-        //     console.log('查询返回值', res)
-        //     for (let i = 0; i < res.data.data.length; i++) {
-        //       that.tableLisr.push(res.data.data[i].fields)
-        //       if (that.tableLisr[i].iscompany === true) {
-        //         that.tableLisr[i].typeName = '公司保险'
-        //       } else {
-        //         that.tableLisr[i].typeName = '个人保险'
-        //       }
-        //       that.tableLisr[i].id = res.data.data[i].pk
-        //     }
-        //     that.total = res.data.count
-        //   }).catch(function (error) {
-        //     console.log(error)
-        //   })
-        //   console.log(this.tableLisr)
-        //   this.loading = false
-        // }, 500)
-        // this.loading = false
-        // this.formValidate = {}
-        // this.formValidate.radio = 'false'
       },
       cancel2() {
         this.$Message.success('点击取消!')

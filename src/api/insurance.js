@@ -19,7 +19,7 @@ export const getInsuranceInfo = (id) => {
   })
 }
 
-export const saveOrModifyInsuranceInfo = ({ companyid, id, psize, contractnum, insured, tel, insurancetypeid, buydate, month, policyamount, cost, actualpayment }) => {
+export const saveOrModifyInsuranceInfo = ({ companyid, id, psize, contractnum, insured, tel, insurancetypeid, buydate, month, policyamount, bili, jishu, actualpayment, cost }) => {
   const data = {
     companyid,
     id,
@@ -31,8 +31,10 @@ export const saveOrModifyInsuranceInfo = ({ companyid, id, psize, contractnum, i
     buydate,
     month,
     policyamount,
-    cost,
-    actualpayment
+    bili,
+    jishu,
+    actualpayment,
+    cost
   }
 
   return axios.request({

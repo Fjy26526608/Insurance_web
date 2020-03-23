@@ -1,5 +1,17 @@
 <template>
   <div>
+    <Row :gutter="20" style="margin-bottom: 10px;">
+      <i-col span="5" offset="7">
+        <Card shadow :padding='10'>
+          今日成单：{{jr}}
+        </Card>
+      </i-col>
+      <i-col span="5">
+        <Card shadow :padding='10'>
+          30日成单：{{sr}}
+        </Card>
+      </i-col>
+    </Row>
     <Card :padding="0" shadow class="text-center">
       <button :class="{ active: changeType === 1 }" @click="changeTopTab(1)" class="top_tab_button">企业</button>
       <button :class="{ active: changeType === 2 }" @click="changeTopTab(2)" class="top_tab_button">个人</button>
@@ -120,7 +132,9 @@
         ctableDet15: [],
         ptableDet10: [],
         ptableDet15: [],
-        show: true
+        show: true,
+        jr:0,
+        sr:0
       }
     },
     beforeCreate() {
@@ -147,6 +161,16 @@
           that.ctableDet10.push(res.data.data[i])
           that.ctableDet10[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
         }
+      }).catch(function (error) {
+        console.log(error)
+      })
+      axios.request({
+        method: 'post',
+        url: '/main/todaycount'
+      }).then(function (res) {
+        console.log('shagntopu', res)
+        that.jr=res.data.data
+        that.sr=res.data.data30
       }).catch(function (error) {
         console.log(error)
       })

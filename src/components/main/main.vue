@@ -119,6 +119,7 @@ export default {
             if (innerRoute.name === '_enterprise') {
               let enterpriseChildren = innerRoute.children
               const enterpriseTypes = this.$store.getters.getEnterpiseInsuranceTypes
+              console.log('/```````````/',enterpriseTypes)
               for (const type of enterpriseTypes) {
                 enterpriseChildren.push({
                   path: 'index/' + type.id,
@@ -137,6 +138,7 @@ export default {
             } else if (innerRoute.name === '_personal') {
               let personalChildren = innerRoute.children
               const personalTypes = this.$store.getters.getPersonalInsuranceTypes
+              console.log('/~~~~~~~~~~~/',personalTypes)
               for (const type of personalTypes) {
                 personalChildren.push({
                   path: 'index/' + type.id,

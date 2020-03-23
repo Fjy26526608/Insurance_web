@@ -7,16 +7,16 @@
         </Select>
       </i-col> -->
       <i-col span="4">
-        <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doStart' v-model='startData' placeholder="选择开始时间"></DatePicker>
+        <DatePicker :clearable="true" class="typeSelList" type="date" v-model='startData' placeholder="选择开始时间"></DatePicker>
       </i-col>
       <i-col span="4">
-        <DatePicker :clearable="true" class="typeSelList" type="date" @on-change='doEnd' v-model='endData' placeholder="选择结束时间"></DatePicker>
+        <DatePicker :clearable="true" class="typeSelList" type="date" v-model='endData' placeholder="选择结束时间"></DatePicker>
       </i-col>
-      <i-col span="4">
-        <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj" @on-change='selectStatus'>
+      <!-- <i-col span="4">
+        <Select placeholder="请选择状态" class="typeSelList" v-model="statusObj">
           <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-      </i-col>
+      </i-col> -->
       <!-- <i-col span="24"></i-col>
       <i-col span="4" class="mt20">
         <Select class="typeSelList" v-model="queryObj">
@@ -24,14 +24,15 @@
         </Select>
       </i-col> -->
       <i-col span="11"><Input clearable search enter-button="搜索" @on-search='doSearch' class="typeSelList" v-model="queryStr" placeholder="输入内容按回车键查询">
-        <Select v-model="select1" slot="prepend" style="width: 80px">
+        <!-- <Select v-model="select1" slot="prepend" style="width: 80px">
           <Option value="1">按名称：</Option>
           <Option value="2">按编号：</Option>
-        </Select></Input>
+        </!-->
+        </Input>
       </i-col>
       <i-col span="24"></i-col>
       <i-col span="12" class="mt20">
-        <Button type="primary"  size="large" @click="showAddModal = true" class="mr15">新增</Button>
+        <Button type="primary" size="large" @click="showAddModal = true" class="mr15">新增</Button>
         <!-- <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button> -->
       </i-col>
@@ -74,14 +75,14 @@
         </FormItem>
         <FormItem label="保险类型" prop="insuranceType">
           <i-col span="10">
-          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" @on-change='chan'>
-            <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select></i-col>
-          <i-col span="2"  offset="1">保险档次</i-col>
+            <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" @on-change='chan'>
+              <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select></i-col>
+          <i-col span="2" offset="1">保险档次</i-col>
           <i-col span="11">
-          <Select v-model="formLeval" placeholder="选择保险档次">
-            <Option v-for="item in formLeval" :value="item.typeid" :key="item.id">{{ item.label }}</Option>
-          </Select></i-col>
+            <Select v-model="formValidate.level" placeholder="选择保险档次" @on-change='doLevel'>
+              <Option v-for="item in formLeval" :value="item.id" :key="item.id">{{ item.label }}</Option>
+            </Select></i-col>
         </FormItem>
         <FormItem label="合同日期" prop="date">
           <!-- <Row>
@@ -242,8 +243,8 @@
             tooltip: true,
             title: '编号',
             key: 'id',
-            maxWidth:65,
-            minWidth:65
+            maxWidth: 65,
+            minWidth: 65
           },
           {
             align: 'center',
@@ -279,14 +280,14 @@
             tooltip: true,
             title: '总金额(元)',
             key: 'policyamount',
-            minWidth:120
+            minWidth: 120
           },
           {
             align: 'center',
             tooltip: true,
             title: '管理费(元)',
             key: 'cost',
-            maxWidth:130,
+            maxWidth: 130,
             minWidth: 100
           },
           {
@@ -294,7 +295,7 @@
             tooltip: true,
             title: '实际支付(元)',
             key: 'actualpayment',
-            maxWidth:130,
+            maxWidth: 130,
             minWidth: 100
           },
           {
@@ -302,7 +303,7 @@
             tooltip: true,
             title: '已使用(元)',
             key: 'alreadyused',
-            maxWidth:130,
+            maxWidth: 130,
             minWidth: 100
           },
           {
@@ -317,7 +318,7 @@
             title: '操作',
             slot: 'action',
             align: 'center',
-            maxWidth:170,
+            maxWidth: 170,
             minWidth: 170,
           }
         ],
@@ -391,7 +392,9 @@
             }
           ]
         },
-        formLeval:[]
+        formLeval: [],
+        levelB: '',
+        levelJ: ''
       }
     },
     computed: {
@@ -413,19 +416,29 @@
       })
     },
     methods: {
-      chan(res){
-        console.log('/////////////',res)
-        for(let i=0;i<this.insuranceList.length;i++){
-          if(this.insuranceList[i].value===res){
-            this.formLeval=this.insuranceList[i].levellist
-            for (let j=0;j<this.formLeval.length;j++){
-              this.formLeval[i].label=this.formLeval[i].jishu+' - '+this.formLeval[i].bili+'%'
+      doLevel(res) {
+        console.log(';;;;;;;;;;;;;;;;;', res)
+        for (let i = 0; i < this.formLeval.length; i++) {
+          if (this.formLeval[i].id === res) {
+            this.levelB = this.formLeval[i].bili
+            this.levelJ = this.formLeval[i].jishu
+          }
+        }
+        console.log('>>>>>>>>', this.levelB, this.levelJ)
+      },
+      chan(res) {
+        console.log('/////////////', res)
+        for (let i = 0; i < this.insuranceList.length; i++) {
+          if (this.insuranceList[i].value === res) {
+            this.formLeval = this.insuranceList[i].levellist
+            for (let j = 0; j < this.formLeval.length; j++) {
+              this.formLeval[j].label = this.formLeval[j].jishu + ' - ' + this.formLeval[j].bili + '%'
             }
           }
         }
       },
       doSearch() {
-        console.log('搜索值', this.queryStr, this.select1)
+        console.log('搜索值', this.queryStr, this.startData, this.endData)
         this.loading = true
         this.tableLisr = []
         let that = this
@@ -435,10 +448,9 @@
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,
-            instypeid: this.typeId,
-            startdata:this.startdata,
-            enddata:this.endData,
-            status:this.statusObj
+            name: this.queryStr,
+            bdata: this.startData,
+            edata: this.endData,
           }
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
@@ -457,21 +469,12 @@
         })
         this.loading = false
       },
-      doStart() {
-        console.log('开始日期',this.startData)
-      },
-      doEnd() {
-        console.log('结束日期',this.endData)
-      },
-      selectStatus(){
-        console.log('状态选择',this.statusObj)
-      },
       getInsuranceTypes() {
         this.insuranceList = []
         getInsuranceTypes().then((res) => {
           if (res.data.state === 'true') {
             const types = res.data.data
-            console.log('返回的保险类型',res)
+            console.log('返回的保险类型', res)
             for (const type of types) {
               if (!type.iscompany) {
                 this.insuranceList.push({
@@ -484,7 +487,7 @@
           } else {
             this.$Message.error('保险类型查询异常')
           }
-        console.log('*****',this.insuranceList)
+          console.log('*****', this.insuranceList)
         }).catch((err) => {
           console.error(err)
         })
@@ -552,8 +555,10 @@
             buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
             month: duration,
             policyamount: unitPrice,
-            cost,
-            actualpayment: payment
+            bili: this.levelB,
+            jishu: this.levelJ,
+            actualpayment: payment,
+            cost: cost
           }
           saveOrModifyInsuranceInfo(data).then((res) => {
             if (res.data.state === 'true') {

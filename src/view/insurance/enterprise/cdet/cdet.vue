@@ -5,9 +5,9 @@
       <FormItem label="名称" prop="name">
         <Input v-model="formValidate2.name" placeholder="输入公司名称" :disabled="!isChange"></Input>
       </FormItem>
-      <FormItem label="规模" prop="psize">
+      <!-- <FormItem label="规模" prop="psize">
         <Input v-model="formValidate2.psize" placeholder="输入公司规模" :disabled="!isChange"></Input>
-      </FormItem>
+      </FormItem> -->
       <FormItem label="地址" prop="address">
         <Input v-model="formValidate2.address" placeholder="输入公司地址" :disabled="!isChange"></Input>
       </FormItem>
@@ -89,7 +89,7 @@
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
+    <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :closable="false" :styles="{top: '20px'}" :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="合同编号" prop="number">
           <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
@@ -101,9 +101,15 @@
           <Input v-model="formValidate.phone" placeholder="输入被保人电话"></Input>
         </FormItem>
         <FormItem label="保险类型" prop="insuranceType">
-          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型">
-            <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
+          <i-col span="10">
+            <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" @on-change='chan'>
+              <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select></i-col>
+          <i-col span="2" offset="1">保险档次</i-col>
+          <i-col span="11">
+            <Select v-model="formValidate.level" placeholder="选择保险档次" @on-change='doLevel'>
+              <Option v-for="item in formLevel" :value="item.id" :key="item.id">{{ item.label }}</Option>
+            </Select></i-col>
         </FormItem>
         <FormItem label="合同日期">
           <Row>
@@ -232,8 +238,8 @@
             align: 'center',
             tooltip: true,
             title: '金额(元)',
-            key: 'je',
-            width: 200
+            key: 'policyamount',
+            width: 100
           },
           {
             align: 'center',
@@ -241,7 +247,7 @@
             title: '购买日期',
             key: 'buydate',
             maxwidth: 130,
-            minWidth: 100
+            minWidth: 130
           },
           {
             align: 'center',
@@ -326,7 +332,10 @@
           date: [{ required: true, type: 'date', message: '请选择日期', trigger: 'change' }],
           cost: [{ required: true, message: '保单总成本不能为空', trigger: 'blur' }]
         },
-        getValue: ''
+        getValue: '',
+        formLevel: [],
+        levelB: '',
+        levelJ: ''
       }
     },
     computed: {
@@ -352,7 +361,7 @@
         }
       }).then(function (res) {
         console.log('请求企业信息返回值', res)
-        res.data.data[0].fields.psize = res.data.data[0].fields.psize.toString()
+        // res.data.data[0].fields.psize = res.data.data[0].fields.psize.toString()
         that.formValidate2 = res.data.data[0].fields
         that.formValidate2.id = res.data.data[0].pk
         console.log('返回处理后的企业信息', that.formValidate2)
@@ -385,16 +394,38 @@
       })
     },
     methods: {
+      doLevel(res) {
+        console.log(';;;;;;;;;;;;;;;;;', res)
+        for (let i = 0; i < this.formLevel.length; i++) {
+          if (this.formLevel[i].id === res) {
+            this.levelB = this.formLevel[i].bili
+            this.levelJ = this.formLevel[i].jishu
+          }
+        }
+        console.log('>>>>>>>>', this.levelB, this.levelJ)
+      },
+      chan(res) {
+        console.log('/////////////', res)
+        for (let i = 0; i < this.insuranceList.length; i++) {
+          if (this.insuranceList[i].value === res) {
+            this.formLevel = this.insuranceList[i].levellist
+            for (let j = 0; j < this.formLevel.length; j++) {
+              this.formLevel[j].label = this.formLevel[j].jishu + ' - ' + this.formLevel[j].bili + '%'
+            }
+          }
+        }
+      },
       getInsuranceTypes() {
         getInsuranceTypes().then((res) => {
           if (res.data.state === 'true') {
             this.insuranceList = []
             const types = res.data.data
             for (const type of types) {
-              if (type.fields.iscompany) {
+              if (!type.iscompany) {
                 this.insuranceList.push({
-                  value: type.pk,
-                  label: type.fields.name
+                  value: type.id,
+                  label: type.name,
+                  levellist: type.levellist
                 })
               }
             }
@@ -501,6 +532,8 @@
             month: duration,
             policyamount: unitPrice,
             cost,
+            bili: this.levelB,
+            jishu: this.levelJ,
             actualpayment: payment
           }
           console.log(data)
