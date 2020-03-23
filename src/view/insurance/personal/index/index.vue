@@ -440,6 +440,12 @@
       doSearch() {
         console.log('搜索值', this.queryStr, this.startData, this.endData)
         this.loading = true
+        let indexs = JSON.stringify(this.startData).indexOf('T')
+        let sd = JSON.stringify(this.startData).slice(0, indexs)
+        sd =  sd.slice(1,sd.length)
+        indexs = JSON.stringify(this.endData).indexOf('T')
+        let ed = JSON.stringify(this.endData).slice(0, indexs)
+        ed =  ed.slice(1,ed.length)
         this.tableLisr = []
         let that = this
         axios.request({
@@ -449,8 +455,8 @@
             page: this.pageNo,
             pagesize: this.pageSize,
             name: this.queryStr,
-            bdata: this.startData,
-            edata: this.endData,
+            btime: sd,
+            etime: ed
           }
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {

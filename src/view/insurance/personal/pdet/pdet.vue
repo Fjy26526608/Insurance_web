@@ -13,14 +13,16 @@
       </FormItem>
       <FormItem label="保险类型" prop="insuranceType">
         <i-col span="10">
-          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" @on-change='chan' :disabled="!isChange">
+          <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" @on-change='chan' disabled>
             <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select></i-col>
         <i-col span="2" offset="1">保险档次</i-col>
         <i-col span="11">
-          <Select v-model="formValidate.level" placeholder="选择保险档次" @on-change='doLevel' :disabled="!isChange">
-            <Option v-for="item in formLeval" :value="item.id" :key="item.id">{{ item.label }}</Option>
-          </Select></i-col>
+          <!-- <Select v-model="formValidate.level" placeholder="选择保险档次" @on-change='doLevel' :disabled="!isChange"> -->
+            <!-- <Option v-for="item in formLeval" :value="item.id" :key="item.id">{{ item.label }}</Option> -->
+            <Input v-model="formValidate.level" placeholder="输入被保人电话" disabled></Input>
+          <!-- </Select> -->
+        </i-col>
       </FormItem>
       <FormItem label="合同日期">
         <Row>
@@ -253,6 +255,7 @@
       },
       getInsuranceInfo() {
         getInsuranceInfo(this.id).then((res) => {
+          console.log('个人详情',res)
           if (res.data.state === 'true') {
             const info = res.data.data[0].fields
             this.formValidate = {
@@ -264,7 +267,8 @@
               unitPrice: info.policyamount, // 单价
               duration: info.month, // 购买时长
               payment: info.actualpayment, // 实际支付
-              cost: info.cost // 总成本
+              cost: info.cost, // 总成本
+              level:info.jishu+'-'+info.bili+'%'
             }
           } else {
             this.$Message.error('保险详情查询异常')

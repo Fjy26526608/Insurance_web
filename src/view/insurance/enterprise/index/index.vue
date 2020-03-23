@@ -433,8 +433,11 @@
         this.loading = true
         this.tableLisr = []
         let indexs = JSON.stringify(this.startData).indexOf('T')
-        this.startData = JSON.stringify(this.startData).slice(0, indexs)
-        this.startData =  this.startData.slice(1,this.startData.length)
+        let sd = JSON.stringify(this.startData).slice(0, indexs)
+        sd =  sd.slice(1,sd.length)
+        indexs = JSON.stringify(this.endData).indexOf('T')
+        let ed = JSON.stringify(this.endData).slice(0, indexs)
+        ed =  ed.slice(1,ed.length)
         let that = this
         axios.request({
           method: 'post',
@@ -443,8 +446,8 @@
             page: this.pageNo,
             pagesize: this.pageSize,
             name: this.queryStr,
-            btime: this.startData,
-            etime: this.endData
+            btime: sd,
+            etime: ed
           }
         }).then(function (res) {
           console.log('查询返回值', res)
