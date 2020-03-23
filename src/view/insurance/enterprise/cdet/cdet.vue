@@ -152,8 +152,8 @@
               <Icon type="ios-camera" size="20"></Icon>
             </div>
           </Upload>
-          <Modal title="合同文件预览" v-model="visible" width='60%' :styles="{top: '20px'}">
-            <Carousel v-if="visible" v-model="value1" loop>
+          <Modal title="合同文件预览" v-model="visible2" width='60%' :styles="{top: '20px'}">
+            <Carousel v-if="visible2" v-model="value1" loop>
               <CarouselItem v-for='(img,index) in uploadList2' :key='index'>
                 <div class="demo-carousel">
                   <img :src="img.url" style="width: 100%" alt="">
@@ -183,6 +183,7 @@
         defaultList2: [],
         imgName: '',
         visible: false,
+        visible2:false,
         uploadList: [],
         uploadList2: [],
         imgData: '',
@@ -563,6 +564,7 @@
           method: 'post',
           url: '/main/inslist',
           data: {
+            iscompany:'True',
             page: this.pageNo,
             pagesize: this.pageSize,
             instypeid: this.typeId,
@@ -679,7 +681,7 @@
         for (let i = 0; i < this.uploadList2.length; i++) {
           if (this.uploadList2[i].name === index) {
             this.value1 = i
-            this.visible = true
+            this.visible2 = true
           }
         }
       },

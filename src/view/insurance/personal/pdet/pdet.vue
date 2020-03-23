@@ -368,8 +368,8 @@
       handleView(index) {
         console.log(index)
         console.log(this.uploadList)
-        for (let i = 0; i < this.uploadList.length; i++) {
-          if (this.uploadList[i].name === index) {
+        for (let i = 0; i < this.defaultList.length; i++) {
+          if (this.defaultList[i].name === index) {
             this.value1 = i
             this.visible = true
           }

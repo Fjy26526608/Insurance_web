@@ -452,7 +452,7 @@
           method: 'post',
           url: '/main/inslist',
           data: {
-            iscompany:False,
+            iscompany:'False',
             page: this.pageNo,
             pagesize: this.pageSize,
             instypeid: this.typeId,
@@ -508,7 +508,7 @@
           method: 'post',
           url: '/main/inslist',
           data: {
-            iscompany:False,
+            iscompany:'False',
             page: this.pageNo,
             pagesize: this.pageSize,
             instypeid: this.typeId
