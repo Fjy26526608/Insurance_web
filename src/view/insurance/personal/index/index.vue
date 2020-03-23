@@ -238,27 +238,27 @@
           }
         ],
         columns: [
-          {
-            align: 'center',
-            tooltip: true,
-            title: '编号',
-            key: 'id',
-            maxWidth: 65,
-            minWidth: 65
-          },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '编号',
+          //   key: 'id',
+          //   maxWidth: 65,
+          //   minWidth: 65
+          // },
           {
             align: 'center',
             tooltip: true,
             title: '名字',
             key: 'insured',
-            minWidth: 90,
+            minWidth: 100,
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
             key: 'insurancetypename',
-            minWidth: 130,
+            minWidth: 100,
             maxwidth: 130
           },
           {
@@ -280,7 +280,8 @@
             tooltip: true,
             title: '总金额(元)',
             key: 'policyamount',
-            minWidth: 120
+            maxWidth:130,
+            minWidth: 100
           },
           {
             align: 'center',

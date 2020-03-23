@@ -304,13 +304,13 @@
           }
         ],
         columns: [
-          {
-            title: '编号',
-            key: 'id',
-            align: 'center',
-            tooltip: true,
-            width: 65
-          },
+          // {
+          //   title: '编号',
+          //   key: 'id',
+          //   align: 'center',
+          //   tooltip: true,
+          //   width: 65
+          // },
           {
             title: '公司名称',
             key: 'name',
@@ -348,13 +348,13 @@
             minWidth: 130,
             maxWidth: 130
           },
-          {
-            title: '负责人名字',
-            key: 'contactperson',
-            align: 'center',
-            tooltip: true,
-            width: 110
-          },
+          // {
+          //   title: '负责人名字',
+          //   key: 'contactperson',
+          //   align: 'center',
+          //   tooltip: true,
+          //   width: 110
+          // },
           {
             title: '总金额(元)',
             key: 'policyamount',
