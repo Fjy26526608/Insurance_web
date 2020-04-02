@@ -161,12 +161,21 @@ export default [
     children: [
       {
         path: 'example',
-        name: '报表',
+        name: '个人报表',
         meta: {
           icon: 'md-brush',
-          title: '报表'
+          title: '个人报表'
         },
         component: () => import('@/view/single-page/home/home.vue')
+      },
+      {
+        path: 'examplec',
+        name: '企业报表',
+        meta: {
+          icon: 'md-brush',
+          title: '企业报表'
+        },
+        component: () => import('@/view/single-page/homec/index.vue')
       }
     ]
   },

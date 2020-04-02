@@ -21,7 +21,7 @@
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
-    <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :styles="{top: '20px'}" :mask-closable="false" ok-text='添加' width='60%'>
+    <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :styles="{top: '20px'}" :mask-closable="false" ok-text='添加' width='70%'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="90">
         <FormItem label="保险名称:" prop="name">
           <Input v-model="formValidate.name" placeholder="输入保险名称"></Input>
@@ -32,19 +32,34 @@
             <Radio label="true">企业保险</Radio>
           </RadioGroup>
         </FormItem>
+        <FormItem label="比例(%)：" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
+          <Row>
+            <Col style="width: auto;" span="2">个人比例(%)：</Col>
+             <Col span="4">
+              <Input type="text" v-model="formValidate.pbili" placeholder='输入个人比例'></Input>
+            </Col>
+            <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col>
+            <Col span="4">
+             <Input type="text" v-model="formValidate.cbili" placeholder='输入企业比例'></Input>
+           </Col>
+          </Row>
+        </FormItem>
         <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性:'" :prop="'items.' + index + '.bili'"
-                    :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
+          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'" :prop="'items.' + index + '.bili'" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
             <Row>
-              <Col span="2">比例(%)：</Col>
-              <Col span="5">
-              <Input type="text" v-model="item.bili" placeholder="保险比例"></Input>
+              <Col style="width: auto;" span="2">名字：</Col>
+              <Col span="4">
+              <Input type="text" v-model="item.name" placeholder="子类别名称"></Input>
               </Col>
-              <Col span="2" offset="1">基数：</Col>
-              <Col span="5">
-              <Input type="text" v-model="item.jishu" placeholder="保险基数"></Input>
+              <Col style="width: auto;" span="3" offset="1">个人比例(%)：</Col>
+              <Col span="4">
+              <Input type="text" v-model="item.pbili" placeholder="个人保险比例"></Input>
               </Col>
-              <Col span="3" offset="1">
+              <Col style="width: auto;" span="3" offset="1">企业比例(%)：</Col>
+              <Col span="4">
+              <Input type="text" v-model="item.cbili" placeholder="企业保险比例"></Input>
+              </Col>
+              <Col span="2" offset="1">
               <Button @click="handleRemove(index)">删除</Button>
               </Col>
             </Row>
@@ -70,19 +85,34 @@
             <Radio label='true'>企业保险</Radio>
           </RadioGroup>
         </FormItem>
+        <FormItem label="比例(%)：" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
+          <Row>
+            <Col style="width: auto;" span="2">个人比例(%)：</Col>
+             <Col span="4">
+              <Input type="text" v-model="formValidate.pbili" placeholder='输入个人比例'></Input>
+            </Col>
+            <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col>
+            <Col span="4">
+             <Input type="text" v-model="formValidate.cbili" placeholder='输入企业比例'></Input>
+           </Col>
+          </Row>
+        </FormItem>
         <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'保险属性:'" :prop="'items.' + index + '.bili'"
-                    :rules="{required: true, message: 'Item ' + item.index +' can not be empty', trigger: 'blur'}">
+          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'" :prop="'items.' + index + '.bili'" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
             <Row>
-              <Col span="2">比例(%)：</Col>
-              <Col span="5">
-              <Input type="text" v-model="item.bili" placeholder="保险比例"></Input>
+              <Col style="width: auto;" span="2">名字：</Col>
+              <Col span="4">
+              <Input type="text" v-model="item.name" placeholder="子类别名称"></Input>
               </Col>
-              <Col span="2" offset="1">基数：</Col>
-              <Col span="5">
-              <Input type="text" v-model="item.jishu" placeholder="保险基数"></Input>
+              <Col style="width: auto;" span="3" offset="1">个人比例(%)：</Col>
+              <Col span="4">
+              <Input type="text" v-model="item.pbili" placeholder="个人保险比例"></Input>
               </Col>
-              <Col span="3" offset="1">
+              <Col style="width: auto;" span="3" offset="1">企业比例(%)：</Col>
+              <Col span="4">
+              <Input type="text" v-model="item.cbili" placeholder="企业保险比例"></Input>
+              </Col>
+              <Col span="2" offset="1">
               <Button @click="handleRemove(index)">删除</Button>
               </Col>
             </Row>
@@ -117,12 +147,15 @@
         pageSize: 15,
         pageNo: 1,
         index: 0,
+        pbili:'',
+        cbili:'',
         formDynamic: {
           items: [
             {
-              bili: '',
+              cbili: '',
               index: 1,
-              jishu: ''
+              pbili: '',
+              name:''
             }
           ]
         },
@@ -153,8 +186,9 @@
           typeName: ''
         },
         ruleValidate: {
-          name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-          radio: [{ required: true, message: '请选择权限类别', trigger: 'change' }]
+          name: [{ required: true, message: '名字不能为空', trigger: 'blur' }],
+          cbili: [{ required: true, message: '值不能为空', trigger: 'blur' }],
+          pbili: [{ required: true, message: '值不能为空', trigger: 'blur' }]
         },
         remov: ''
       }
@@ -168,10 +202,10 @@
       this.fetchList()
     },
     methods: {
-      showAdd(){
-        this.showAddModal=true
-        this.formDynamic.items=[]
-        this.index=0
+      showAdd() {
+        this.showAddModal = true
+        this.formDynamic.items = []
+        this.index = 0
       },
       handleAdd() {
         this.index++;
@@ -182,12 +216,12 @@
         });
       },
       handleRemove(index) {
-        this.formDynamic.items.splice(index,1)
-        for(let i = 0;i<this.formDynamic.items.length;i++){
-          this.formDynamic.items[i].index=i+1
-          this.index=i+1
+        this.formDynamic.items.splice(index, 1)
+        for (let i = 0; i < this.formDynamic.items.length; i++) {
+          this.formDynamic.items[i].index = i + 1
+          this.index = i + 1
         }
-        console.log('删除后的',index,this.formDynamic.items)
+        console.log('删除后的', index, this.formDynamic.items)
       },
       fetchList() {
         this.tableLisr = []
@@ -237,18 +271,18 @@
         } else if (this.formValidate.radio === 'false') {
           this.formValidate.radio = 0
         }
-        console.log('表单值', this.formValidate,this.formDynamic.items)
+        console.log('表单值', this.formValidate, this.formDynamic.items)
         let that = this
-        let tp=JSON.stringify(this.formDynamic.items)
-        console.log('转码后的数组',tp)
+        let tp = JSON.stringify(this.formDynamic.items)
+        console.log('转码后的数组', tp)
         axios.request({
           method: 'post',
           url: '/main/addinstype',
           data: {
             name: that.formValidate.name,
             iscompany: that.formValidate.radio,
-            length:that.formDynamic.items.length,
-            data:tp
+            length: that.formDynamic.items.length,
+            data: tp
           }
         }).then(function (res) {
           console.log(res)
@@ -279,7 +313,7 @@
         } else if (this.formValidate.radio === 'false') {
           this.formValidate.radio = 0
         }
-        let tp=JSON.stringify(this.formDynamic.items)
+        let tp = JSON.stringify(this.formDynamic.items)
         axios.request({
           method: 'post',
           url: '/main/addinstype',
@@ -287,7 +321,7 @@
             id: that.formValidate.id,
             name: that.formValidate.name,
             iscompany: that.formValidate.radio,
-            data:tp
+            data: tp
           }
         }).then(function (res) {
           console.log(res)
@@ -338,10 +372,10 @@
         console.log(this.tableLisr[index])
         this.formValidate = this.tableLisr[index]
         this.formValidate.radio = this.tableLisr[index].iscompany.toString()
-        this.formDynamic.items=this.tableLisr[index].levellist
-        for (let i=0;i<this.tableLisr[index].levellist.length;i++){
+        this.formDynamic.items = this.tableLisr[index].levellist
+        for (let i = 0; i < this.tableLisr[index].levellist.length; i++) {
           // this.formDynamic.push(this.tableLisr[index].levellist[i])
-          this.formDynamic.items[i].index=this.tableLisr[index].levellist[i].id
+          this.formDynamic.items[i].index = this.tableLisr[index].levellist[i].id
         }
         this.showAddModal1 = true
       },

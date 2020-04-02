@@ -77,7 +77,7 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button>
+          <!-- <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button> -->
           <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
         </template>
       </Table>
@@ -402,8 +402,8 @@
             title: '操作',
             slot: 'action',
             align: 'center',
-            minWidth: 170,
-            maxWidth: 170
+            minWidth: 100,
+            maxWidth: 100
           }
 
         ],
