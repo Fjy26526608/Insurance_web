@@ -64,9 +64,9 @@
     </div>
     <Modal v-model="showAddModal" title="添加保险合同" @on-ok="ok" @on-cancel="cancel" :styles="{top: '20px'}" :closable="false" :mask-closable="false" width="60%" ok-text='添加' :loading="modalLoading">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-        <FormItem label="合同编号" prop="number">
+        <!-- <FormItem label="合同编号" prop="number">
           <Input v-model="formValidate.number" placeholder="输入合同编号"></Input>
-        </FormItem>
+        </FormItem> -->
         <FormItem label="姓名" prop="name">
           <Input v-model="formValidate.name" placeholder="输入被保人姓名"></Input>
         </FormItem>
@@ -78,11 +78,11 @@
             <Select v-model="formValidate.insuranceType" placeholder="选择保险类型" @on-change='chan'>
               <Option v-for="item in insuranceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select></i-col>
-          <i-col span="2" offset="1">保险档次</i-col>
+          <!-- <i-col span="2" offset="1">保险档次</i-col>
           <i-col span="11">
             <Select v-model="formValidate.level" placeholder="选择保险档次" @on-change='doLevel'>
               <Option v-for="item in formLeval" :value="item.id" :key="item.id">{{ item.label }}</Option>
-            </Select></i-col>
+            </Select></i-col> -->
         </FormItem>
         <FormItem label="合同日期" prop="date">
           <!-- <Row>
@@ -93,19 +93,19 @@
             </Col>
           </Row> -->
         </FormItem>
-        <FormItem label="成本单价" prop="unitPrice">
-          <Input v-model="formValidate.unitPrice" placeholder="输入成本单价（月/元）"></Input>
+        <FormItem label="基数" prop="unitPrice">
+          <Input v-model="formValidate.unitPrice" placeholder="输入基数（元/月）"></Input>
         </FormItem>
         <FormItem label="购买时长" prop="duration">
           <Input v-model="formValidate.duration" placeholder="输入购买时长（月）"></Input>
         </FormItem>
-        <FormItem label="保单总成本" prop="cost">
-          <Input v-model="formValidate.cost" placeholder="输入保单总成本金额（元）"></Input>
+        <FormItem label="管理费" prop="cost">
+          <Input v-model="formValidate.cost" placeholder="输入管理费（元/月）"></Input>
         </FormItem>
         <FormItem label="实际支付" prop="payment">
           <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）"></Input>
         </FormItem>
-        <FormItem label="合同文件" prop="desc">
+        <!-- <FormItem label="合同文件" prop="desc">
           <div class="demo-upload-list" v-for="item in uploadList">
             <template v-if="item.status === 'finished'">
               <img :src="item.url">
@@ -134,7 +134,7 @@
               </CarouselItem>
             </Carousel>
           </Modal>
-        </FormItem>
+        </FormItem> -->
       </Form>
     </Modal>
     <Modal v-model="deleteInsuModal" title='警告！' @on-ok="deleteOk" @on-cancel="deleteCancel">

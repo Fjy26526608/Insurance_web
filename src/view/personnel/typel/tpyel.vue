@@ -22,7 +22,7 @@
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
     <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :styles="{top: '20px'}" :mask-closable="false" ok-text='添加' width='70%'>
-      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="90">
+      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="保险名称:" prop="name">
           <Input v-model="formValidate.name" placeholder="输入保险名称"></Input>
         </FormItem>
@@ -32,20 +32,24 @@
             <Radio label="true">企业保险</Radio>
           </RadioGroup>
         </FormItem>
-        <FormItem label="比例(%)：" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
-          <Row>
-            <Col style="width: auto;" span="2">个人比例(%)：</Col>
-             <Col span="4">
-              <Input type="text" v-model="formValidate.pbili" placeholder='输入个人比例'></Input>
-            </Col>
-            <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col>
-            <Col span="4">
-             <Input type="text" v-model="formValidate.cbili" placeholder='输入企业比例'></Input>
-           </Col>
-          </Row>
-        </FormItem>
+        <!-- <FormItem label="比例(%)：" :rules="{required: true, message: '值不能为空', trigger: 'blur'}"> -->
+        <Row>
+          <!-- <Col style="width: auto;" span="2">个人比例(%)：</Col> -->
+          <Col span="8">
+          <FormItem label="个人比例(%):" prop='pbili'>
+            <Input type="text" v-model="formValidate.pbili" placeholder='输入个人比例(%)'></Input>
+          </FormItem>
+          </Col>
+          <!-- <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col> -->
+          <Col span="8">
+          <FormItem label="企业比例(%):" prop='cbili'>
+            <Input type="text" v-model="formValidate.cbili" placeholder='输入企业比例(%)'></Input>
+          </FormItem>
+          </Col>
+        </Row>
+        <!-- </FormItem> -->
         <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'" :prop="'items.' + index + '.bili'" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
+          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'" :prop="'items.' + index + '.name'" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
             <Row>
               <Col style="width: auto;" span="2">名字：</Col>
               <Col span="4">
@@ -85,20 +89,24 @@
             <Radio label='true'>企业保险</Radio>
           </RadioGroup>
         </FormItem>
-        <FormItem label="比例(%)：" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
-          <Row>
-            <Col style="width: auto;" span="2">个人比例(%)：</Col>
-             <Col span="4">
-              <Input type="text" v-model="formValidate.pbili" placeholder='输入个人比例'></Input>
-            </Col>
-            <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col>
-            <Col span="4">
-             <Input type="text" v-model="formValidate.cbili" placeholder='输入企业比例'></Input>
-           </Col>
-          </Row>
-        </FormItem>
+       <!-- <FormItem label="比例(%)：" :rules="{required: true, message: '值不能为空', trigger: 'blur'}"> -->
+        <Row>
+          <!-- <Col style="width: auto;" span="2">个人比例(%)：</Col> -->
+          <Col span="8">
+          <FormItem label="个人比例(%):" prop='pbili'>
+            <Input type="text" v-model="formValidate.pbili" placeholder='输入个人比例(%)'></Input>
+          </FormItem>
+          </Col>
+          <!-- <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col> -->
+          <Col span="8">
+          <FormItem label="企业比例(%):" prop='cbili'>
+            <Input type="text" v-model="formValidate.cbili" placeholder='输入企业比例(%)'></Input>
+          </FormItem>
+          </Col>
+        </Row>
+        <!-- </FormItem> -->
         <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'" :prop="'items.' + index + '.bili'" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
+          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'" :prop="'items.' + index + '.name'"  :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
             <Row>
               <Col style="width: auto;" span="2">名字：</Col>
               <Col span="4">
@@ -147,15 +155,15 @@
         pageSize: 15,
         pageNo: 1,
         index: 0,
-        pbili:'',
-        cbili:'',
+        pbili: '',
+        cbili: '',
         formDynamic: {
           items: [
             {
               cbili: '',
               index: 1,
               pbili: '',
-              name:''
+              name: ''
             }
           ]
         },
