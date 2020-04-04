@@ -94,7 +94,7 @@
           </Row> -->
         </FormItem>
         <FormItem label="基数" prop="unitPrice">
-          <Input v-model="formValidate.unitPrice" placeholder="输入基数（元/月）"></Input>
+          <Input v-model="formValidate.unitPrice" placeholder="输入缴费基数（元/月）"></Input>
         </FormItem>
         <FormItem label="购买时长" prop="duration">
           <Input v-model="formValidate.duration" placeholder="输入购买时长（月）"></Input>
@@ -350,7 +350,7 @@
           unitPrice: [
             {
               required: true,
-              message: '成本单价不能为空',
+              message: '缴费基数不能为空',
               trigger: 'blur'
             }
           ],
@@ -559,16 +559,17 @@
           const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
           const data = {
             // contractnum: number,
+            glf:cost,
             insured: name,
             tel: phone,
             insurancetypeid: insuranceType,
-            buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
+            buydate: formatDate(date, 'yyyy-MM-dd'),
             month: duration,
             policyamount: unitPrice,
-            bili: this.levelB,
-            jishu: this.levelJ,
+            // bili: this.levelB,
+            // jishu: this.levelJ,
             actualpayment: payment,
-            cost: cost
+            // cost: cost
           }
           saveOrModifyInsuranceInfo(data).then((res) => {
             if (res.data.state === 'true') {
