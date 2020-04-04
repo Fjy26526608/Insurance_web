@@ -121,38 +121,128 @@ export default {
               const enterpriseTypes = this.$store.getters.getEnterpiseInsuranceTypes
               console.log('/```````````/',enterpriseTypes)
               for (const type of enterpriseTypes) {
-                enterpriseChildren.push({
-                  path: 'index/' + type.id,
-                  name: type.name,
-                  meta: {
-                    icon: 'md-options',
-                    title: type.name
-                  },
-                  props: {
-                    typeId: type.id
-                  },
-                  component: () =>
-                    import('@/view/insurance/enterprise/index/index.vue')
-                })
+                if (type.child && type.child.length > 0) {
+                  const child = [{
+                    path: 'index/' + type.id,
+                    name: '所有' + type.name,
+                    meta: {
+                      icon: 'md-options',
+                      title: '所有' + type.name
+                    },
+                    props: {
+                      typeId: type.id
+                    },
+                    component: () =>
+                      import('@/view/insurance/enterprise/index/index')
+                  }]
+                  for (const item of type.child) {
+                    child.push({
+                      path: 'child/' + item.id,
+                      name: item.name,
+                      meta: {
+                        icon: 'md-options',
+                        title: item.name
+                      },
+                      props: {
+                        typeId: item.id
+                      },
+                      component: () =>
+                        import('@/view/insurance/enterprise/child/child')
+                    })
+                  }
+                  enterpriseChildren.push({
+                    path: 'index/' + type.id,
+                    name: type.name,
+                    meta: {
+                      icon: 'md-options',
+                      title: type.name
+                    },
+                    props: {
+                      typeId: type.id
+                    },
+                    component: () =>
+                      import('@/view/insurance/enterprise/index/index'),
+                    children: child
+                  })
+                } else {
+                  enterpriseChildren.push({
+                    path: 'index/' + type.id,
+                    name: type.name,
+                    meta: {
+                      icon: 'md-options',
+                      title: type.name
+                    },
+                    props: {
+                      typeId: type.id
+                    },
+                    component: () =>
+                      import('@/view/insurance/enterprise/index/index.vue')
+                  })
+                }
               }
             } else if (innerRoute.name === '_personal') {
               let personalChildren = innerRoute.children
               const personalTypes = this.$store.getters.getPersonalInsuranceTypes
               console.log('/~~~~~~~~~~~/',personalTypes)
               for (const type of personalTypes) {
-                personalChildren.push({
-                  path: 'index/' + type.id,
-                  name: type.name,
-                  meta: {
-                    icon: 'md-options',
-                    title: type.name
-                  },
-                  props: {
-                    typeId: type.id
-                  },
-                  component: () =>
-                    import('@/view/insurance/personal/index/index')
-                })
+                if (type.child && type.child.length > 0) {
+                  const child = [{
+                    path: 'index/' + type.id,
+                    name: '所有' + type.name,
+                    meta: {
+                      icon: 'md-options',
+                      title: '所有' + type.name
+                    },
+                    props: {
+                      typeId: type.id
+                    },
+                    component: () =>
+                      import('@/view/insurance/personal/index/index')
+                  }]
+                  for (const item of type.child) {
+                    child.push({
+                      path: 'child/' + item.id,
+                      name: item.name,
+                      meta: {
+                        icon: 'md-options',
+                        title: item.name
+                      },
+                      props: {
+                        typeId: item.id
+                      },
+                      component: () =>
+                        import('@/view/insurance/personal/child/child')
+                    })
+                  }
+                  personalChildren.push({
+                    path: 'index/' + type.id,
+                    name: type.name,
+                    meta: {
+                      icon: 'md-options',
+                      title: type.name
+                    },
+                    props: {
+                      typeId: type.id
+                    },
+                    component: () =>
+                      import('@/view/insurance/personal/index/index'),
+                    children: child
+                  })
+                } else {
+                  personalChildren.push({
+                    path: 'index/' + type.id,
+                    name: type.name,
+                    meta: {
+                      icon: 'md-options',
+                      title: type.name
+                    },
+                    props: {
+                      typeId: type.id
+                    },
+                    component: () =>
+                      import('@/view/insurance/personal/index/index')
+                  })
+                }
               }
             }
           }

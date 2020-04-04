@@ -99,6 +99,17 @@ export default [
               hideInMenu: true
             },
             component: () => import('@/view/insurance/enterprise/cdet/cdet.vue')
+          },
+          {
+            path: 'child',
+            name: 'child',
+            meta: {
+              icon: 'md-funnel',
+              title: 'child',
+              hideInMenu: true
+            },
+            component: () =>
+              import('@/view/insurance/enterprise/child/child.vue')
           }
         ]
       },
@@ -143,6 +154,16 @@ export default [
               title: '所有个人'
             },
             component: () => import('@/view/insurance/personal/index/index')
+          },
+          {
+            path: 'child',
+            name: 'child',
+            meta: {
+              icon: 'md-person',
+              title: 'child',
+              hideInMenu: true
+            },
+            component: () => import('@/view/insurance/personal/child/child')
           }
         ]
       }
