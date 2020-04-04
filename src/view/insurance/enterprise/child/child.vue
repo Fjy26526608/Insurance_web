@@ -72,14 +72,15 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" :loading="loading" :row-class-name="rowClassName" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+      <!-- <Table size="large" :loading="loading" :row-class-name="rowClassName" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet"> -->
+      <Table size="large" :loading="loading" :row-class-name="rowClassName" border stripe highlight-row :columns="columns" :data="tableLisr">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
-        <template slot-scope="{ row }" slot="action">
+        <!-- <template slot-scope="{ row }" slot="action"> -->
           <!-- <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button> -->
-          <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
-        </template>
+          <!-- <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button> -->
+        <!-- </template> -->
       </Table>
     </div>
     <div class="text-right pageList">
@@ -363,48 +364,64 @@
             width: 110
           },
           {
-            title: '管理费(元)',
-            key: 'glf',
             align: 'center',
             tooltip: true,
-            width: 120
+            title: '个人承担(元)',
+            key: 'grcd',
+            maxWidth:130,
+            minWidth: 100
           },
           {
-            title: '实际支付(元)',
-            key: 'actualpayment',
             align: 'center',
             tooltip: true,
-            width: 150
+            title: '公司承担(元)',
+            key: 'gscd',
+            maxWidth:130,
+            minWidth: 100
           },
-          {
-            title: '已使用(元)',
-            key: 'alreadyused',
-            align: 'center',
-            tooltip: true,
-            minWidth: 110,
-            maxWidth: 130
-          },
-          {
-            title: '剩余(元)',
-            key: 'balance',
-            align: 'center',
-            tooltip: true,
-            maxWidth: 130,
-            minWidth: 130
-          },
+          // {
+          //   title: '管理费(元)',
+          //   key: 'glf',
+          //   align: 'center',
+          //   tooltip: true,
+          //   width: 120
+          // },
+          // {
+          //   title: '实际支付(元)',
+          //   key: 'actualpayment',
+          //   align: 'center',
+          //   tooltip: true,
+          //   width: 150
+          // },
+          // {
+          //   title: '已使用(元)',
+          //   key: 'alreadyused',
+          //   align: 'center',
+          //   tooltip: true,
+          //   minWidth: 110,
+          //   maxWidth: 130
+          // },
+          // {
+          //   title: '剩余(元)',
+          //   key: 'balance',
+          //   align: 'center',
+          //   tooltip: true,
+          //   maxWidth: 130,
+          //   minWidth: 130
+          // },
           // {
           //   title: '备注',
           //   key: 'remark',
           //   align: 'center',
           //   tooltip: true
           // },
-          {
-            title: '操作',
-            slot: 'action',
-            align: 'center',
-            minWidth: 100,
-            maxWidth: 100
-          }
+          // {
+          //   title: '操作',
+          //   slot: 'action',
+          //   align: 'center',
+          //   minWidth: 100,
+          //   maxWidth: 100
+          // }
 
         ],
         tableLisr: [],

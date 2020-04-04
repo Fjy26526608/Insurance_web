@@ -151,17 +151,14 @@ export default {
                     })
                   }
                   enterpriseChildren.push({
-                    path: 'index/' + type.id,
+                    path: 'index',
                     name: type.name,
                     meta: {
                       icon: 'md-options',
                       title: type.name
                     },
-                    props: {
-                      typeId: type.id
-                    },
-                    component: () =>
-                      import('@/view/insurance/enterprise/index/index'),
+                    component: parentView,
+                    redirect: { name: 'index' },
                     children: child
                   })
                 } else {
@@ -215,17 +212,14 @@ export default {
                     })
                   }
                   personalChildren.push({
-                    path: 'index/' + type.id,
+                    path: 'index',
                     name: type.name,
                     meta: {
                       icon: 'md-options',
                       title: type.name
                     },
-                    props: {
-                      typeId: type.id
-                    },
-                    component: () =>
-                      import('@/view/insurance/personal/index/index'),
+                    component: parentView,
+                    redirect: { name: 'index' },
                     children: child
                   })
                 } else {
