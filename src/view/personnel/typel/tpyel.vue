@@ -218,9 +218,10 @@
       handleAdd() {
         this.index++;
         this.formDynamic.items.push({
-          bili: '',
+          pbili: '',
           index: this.index,
-          jishu: ''
+          name: '',
+          cbili:''
         });
       },
       handleRemove(index) {
