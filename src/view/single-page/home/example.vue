@@ -26,28 +26,31 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/statistics'
+          url: '/main/statistics',
+          data: {
+            gryear: 2020
+          }
         }).then(function (res) {
           console.log('查询返回值', res)
           if (res.data.state == 'true') {
             that.temp = res
             that.mounted1()
-            that.option.series[0]= {
+            that.option.series[0] = {
               name: '总金额',
               type: 'bar',
               barGap: 0
             }
-            that.option.series[0].data=res.data.grcb
-            that.option.series[1]= {
+            that.option.series[0].data = res.data.grcb
+            that.option.series[1] = {
               name: '总管理费',
               type: 'bar'
             }
-            that.option.series[1].data=res.data.grglf
-            that.option.series[2]= {
+            that.option.series[1].data = res.data.grglf
+            that.option.series[2] = {
               name: '总成本',
               type: 'bar'
             }
-            that.option.series[2].data=res.data.grcost
+            that.option.series[2].data = res.data.grcost
           } else {
             console.log('错误异常', res.msg)
           }

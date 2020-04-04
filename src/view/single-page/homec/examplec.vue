@@ -26,7 +26,10 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/statistics'
+          url: '/main/statistics',
+          data:{
+            gryear:2020
+          }
         }).then(function (res) {
           console.log('查询返回值', res)
           if (res.data.state == 'true') {

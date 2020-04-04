@@ -2,7 +2,10 @@
   <div>
     <Row>
       <Card shadow>
-        <example style="height: 600px;"/>
+        <Col span="4">
+          <DatePicker type="year" placeholder="选择年份" style="width: 200px;"></DatePicker>
+        </Col>
+        <example style="height: 580px;"/>
       </Card>
     </Row>
   </div>

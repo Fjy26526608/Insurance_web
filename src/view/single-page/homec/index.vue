@@ -2,7 +2,7 @@
   <div>
     <Row>
       <Card shadow>
-        <example style="height: 600px;"/>
+        <example style="height: 580px;"/>
       </Card>
     </Row>
   </div>
