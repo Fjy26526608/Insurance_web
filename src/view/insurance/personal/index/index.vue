@@ -429,14 +429,14 @@
       },
       chan(res) {
         console.log('/////////////', res)
-        for (let i = 0; i < this.insuranceList.length; i++) {
-          if (this.insuranceList[i].value === res) {
-            this.formLeval = this.insuranceList[i].levellist
-            for (let j = 0; j < this.formLeval.length; j++) {
-              this.formLeval[j].label = this.formLeval[j].jishu + ' - ' + this.formLeval[j].bili + '%'
-            }
-          }
-        }
+        // for (let i = 0; i < this.insuranceList.length; i++) {
+        //   if (this.insuranceList[i].value === res) {
+        //     this.formLeval = this.insuranceList[i].levellist
+        //     for (let j = 0; j < this.formLeval.length; j++) {
+        //       this.formLeval[j].label = this.formLeval[j].jishu + ' - ' + this.formLeval[j].bili + '%'
+        //     }
+        //   }
+        // }
       },
       doSearch() {
         console.log('搜索值', this.queryStr, this.startData, this.endData)
@@ -558,7 +558,7 @@
           // 请求服务端添加接口
           const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
           const data = {
-            contractnum: number,
+            // contractnum: number,
             insured: name,
             tel: phone,
             insurancetypeid: insuranceType,

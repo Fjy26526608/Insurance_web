@@ -37,34 +37,34 @@
         <Row>
           <!-- <Col style="width: auto;" span="2">个人比例(%)：</Col> -->
           <Col span="8">
-          <FormItem label="个人比例(%):" prop='pbili'>
-            <Input type="text" v-model="formValidate.pbili" placeholder='输入个人比例(%)'></Input>
+          <FormItem label="个人比例(%):" prop='grbili'>
+            <Input type="text" v-model="formValidate.grbili" placeholder='输入个人比例(%)'></Input>
           </FormItem>
           </Col>
           <!-- <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col> -->
           <Col span="8">
-          <FormItem label="企业比例(%):" prop='cbili'>
-            <Input type="text" v-model="formValidate.cbili" placeholder='输入企业比例(%)'></Input>
+          <FormItem label="企业比例(%):" prop='gsbili'>
+            <Input type="text" v-model="formValidate.gsbili" placeholder='输入企业比例(%)'></Input>
           </FormItem>
           </Col>
         </Row>
         <!-- </FormItem> -->
       </Form>
-      <Form ref="formDynamic" :model="formDynamic" :label-width="90">
+      <Form ref="formDynamic" :model="formDynamic" :label-width="110">
           <Row v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'">
-            <Col span="6">
+            <Col span="7">
               <FormItem label="名字：" :prop='"items." + index + ".name"' :rules="{ required: true, message: '名字不能为空', trigger: 'blur' }">
                 <Input v-model="item.name" placeholder="子类别名称" />
               </FormItem>
             </Col>
-            <Col span="6">
-              <FormItem label="个人比例(%)：" :prop='"items." + index + ".pbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
-                <Input v-model="item.pbili" placeholder="个人保险比例" />
+            <Col span="7">
+              <FormItem label="个人比例(%)：" :prop='"items." + index + ".grbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
+                <Input v-model="item.grbili" placeholder="个人保险比例(%)" />
               </FormItem>
             </Col>
-            <Col span="6">
-              <FormItem label="企业比例(%)：" :prop='"items." + index + ".cbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
-                <Input v-model="item.cbili" placeholder="企业保险比例" />
+            <Col span="7">
+              <FormItem label="企业比例(%)：" :prop='"items." + index + ".gsbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
+                <Input v-model="item.gsbili" placeholder="企业保险比例(%)" />
               </FormItem>
             </Col>
             <Col span="2" offset="1">
@@ -82,7 +82,7 @@
     </Modal>
     <!-- 修改 -->
     <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :styles="{top: '20px'}" :closable="false" :mask-closable="false" ok-text='修改' width='60%'>
-      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="保险名称" prop="name">
           <Input v-model="formValidate.name" placeholder="输入保险名称"></Input>
         </FormItem>
@@ -96,34 +96,34 @@
         <Row>
           <!-- <Col style="width: auto;" span="2">个人比例(%)：</Col> -->
           <Col span="8">
-          <FormItem label="个人比例(%):" prop='pbili'>
-            <Input type="text" v-model="formValidate.pbili" placeholder='输入个人比例(%)'></Input>
+          <FormItem label="个人比例(%):" prop='grbili'>
+            <Input type="text" v-model="formValidate.grbili" placeholder='输入个人比例(%)'></Input>
           </FormItem>
           </Col>
           <!-- <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col> -->
           <Col span="8">
-          <FormItem label="企业比例(%):" prop='cbili'>
-            <Input type="text" v-model="formValidate.cbili" placeholder='输入企业比例(%)'></Input>
+          <FormItem label="企业比例(%):" prop='gsbili'>
+            <Input type="text" v-model="formValidate.gsbili" placeholder='输入企业比例(%)'></Input>
           </FormItem>
           </Col>
         </Row>
         <!-- </FormItem> -->
       </Form>
-      <Form ref="formDynamic" :model="formDynamic" :label-width="90">
+      <Form ref="formDynamic" :model="formDynamic" :label-width="110">
           <Row v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'">
-            <Col span="6">
-              <FormItem label="名字：" :prop='"items." + index + ".name"' :rules="{ required: true, message: '名字不能为空', trigger: 'blur' }">
+            <Col span="7">
+              <FormItem label="名字：" :prop='"items." + index + ".name"' :rules="{ required: true, message: '名字不能为空', trigger: 'blur' }" >
                 <Input v-model="item.name" placeholder="子类别名称" />
               </FormItem>
             </Col>
-            <Col span="6">
-              <FormItem label="个人比例(%)：" :prop='"items." + index + ".pbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
-                <Input v-model="item.pbili" placeholder="个人保险比例" />
+            <Col span="7">
+              <FormItem label="个人比例(%)：" :prop='"items." + index + ".grbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
+                <Input v-model="item.grbili" placeholder="个人保险比例(%)" />
               </FormItem>
             </Col>
-            <Col span="6">
-              <FormItem label="企业比例(%)：" :prop='"items." + index + ".cbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
-                <Input v-model="item.cbili" placeholder="企业保险比例" />
+            <Col span="7">
+              <FormItem label="企业比例(%)：" :prop='"items." + index + ".gsbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
+                <Input v-model="item.gsbili" placeholder="企业保险比例(%)" />
               </FormItem>
             </Col>
             <Col span="2" offset="1">
@@ -159,8 +159,8 @@
         pageSize: 15,
         pageNo: 1,
         index: 0,
-        pbili: '',
-        cbili: '',
+        grbili: '',
+        gsbili: '',
         formDynamic: {
           items: []
         },
@@ -192,8 +192,8 @@
         },
         ruleValidate: {
           name: [{ required: true, message: '名字不能为空', trigger: 'change' }],
-          cbili: [{ required: true, message: '值不能为空', trigger: 'change' }],
-          pbili: [{ required: true, message: '值不能为空', trigger: 'change' }]
+          gsbili: [{ required: true, message: '值不能为空', trigger: 'change' }],
+          grbili: [{ required: true, message: '值不能为空', trigger: 'change' }]
         },
         remov: ''
       }
@@ -216,8 +216,8 @@
         this.formDynamic.items.push({
           index: this.index,
           name: '',
-          pbili: '',
-          cbili: ''
+          grbili: '',
+          gsbili: ''
         });
         this.index++;
       },
@@ -251,6 +251,7 @@
             }
           }
           that.total = res.data.count
+          console.log('…………………………………………',that.tableLisr)
         }).catch(function (error) {
           console.log(error)
         })
@@ -288,7 +289,10 @@
             name: that.formValidate.name,
             iscompany: that.formValidate.radio,
             length: that.formDynamic.items.length,
-            data: tp
+            grbili:that.formValidate.grbili,
+            gsbili:that.formValidate.gsbili,
+            data: tp,
+            tag:1
           }
         }).then(function (res) {
           console.log(res)
@@ -327,7 +331,10 @@
             id: that.formValidate.id,
             name: that.formValidate.name,
             iscompany: that.formValidate.radio,
-            data: tp
+            data: tp,
+            grbili:that.formValidate.grbili,
+            gsbili:that.formValidate.gsbili,
+            tag:1
           }
         }).then(function (res) {
           console.log(res)
@@ -378,10 +385,10 @@
         console.log(this.tableLisr[index])
         this.formValidate = this.tableLisr[index]
         this.formValidate.radio = this.tableLisr[index].iscompany.toString()
-        this.formDynamic.items = this.tableLisr[index].levellist
-        for (let i = 0; i < this.tableLisr[index].levellist.length; i++) {
+        this.formDynamic.items = this.tableLisr[index].child
+        for (let i = 0; i < this.tableLisr[index].child.length; i++) {
           // this.formDynamic.push(this.tableLisr[index].levellist[i])
-          this.formDynamic.items[i].index = this.tableLisr[index].levellist[i].id
+          this.formDynamic.items[i].index = this.tableLisr[index].child[i].id
         }
         this.showAddModal1 = true
       },
