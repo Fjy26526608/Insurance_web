@@ -21,6 +21,7 @@
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />
     </div>
+    <!-- 新增 -->
     <Modal v-model="showAddModal" title="添加保险类型" @on-ok="ok" @on-cancel="cancel" :closable="false" :styles="{top: '20px'}" :mask-closable="false" ok-text='添加' width='70%'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="保险名称:" prop="name">
@@ -48,26 +49,28 @@
           </Col>
         </Row>
         <!-- </FormItem> -->
-        <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'" :prop="'items.' + index + '.name'" :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
-            <Row>
-              <Col style="width: auto;" span="2">名字：</Col>
-              <Col span="4">
-              <Input type="text" v-model="item.name" placeholder="子类别名称"></Input>
-              </Col>
-              <Col style="width: auto;" span="3" offset="1">个人比例(%)：</Col>
-              <Col span="4">
-              <Input type="text" v-model="item.pbili" placeholder="个人保险比例"></Input>
-              </Col>
-              <Col style="width: auto;" span="3" offset="1">企业比例(%)：</Col>
-              <Col span="4">
-              <Input type="text" v-model="item.cbili" placeholder="企业保险比例"></Input>
-              </Col>
-              <Col span="2" offset="1">
+      </Form>
+      <Form ref="formDynamic" :model="formDynamic" :label-width="90">
+          <Row v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'">
+            <Col span="6">
+              <FormItem label="名字：" :prop='"items." + index + ".name"' :rules="{ required: true, message: '名字不能为空', trigger: 'blur' }">
+                <Input v-model="item.name" placeholder="子类别名称" />
+              </FormItem>
+            </Col>
+            <Col span="6">
+              <FormItem label="个人比例(%)：" :prop='"items." + index + ".pbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
+                <Input v-model="item.pbili" placeholder="个人保险比例" />
+              </FormItem>
+            </Col>
+            <Col span="6">
+              <FormItem label="企业比例(%)：" :prop='"items." + index + ".cbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
+                <Input v-model="item.cbili" placeholder="企业保险比例" />
+              </FormItem>
+            </Col>
+            <Col span="2" offset="1">
               <Button @click="handleRemove(index)">删除</Button>
-              </Col>
-            </Row>
-          </FormItem>
+            </Col>
+          </Row>
           <FormItem>
             <Row>
               <Col span="4">
@@ -76,8 +79,8 @@
             </Row>
           </FormItem>
         </Form>
-      </Form>
     </Modal>
+    <!-- 修改 -->
     <Modal v-model="showAddModal1" title="修改保险类型" @on-ok="ok1" @on-cancel="cancel1" :styles="{top: '20px'}" :closable="false" :mask-closable="false" ok-text='修改' width='60%'>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
         <FormItem label="保险名称" prop="name">
@@ -105,26 +108,28 @@
           </Col>
         </Row>
         <!-- </FormItem> -->
-        <Form ref="formDynamic" :model="formDynamic" :label-width="90">
-          <FormItem v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'" :prop="'items.' + index + '.name'"  :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
-            <Row>
-              <Col style="width: auto;" span="2">名字：</Col>
-              <Col span="4">
-              <Input type="text" v-model="item.name" placeholder="子类别名称"></Input>
-              </Col>
-              <Col style="width: auto;" span="3" offset="1">个人比例(%)：</Col>
-              <Col span="4">
-              <Input type="text" v-model="item.pbili" placeholder="个人保险比例"></Input>
-              </Col>
-              <Col style="width: auto;" span="3" offset="1">企业比例(%)：</Col>
-              <Col span="4">
-              <Input type="text" v-model="item.cbili" placeholder="企业保险比例"></Input>
-              </Col>
-              <Col span="2" offset="1">
+      </Form>
+      <Form ref="formDynamic" :model="formDynamic" :label-width="90">
+          <Row v-for="(item, index) in formDynamic.items" :key="index" :label="'子类别属性:'">
+            <Col span="6">
+              <FormItem label="名字：" :prop='"items." + index + ".name"' :rules="{ required: true, message: '名字不能为空', trigger: 'blur' }">
+                <Input v-model="item.name" placeholder="子类别名称" />
+              </FormItem>
+            </Col>
+            <Col span="6">
+              <FormItem label="个人比例(%)：" :prop='"items." + index + ".pbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
+                <Input v-model="item.pbili" placeholder="个人保险比例" />
+              </FormItem>
+            </Col>
+            <Col span="6">
+              <FormItem label="企业比例(%)：" :prop='"items." + index + ".cbili"' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
+                <Input v-model="item.cbili" placeholder="企业保险比例" />
+              </FormItem>
+            </Col>
+            <Col span="2" offset="1">
               <Button @click="handleRemove(index)">删除</Button>
-              </Col>
-            </Row>
-          </FormItem>
+            </Col>
+          </Row>
           <FormItem>
             <Row>
               <Col span="4">
@@ -133,7 +138,6 @@
             </Row>
           </FormItem>
         </Form>
-      </Form>
     </Modal>
     <Modal v-model="modal1" title='警告！' @on-ok="ok2" @on-cancel="cancel2">
       <p>删除后不可恢复，确认删除吗？</p>
@@ -158,14 +162,7 @@
         pbili: '',
         cbili: '',
         formDynamic: {
-          items: [
-            {
-              cbili: '',
-              index: 1,
-              pbili: '',
-              name: ''
-            }
-          ]
+          items: []
         },
         columns: [
           {
@@ -194,9 +191,9 @@
           typeName: ''
         },
         ruleValidate: {
-          name: [{ required: true, message: '名字不能为空', trigger: 'blur' }],
-          cbili: [{ required: true, message: '值不能为空', trigger: 'blur' }],
-          pbili: [{ required: true, message: '值不能为空', trigger: 'blur' }]
+          name: [{ required: true, message: '名字不能为空', trigger: 'change' }],
+          cbili: [{ required: true, message: '值不能为空', trigger: 'change' }],
+          pbili: [{ required: true, message: '值不能为空', trigger: 'change' }]
         },
         remov: ''
       }
@@ -216,13 +213,13 @@
         this.index = 0
       },
       handleAdd() {
-        this.index++;
         this.formDynamic.items.push({
-          pbili: '',
           index: this.index,
           name: '',
-          cbili:''
+          pbili: '',
+          cbili: ''
         });
+        this.index++;
       },
       handleRemove(index) {
         this.formDynamic.items.splice(index, 1)
