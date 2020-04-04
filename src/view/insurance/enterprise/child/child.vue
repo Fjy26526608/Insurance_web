@@ -358,7 +358,7 @@
           // },
           {
             title: '总金额(元)',
-            key: 'policyamount',
+            key: 'cost',
             align: 'center',
             tooltip: true,
             width: 110
@@ -458,14 +458,14 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/companylist',
+          url: '/main/companylistchild',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,
             name: this.queryStr,
             btime: sd,
             etime: ed,
-            instypeid: this.typeId
+            typeid: this.typeId
           }
         }).then(function (res) {
           console.log('查询返回值', res)
@@ -497,11 +497,11 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/companylist',
+          url: '/main/companylistchild',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,
-            instypeid: this.typeId
+            typeid: this.typeId
           }
         }).then(function (res) {
           console.log('********', res)

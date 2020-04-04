@@ -251,14 +251,14 @@
             align: 'center',
             tooltip: true,
             title: '名字',
-            key: 'insured',
+            key: 'name',
             minWidth: 100,
           },
           {
             align: 'center',
             tooltip: true,
             title: '保险类型',
-            key: 'insurancetypename',
+            key: 'typename',
             minWidth: 100,
             maxwidth: 130
           },
@@ -280,7 +280,7 @@
             align: 'center',
             tooltip: true,
             title: '总金额(元)',
-            key: 'policyamount',
+            key: 'cost',
             maxWidth:130,
             minWidth: 100
           },
@@ -468,12 +468,11 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/inslist',
+          url: '/main/plistchild',
           data: {
-            iscompany:'False',
             page: this.pageNo,
             pagesize: this.pageSize,
-            instypeid: this.typeId,
+            typeid: this.typeId,
             name: this.queryStr,
             btime: sd,
             etime: ed
@@ -524,12 +523,11 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/inslist',
+          url: '/main/plistchild',
           data: {
-            iscompany:'False',
             page: this.pageNo,
             pagesize: this.pageSize,
-            instypeid: this.typeId
+            typeid: this.typeId
           }
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
