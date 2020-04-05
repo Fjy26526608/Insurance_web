@@ -238,14 +238,13 @@
           }
         ],
         columns: [
-          // {
-          //   align: 'center',
-          //   tooltip: true,
-          //   title: '编号',
-          //   key: 'id',
-          //   maxWidth: 65,
-          //   minWidth: 65
-          // },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '编号',
+            key: 'id',
+            width: 65
+          },
           {
             align: 'center',
             tooltip: true,
@@ -278,8 +277,8 @@
           {
             align: 'center',
             tooltip: true,
-            title: '总金额(元)',
-            key: 'policyamount',
+            title: '总成本(元)',
+            key: 'cost',
             maxWidth: 130,
             minWidth: 100
           },
@@ -287,7 +286,7 @@
             align: 'center',
             tooltip: true,
             title: '管理费(元)',
-            key: 'cost',
+            key: 'glf',
             maxWidth: 130,
             minWidth: 100
           },
@@ -340,13 +339,13 @@
         },
         ruleValidate: {
           name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-          number: [
-            {
-              required: true,
-              message: '合同编号不能为空',
-              trigger: 'blur'
-            }
-          ],
+          // number: [
+          //   {
+          //     required: true,
+          //     message: '合同编号不能为空',
+          //     trigger: 'blur'
+          //   }
+          // ],
           unitPrice: [
             {
               required: true,
@@ -388,14 +387,17 @@
           cost: [
             {
               required: true,
-              message: '保单总成本不能为空',
+              message: '管理费不能为空',
               trigger: 'blur'
             }
           ]
         },
         formLeval: [],
         levelB: '',
-        levelJ: ''
+        levelJ: '',
+        a: '',
+        b: '',
+        bb:[]
       }
     },
     computed: {
@@ -443,6 +445,16 @@
         this.loading = true
         this.tableLisr = []
         let that = this
+        if (this.startData == '') {
+          this.a = ''
+        } else {
+          this.a = formatDate(this.startData, 'yyyy-MM-dd')
+        }
+        if (this.endData == '') {
+          this.b = ''
+        } else {
+          this.b = formatDate(this.endData, 'yyyy-MM-dd')
+        }
         axios.request({
           method: 'post',
           url: '/main/inslist',
@@ -452,12 +464,20 @@
             pagesize: this.pageSize,
             instypeid: this.typeId,
             name: this.queryStr,
-            btime: formatDate(shat.startData, 'yyyy-MM-dd'),
-            etime: formatDate(shat.endData, 'yyyy-MM-dd')
+            btime: this.a,
+            etime: this.b
           }
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
+            that.tableLisr[i].policyamount=that.tableLisr[i].policyamount.toFixed(2)
+            that.tableLisr[i].cost=that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd=that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd=that.tableLisr[i].grcd.toFixed(2)
+            that.tableLisr[i].glf=that.tableLisr[i].glf.toFixed(2)
+            that.tableLisr[i].actualpayment=that.tableLisr[i].actualpayment.toFixed(2)
+            that.tableLisr[i].alreadyused=that.tableLisr[i].alreadyused.toFixed(2)
+            that.tableLisr[i].balance=that.tableLisr[i].balance.toFixed(2)
             that.tableLisr[i].id = res.data.data[i].pk
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
@@ -506,187 +526,195 @@
             instypeid: this.typeId
           }
         }).then(function (res) {
-          console.log('yemianfanhuizhi',res)
+          console.log('yemianfanhuizhi', res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
+            that.tableLisr[i].policyamount=that.tableLisr[i].policyamount.toFixed(2)
+            that.tableLisr[i].cost=that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd=that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd=that.tableLisr[i].grcd.toFixed(2)
+            that.tableLisr[i].glf=that.tableLisr[i].glf.toFixed(2)
+            that.tableLisr[i].actualpayment=that.tableLisr[i].actualpayment.toFixed(2)
+            that.tableLisr[i].alreadyused=that.tableLisr[i].alreadyused.toFixed(2)
+            that.tableLisr[i].balance=that.tableLisr[i].balance.toFixed(2)
             that.tableLisr[i].id = res.data.data[i].pk
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
           }
           that.total = res.data.count
-        }).catch(function (error) {
-          console.log(error)
-        })
+    }).catch(function (error) {
+      console.log(error)
+    })
         this.loading = false
-      },
-      changePage(page) {
-        this.pageNo = page
-        this.fetchPersonalInfo()
-      },
-      pdet(e, index) {
-        console.log('我的下标是', index, e)
-        this.$router.push({
-          path: '/insurance/personal/pdet',
-          query: { id: e.id }
-        })
-      },
-      cancel() {
-      },
-      changeLoading() {
-        this.modalLoading = false
-        this.$nextTick(() => {
-          this.modalLoading = true
-        })
-      },
-      ok() {
-        this.$refs['formValidate'].validate((valid) => {
-          if (!valid) {
-            return this.changeLoading()
-          }
-          // 请求服务端添加接口
-          const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
-          const data = {
-            // contractnum: number,
-            glf: cost,
-            insured: name,
-            tel: phone,
-            insurancetypeid: insuranceType,
-            buydate: formatDate(date, 'yyyy-MM-dd'),
-            month: duration,
-            policyamount: unitPrice,
-            // bili: this.levelB,
-            // jishu: this.levelJ,
-            actualpayment: payment,
-            // cost: cost
-          }
-          saveOrModifyInsuranceInfo(data).then((res) => {
-            if (res.data.state === 'true') {
-              setTimeout(() => {
-                this.changeLoading()
-                this.showAddModal = false
-                this.$Message.success('添加成功')
-                this.fetchPersonalInfo()
-              }, 1000)
-            } else {
-              this.$Message.error('添加保险合同失败')
-            }
-          }).catch((err) => {
-            console.error(err)
-            this.$Message.error('请求服务器错误')
-            this.changeLoading()
-          })
-        })
-      },
-      remove(id) {
-        this.deleteInsuModal = true
-        this.removeId = id
-      },
-      deleteCancel() { },
-      deleteOk() {
-        deleteInsuranceInfo(this.removeId).then((res) => {
-          if (res.data.state === 'true') {
-            this.$Message.success('删除成功')
-            this.fetchPersonalInfo()
-          } else {
-            this.$Message.error('删除操作失败')
-          }
-        }).catch((err) => {
-          console.error(err)
-          this.$Message.error('请求服务器异常')
-        })
-      },
-      handleSuccess(res, file) {
-        console.log('上传后返回信息', res)
-        file.url = 'http://47.105.49.81:2222/api/main/getimg' + '/' + res.id + '/' + this.token;
-        console.log('图片地址', file.url)
-        file.name = res.id;
-      },
-      handleFormatError(file) {
-        this.$Notice.warning({
-          title: '文件格式不正确',
-          desc: '文件 ' + file.name + ' 的格式不正确，请选择jpg、jpeg或png格式的图片。'
-        });
-      },
-      handleMaxSize(file) {
-        this.$Notice.warning({
-          title: '超出文件大小限制',
-          desc: '文件  ' + file.name + ' 超出大小限制，文件最大为2MB。'
-        });
-      },
-      handleBeforeUpload() {
-        const check = this.uploadList.length < 5;
-        if (!check) {
-          this.$Notice.warning({
-            title: '最多可以上传5张图片。'
-          });
-        }
-        return check;
-      },
-      handleRemove(file) {
-        console.log(file)
-        let that = this
-        axios.request({
-          method: 'post',
-          url: '/main/delimg',
-          data: {
-            id: file.name,
-          }
-        }).then(function (res) {
-          if (res.data.state === 'true') {
-            that.$Message.success(res.data.msg)
-          } else {
-            that.$Message.error(res.data.msg)
-          }
-        }).catch(function (error) {
-          console.log(error)
-        })
-        const fileList = this.$refs.upload.fileList;
-        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-      },
-      handleView(index) {
-        console.log(index)
-        console.log(this.uploadList)
-        for (let i = 0; i < this.uploadList.length; i++) {
-          if (this.uploadList[i].name === index) {
-            this.value1 = i
-            this.visible = true
-          }
-        }
-      },
-      shen(id) {
-        this.shModal = true
-        this.shId = id
-        let that = this
-        axios.request({
-          method: 'post',
-          url: '/main/reviewins',
-          data: {
-            id: that.shId
-          }
-        }).then(function (res) {
-          if (res.data.state === 'true') {
-            that.$Message.success(res.data.msg)
-          } else {
-            that.$Message.error(res.data.msg)
-          }
-        }).catch(function (error) {
-          console.log(error)
-        })
-      },
-      shenOk() {
-        // delCompany(this.removeId).then((res) => {
-        //   if (res.data.state === 'true') {
-        this.$Message.success('删除成功')
-        //     this.fetchCompanyList()
-        //   } else {
-        //     this.$Message.error('删除操作失败')
-        //   }
-        // }).catch((err) => {
-        //   console.error(err)
-        //   this.$Message.error('请求服务器异常')
-        // })
+  },
+  changePage(page) {
+    this.pageNo = page
+    this.fetchPersonalInfo()
+  },
+  pdet(e, index) {
+    console.log('我的下标是', index, e)
+    this.$router.push({
+      path: '/insurance/personal/pdet',
+      query: { id: e.id }
+    })
+  },
+  cancel() {
+  },
+  changeLoading() {
+    this.modalLoading = false
+    this.$nextTick(() => {
+      this.modalLoading = true
+    })
+  },
+  ok() {
+    this.$refs['formValidate'].validate((valid) => {
+      if (!valid) {
+        return this.changeLoading()
       }
+      // 请求服务端添加接口
+      const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
+      const data = {
+        // contractnum: number,
+        glf: cost,
+        insured: name,
+        tel: phone,
+        insurancetypeid: insuranceType,
+        buydate: formatDate(date, 'yyyy-MM-dd'),
+        month: duration,
+        policyamount: unitPrice,
+        // bili: this.levelB,
+        // jishu: this.levelJ,
+        actualpayment: payment,
+        // cost: cost
+      }
+      saveOrModifyInsuranceInfo(data).then((res) => {
+        if (res.data.state === 'true') {
+          setTimeout(() => {
+            this.changeLoading()
+            this.showAddModal = false
+            this.$Message.success('添加成功')
+            this.fetchPersonalInfo()
+          }, 1000)
+        } else {
+          this.$Message.error('添加保险合同失败')
+        }
+      }).catch((err) => {
+        console.error(err)
+        this.$Message.error('请求服务器错误')
+        this.changeLoading()
+      })
+    })
+  },
+  remove(id) {
+    this.deleteInsuModal = true
+    this.removeId = id
+  },
+  deleteCancel() { },
+  deleteOk() {
+    deleteInsuranceInfo(this.removeId).then((res) => {
+      if (res.data.state === 'true') {
+        this.$Message.success('删除成功')
+        this.fetchPersonalInfo()
+      } else {
+        this.$Message.error('删除操作失败')
+      }
+    }).catch((err) => {
+      console.error(err)
+      this.$Message.error('请求服务器异常')
+    })
+  },
+  handleSuccess(res, file) {
+    console.log('上传后返回信息', res)
+    file.url = 'http://47.105.49.81:2222/api/main/getimg' + '/' + res.id + '/' + this.token;
+    console.log('图片地址', file.url)
+    file.name = res.id;
+  },
+  handleFormatError(file) {
+    this.$Notice.warning({
+      title: '文件格式不正确',
+      desc: '文件 ' + file.name + ' 的格式不正确，请选择jpg、jpeg或png格式的图片。'
+    });
+  },
+  handleMaxSize(file) {
+    this.$Notice.warning({
+      title: '超出文件大小限制',
+      desc: '文件  ' + file.name + ' 超出大小限制，文件最大为2MB。'
+    });
+  },
+  handleBeforeUpload() {
+    const check = this.uploadList.length < 5;
+    if (!check) {
+      this.$Notice.warning({
+        title: '最多可以上传5张图片。'
+      });
+    }
+    return check;
+  },
+  handleRemove(file) {
+    console.log(file)
+    let that = this
+    axios.request({
+      method: 'post',
+      url: '/main/delimg',
+      data: {
+        id: file.name,
+      }
+    }).then(function (res) {
+      if (res.data.state === 'true') {
+        that.$Message.success(res.data.msg)
+      } else {
+        that.$Message.error(res.data.msg)
+      }
+    }).catch(function (error) {
+      console.log(error)
+    })
+    const fileList = this.$refs.upload.fileList;
+    this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+  },
+  handleView(index) {
+    console.log(index)
+    console.log(this.uploadList)
+    for (let i = 0; i < this.uploadList.length; i++) {
+      if (this.uploadList[i].name === index) {
+        this.value1 = i
+        this.visible = true
+      }
+    }
+  },
+  shen(id) {
+    this.shModal = true
+    this.shId = id
+    let that = this
+    axios.request({
+      method: 'post',
+      url: '/main/reviewins',
+      data: {
+        id: that.shId
+      }
+    }).then(function (res) {
+      if (res.data.state === 'true') {
+        that.$Message.success(res.data.msg)
+      } else {
+        that.$Message.error(res.data.msg)
+      }
+    }).catch(function (error) {
+      console.log(error)
+    })
+  },
+  shenOk() {
+    // delCompany(this.removeId).then((res) => {
+    //   if (res.data.state === 'true') {
+    this.$Message.success('删除成功')
+    //     this.fetchCompanyList()
+    //   } else {
+    //     this.$Message.error('删除操作失败')
+    //   }
+    // }).catch((err) => {
+    //   console.error(err)
+    //   this.$Message.error('请求服务器异常')
+    // })
+  }
     },
     // mounted() {
     //   this.uploadList = this.$refs.upload.fileList;

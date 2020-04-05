@@ -96,13 +96,13 @@
         <Row>
           <!-- <Col style="width: auto;" span="2">个人比例(%)：</Col> -->
           <Col span="8">
-          <FormItem label="个人比例(%):" prop='grbili'>
+          <FormItem label="个人比例(%):" prop='grbili' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
             <Input type="text" v-model="formValidate.grbili" placeholder='输入个人比例(%)'></Input>
           </FormItem>
           </Col>
           <!-- <Col style="width: auto;" span="2" offset="1">企业比例(%)：</Col> -->
           <Col span="8">
-          <FormItem label="企业比例(%):" prop='gsbili'>
+          <FormItem label="企业比例(%):" prop='gsbili' :rules="{ required: true, message: '值不能为空', trigger: 'blur' }">
             <Input type="text" v-model="formValidate.gsbili" placeholder='输入企业比例(%)'></Input>
           </FormItem>
           </Col>
@@ -331,6 +331,7 @@
             id: that.formValidate.id,
             name: that.formValidate.name,
             iscompany: that.formValidate.radio,
+            length: that.formDynamic.items.length,
             data: tp,
             grbili:that.formValidate.grbili,
             gsbili:that.formValidate.gsbili,

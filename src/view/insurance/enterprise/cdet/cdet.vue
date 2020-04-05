@@ -18,12 +18,12 @@
             <DatePicker type="date" placeholder="选择日期" v-model="formValidate2.stime" :disabled="!isChange"></DatePicker>
           </FormItem>
           </Col>
-          <!-- <Col span="2" style="text-align: center">结束日期</Col>
-          <Col span="2">
+          <Col span="2" style="text-align: center">结束日期</Col>
+          <Col span="5">
           <FormItem prop="dtime">
             <DatePicker type="date" placeholder="选择日期" v-model="formValidate2.etime" :disabled="!isChange"></DatePicker>
           </FormItem>
-          </Col> -->
+          </Col>
         </Row>
       </FormItem>
       <FormItem label="联系人" prop="contactperson">
@@ -70,7 +70,7 @@
       </Col>
     </Row>
     <FormItem>
-      <Button size="large" icon="md-checkmark" type="success" @click="handleSubmit('formValidate2')" v-if="isChange">递 交</Button>
+      <Button size="large" icon="md-checkmark" type="success" @click="handleSubmit(formValidate2)" v-if="isChange">递 交</Button>
       <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px" v-if="isChange">重 置</Button> -->
       <Button icon="md-create" size="large" type="primary" v-if="isAdmin" @click="doChange" style="margin-left: 8px">修 改</Button>
     </FormItem>
@@ -195,7 +195,6 @@
         isChange: false,
         formValidate2: {
           name: '',
-          psize: '',
           number: '',
           address: '',
           manager: '',
@@ -218,7 +217,7 @@
             tooltip: true,
             title: '编号',
             key: 'id',
-            Width: 70
+            Width: 65
           },
           {
             align: 'center',
@@ -234,13 +233,6 @@
             key: 'insurancetypename',
             minWidth: 130,
             maxwidth: 200
-          },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '金额(元)',
-            key: 'policyamount',
-            width: 100
           },
           {
             align: 'center',
@@ -261,8 +253,15 @@
           {
             align: 'center',
             tooltip: true,
-            title: '管理费(元)',
+            title: '总成本(元)',
             key: 'cost',
+            width: 100
+          },
+          {
+            align: 'center',
+            tooltip: true,
+            title: '管理费(元)',
+            key: 'glf',
             width: 100
           },
           {
@@ -418,15 +417,16 @@
       },
       getInsuranceTypes() {
         getInsuranceTypes().then((res) => {
+          console.log('查询保险类型',res)
           if (res.data.state === 'true') {
             this.insuranceList = []
             const types = res.data.data
             for (const type of types) {
-              if (!type.iscompany) {
+              if (type.iscompany) {
                 this.insuranceList.push({
                   value: type.id,
                   label: type.name,
-                  levellist: type.levellist
+                  // levellist: type.levellist
                 })
               }
             }
@@ -465,10 +465,11 @@
         })
       },
       handleSubmit(res) {
-        this.$refs['formValidate2'].validate((valid) => {
-          if (!valid) {
-            return this.changeLoading()
-          }
+        console.log('点击修改',res)
+        // this.$refs['formValidate2'].validate((valid) => {
+        //   if (!valid) {
+        //     return this.changeLoading()
+        //   }
           let that = this
           axios.request({
             method: 'post',
@@ -476,7 +477,7 @@
             data: {
               id: that.formValidate2.id,
               name: that.formValidate2.name,
-              psize: that.formValidate2.psize,
+              // psize: that.formValidate2.psize,
               address: that.formValidate2.address,
               stime: formatDate(that.formValidate2.stime, 'yyyy-MM-dd'),
               etime: formatDate(that.formValidate2.etime, 'yyyy-MM-dd'),
@@ -494,7 +495,7 @@
           }).catch(function (error) {
             console.log(error)
           })
-        })
+        // })
       },
       handleReset(name) {
         this.$refs[name].resetFields()
@@ -569,9 +570,18 @@
             companyid: this.getValue
           }
         }).then(function (res) {
+          console.log('表格查询',res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
             that.tableLisr[i].id = res.data.data[i].pk
+            that.tableLisr[i].policyamount=that.tableLisr[i].policyamount.toFixed(2)
+            that.tableLisr[i].cost=that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd=that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd=that.tableLisr[i].grcd.toFixed(2)
+            that.tableLisr[i].glf=that.tableLisr[i].glf.toFixed(2)
+            that.tableLisr[i].actualpayment=that.tableLisr[i].actualpayment.toFixed(2)
+            that.tableLisr[i].alreadyused=that.tableLisr[i].alreadyused.toFixed(2)
+            that.tableLisr[i].balance=that.tableLisr[i].balance.toFixed(2)
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate

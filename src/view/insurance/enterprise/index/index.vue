@@ -304,13 +304,13 @@
           }
         ],
         columns: [
-          // {
-          //   title: '编号',
-          //   key: 'id',
-          //   align: 'center',
-          //   tooltip: true,
-          //   width: 65
-          // },
+          {
+            title: '编号',
+            key: 'id',
+            align: 'center',
+            tooltip: true,
+            width: 65
+          },
           {
             title: '公司名称',
             key: 'name',
@@ -356,8 +356,8 @@
           //   width: 110
           // },
           {
-            title: '总金额(元)',
-            key: 'policyamount',
+            title: '总成本(元)',
+            key: 'cost',
             align: 'center',
             tooltip: true,
             width: 110
@@ -408,7 +408,9 @@
 
         ],
         tableLisr: [],
-        loading: true
+        loading: true,
+        a: '',
+        b: ''
       }
     },
     computed: {
@@ -429,10 +431,20 @@
     },
     methods: {
       doSearch() {
-        console.log('搜索值', this.queryStr, JSON.stringify(this.startData), this.endData)
+        console.log('搜索值', this.queryStr, JSON.stringify(this.startData), JSON.stringify(this.endData))
         this.loading = true
         this.tableLisr = []
         let that = this
+        if (this.startData == '') {
+          this.a = ''
+        } else {
+          this.a = formatDate(this.startData, 'yyyy-MM-dd')
+        }
+        if (this.endData == '') {
+          this.b = ''
+        } else {
+          this.b = formatDate(this.endData, 'yyyy-MM-dd')
+        }
         axios.request({
           method: 'post',
           url: '/main/companylist',
@@ -440,18 +452,24 @@
             page: this.pageNo,
             pagesize: this.pageSize,
             name: this.queryStr,
-            btime: formatDate(shat.startData, 'yyyy-MM-dd'),
-            etime: formatDate(shat.endData, 'yyyy-MM-dd'),
+            btime: this.a,
+            etime: this.b,
             instypeid: this.typeId
           }
         }).then(function (res) {
           console.log('查询返回值', res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i])
-              let abc=new Date(res.data.data[i].stime)
-              that.tableLisr[i].stime = formatDate(abc,'yyyy-MM-dd')
-              let cba=new Date(res.data.data[i].etime)
-              that.tableLisr[i].etime = formatDate(cba,'yyyy-MM-dd')
+              that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+              that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+              that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+              that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
+              that.tableLisr[i].allmoney = that.tableLisr[i].allmoney.toFixed(2)
+              that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+            let abc = new Date(res.data.data[i].stime)
+            that.tableLisr[i].stime = formatDate(abc, 'yyyy-MM-dd')
+            let cba = new Date(res.data.data[i].etime)
+            that.tableLisr[i].etime = formatDate(cba, 'yyyy-MM-dd')
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -481,15 +499,21 @@
             instypeid: this.typeId
           }
         }).then(function (res) {
-          console.log('********', res)
+          console.log('查询企业返回值', res)
           if (res.data.state === 'true') {
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {
               that.tableLisr.push(res.data.data[i])
-              let abc=new Date(res.data.data[i].stime)
-              that.tableLisr[i].stime = formatDate(abc,'yyyy-MM-dd')
-              let cba=new Date(res.data.data[i].etime)
-              that.tableLisr[i].etime = formatDate(cba,'yyyy-MM-dd')
+              that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+              that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+              that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+              that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
+              that.tableLisr[i].allmoney = that.tableLisr[i].allmoney.toFixed(2)
+              that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+              let abc = new Date(res.data.data[i].stime)
+              that.tableLisr[i].stime = formatDate(abc, 'yyyy-MM-dd')
+              let cba = new Date(res.data.data[i].etime)
+              that.tableLisr[i].etime = formatDate(cba, 'yyyy-MM-dd')
             }
           } else {
             that.$Message.error(res.data.msg)
@@ -548,7 +572,7 @@
                 this.changeLoading()
                 this.showAddModal = false
                 this.$Message.success('添加成功')
-                this.fetchPersonalInfo()
+                this.fetchCompanyList()
               }, 1000)
             } else {
               this.$Message.error('添加企业信息失败')
