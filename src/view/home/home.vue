@@ -85,7 +85,7 @@
         loading: true,
         ctableTitle: [
           {
-            title: '编号',
+            title: 'ID',
             key: 'contractnum',
             align: 'center',
             tooltip: true
@@ -105,7 +105,7 @@
         ],
         ptableTitle: [
           {
-            title: '编号',
+            title: 'ID',
             key: 'contractnum',
             align: 'center',
             tooltip: true

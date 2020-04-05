@@ -28,7 +28,7 @@
           method: 'post',
           url: '/main/statistics',
           data:{
-            gryear:year
+            gsyear:year
           }
         }).then(function (res) {
           console.log('查询返回值', res)

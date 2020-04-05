@@ -51,8 +51,8 @@
         </template>
       </div>
       <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError"
-              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{id:formValidate.id,token:token}" multiple type="drag"
-              action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;">
+              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{id:formValidate.id,token:token}" multiple type="drag" action="http://47.105.49.81:2222/api/main/updataimg"
+              style="display: inline-block;width:58px;">
         <!-- :disabled="!isChange" -->
         <div style="width: 58px;height:58px;line-height: 58px;">
           <Icon type="ios-camera" size="20"></Icon>
@@ -81,7 +81,7 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="warning" v-if="isAdmin || iskj"  :disabled='row.state!=0' @click="shen(row.id)" style="margin:0 5px;">审核</Button>
+          <Button type="warning" v-if="isAdmin || iskj" :disabled='row.state!=0' @click="shen(row.id)" style="margin:0 5px;">审核</Button>
           <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
         </template>
       </Table>
@@ -417,7 +417,7 @@
       },
       getInsuranceTypes() {
         getInsuranceTypes().then((res) => {
-          console.log('查询保险类型',res)
+          console.log('查询保险类型', res)
           if (res.data.state === 'true') {
             this.insuranceList = []
             const types = res.data.data
@@ -465,36 +465,36 @@
         })
       },
       handleSubmit(res) {
-        console.log('点击修改',res)
+        console.log('点击修改', res)
         // this.$refs['formValidate2'].validate((valid) => {
         //   if (!valid) {
         //     return this.changeLoading()
         //   }
-          let that = this
-          axios.request({
-            method: 'post',
-            url: '/main/addcompany',
-            data: {
-              id: that.formValidate2.id,
-              name: that.formValidate2.name,
-              // psize: that.formValidate2.psize,
-              address: that.formValidate2.address,
-              stime: formatDate(that.formValidate2.stime, 'yyyy-MM-dd'),
-              etime: formatDate(that.formValidate2.etime, 'yyyy-MM-dd'),
-              contactperson: that.formValidate2.contactperson,
-              tel: that.formValidate2.tel,
-              // remark: that.formValidate2.remark
-            }
-          }).then(function (res) {
-            console.log('修改', res)
-            if (res.data.state === 'true') {
-              that.$Message.success(res.data.msg)
-            } else {
-              that.$Message.error(res.data.msg)
-            }
-          }).catch(function (error) {
-            console.log(error)
-          })
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/addcompany',
+          data: {
+            id: that.formValidate2.id,
+            name: that.formValidate2.name,
+            // psize: that.formValidate2.psize,
+            address: that.formValidate2.address,
+            stime: formatDate(that.formValidate2.stime, 'yyyy-MM-dd'),
+            etime: formatDate(that.formValidate2.etime, 'yyyy-MM-dd'),
+            contactperson: that.formValidate2.contactperson,
+            tel: that.formValidate2.tel,
+            // remark: that.formValidate2.remark
+          }
+        }).then(function (res) {
+          console.log('修改', res)
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
         // })
       },
       handleReset(name) {
@@ -570,18 +570,18 @@
             companyid: this.getValue
           }
         }).then(function (res) {
-          console.log('表格查询',res)
+          console.log('表格查询', res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
             that.tableLisr[i].id = res.data.data[i].pk
-            that.tableLisr[i].policyamount=that.tableLisr[i].policyamount.toFixed(2)
-            that.tableLisr[i].cost=that.tableLisr[i].cost.toFixed(2)
-            that.tableLisr[i].gscd=that.tableLisr[i].gscd.toFixed(2)
-            that.tableLisr[i].grcd=that.tableLisr[i].grcd.toFixed(2)
-            that.tableLisr[i].glf=that.tableLisr[i].glf.toFixed(2)
-            that.tableLisr[i].actualpayment=that.tableLisr[i].actualpayment.toFixed(2)
-            that.tableLisr[i].alreadyused=that.tableLisr[i].alreadyused.toFixed(2)
-            that.tableLisr[i].balance=that.tableLisr[i].balance.toFixed(2)
+            that.tableLisr[i].policyamount = that.tableLisr[i].policyamount.toFixed(2)
+            that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
+            that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+            that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+            that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+            that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
@@ -696,6 +696,23 @@
       shen(id) {
         this.shModal = true
         this.shId = id
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/reviewins',
+          data: {
+            id: that.shId
+          }
+        }).then(function (res) {
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+            that.fetchPersonalInfo()
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
       },
       shenOk() {
         // delCompany(this.removeId).then((res) => {

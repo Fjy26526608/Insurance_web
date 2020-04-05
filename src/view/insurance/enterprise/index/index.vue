@@ -305,7 +305,7 @@
         ],
         columns: [
           {
-            title: '编号',
+            title: 'ID',
             key: 'id',
             align: 'center',
             tooltip: true,

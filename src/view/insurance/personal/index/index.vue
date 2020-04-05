@@ -241,7 +241,7 @@
           {
             align: 'center',
             tooltip: true,
-            title: '编号',
+            title: 'ID',
             key: 'id',
             width: 65
           },
