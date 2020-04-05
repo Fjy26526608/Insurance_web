@@ -683,9 +683,9 @@
         // })
       }
     },
-    mounted() {
-      this.uploadList = this.$refs.upload.fileList;
-    }
+    // mounted() {
+    //   this.uploadList = this.$refs.upload.fileList;
+    // }
   }
 </script>
 
