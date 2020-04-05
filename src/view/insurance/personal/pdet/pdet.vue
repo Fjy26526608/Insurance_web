@@ -61,7 +61,7 @@
         </template>
       </div>
       <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError"
-              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{number:formValidate.number,token:token}" multiple type="drag"
+              :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :data="{id:formValidate.id,token:token}" multiple type="drag"
               action="http://47.105.49.81:2222/api/main/updataimg" style="display: inline-block;width:58px;">
         <!-- :disabled="!isChange" -->
         <div style="width: 58px;height:58px;line-height: 58px;">
