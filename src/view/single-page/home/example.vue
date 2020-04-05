@@ -21,14 +21,14 @@
       this.fetchList()
     },
     methods: {
-      fetchList() {
+      fetchList(year = 2020) {
         console.log('开始请求')
         let that = this
         axios.request({
           method: 'post',
           url: '/main/statistics',
           data: {
-            gryear: 2020
+            gryear: year
           }
         }).then(function (res) {
           console.log('查询返回值', res)
