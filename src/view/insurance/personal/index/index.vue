@@ -668,6 +668,22 @@
       shen(id) {
         this.shModal = true
         this.shId = id
+        let that=this
+        axios.request({
+          method: 'post',
+          url: '/main/reviewins',
+          data: {
+            id: that.shId
+          }
+        }).then(function (res) {
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
       },
       shenOk() {
         // delCompany(this.removeId).then((res) => {
