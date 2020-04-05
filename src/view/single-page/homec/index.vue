@@ -2,6 +2,9 @@
   <div>
     <Row>
       <Card shadow>
+        <Col span="4">
+          <DatePicker type="year" placeholder="选择年份" style="width: 200px;"></DatePicker>
+        </Col>
         <example style="height: 580px;"/>
       </Card>
     </Row>
@@ -9,17 +12,17 @@
 </template>
 
 <script>
-import InforCard from '_c/info-card'
-import CountTo from '_c/count-to'
-import { ChartPie, ChartBar } from '_c/charts'
+// import InforCard from '_c/info-card'
+// import CountTo from '_c/count-to'
+// import { ChartPie, ChartBar } from '_c/charts'
 import Example from './examplec.vue'
 export default {
   name: 'homec',
   components: {
-    InforCard,
-    CountTo,
-    ChartPie,
-    ChartBar,
+    // InforCard,
+    // CountTo,
+    // ChartPie,
+    // ChartBar,
     Example
   },
   data () {
