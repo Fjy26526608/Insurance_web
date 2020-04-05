@@ -217,7 +217,7 @@
             tooltip: true,
             title: '编号',
             key: 'id',
-            Width: 65
+            width: 65
           },
           {
             align: 'center',
