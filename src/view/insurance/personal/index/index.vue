@@ -54,7 +54,7 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button>
+          <Button type="warning" v-if="isAdmin || iskj" :disabled='row.state!=0' @click="shen(row.id)" style="margin:0 5px;">审核</Button>
           <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
         </template>
       </Table>
@@ -280,7 +280,7 @@
             tooltip: true,
             title: '总金额(元)',
             key: 'policyamount',
-            maxWidth:130,
+            maxWidth: 130,
             minWidth: 100
           },
           {
@@ -441,36 +441,27 @@
       doSearch() {
         console.log('搜索值', this.queryStr, this.startData, this.endData)
         this.loading = true
-        let indexs = JSON.stringify(this.startData).indexOf('T')
-        let sd = JSON.stringify(this.startData).slice(0, indexs)
-        sd =  sd.slice(1,sd.length)
-        indexs = JSON.stringify(this.endData).indexOf('T')
-        let ed = JSON.stringify(this.endData).slice(0, indexs)
-        ed =  ed.slice(1,ed.length)
         this.tableLisr = []
         let that = this
         axios.request({
           method: 'post',
           url: '/main/inslist',
           data: {
-            iscompany:'False',
+            iscompany: 'False',
             page: this.pageNo,
             pagesize: this.pageSize,
             instypeid: this.typeId,
             name: this.queryStr,
-            btime: sd,
-            etime: ed
+            btime: formatDate(shat.startData, 'yyyy-MM-dd'),
+            etime: formatDate(shat.endData, 'yyyy-MM-dd')
           }
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
             that.tableLisr[i].id = res.data.data[i].pk
-            let indexs = res.data.data[i].fields.buydate.indexOf('T')
-            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
-            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.reminddate.indexOf('T')
-            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
+            that.tableLisr[i].buydate = res.data.data[i].fields.buydate
+            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
+            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -509,21 +500,19 @@
           method: 'post',
           url: '/main/inslist',
           data: {
-            iscompany:'False',
+            iscompany: 'False',
             page: this.pageNo,
             pagesize: this.pageSize,
             instypeid: this.typeId
           }
         }).then(function (res) {
+          console.log('yemianfanhuizhi',res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
             that.tableLisr[i].id = res.data.data[i].pk
-            let indexs = res.data.data[i].fields.buydate.indexOf('T')
-            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
-            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.reminddate.indexOf('T')
-            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
+            that.tableLisr[i].buydate = res.data.data[i].fields.buydate
+            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
+            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -559,7 +548,7 @@
           const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
           const data = {
             // contractnum: number,
-            glf:cost,
+            glf: cost,
             insured: name,
             tel: phone,
             insurancetypeid: insuranceType,
@@ -668,7 +657,7 @@
       shen(id) {
         this.shModal = true
         this.shId = id
-        let that=this
+        let that = this
         axios.request({
           method: 'post',
           url: '/main/reviewins',

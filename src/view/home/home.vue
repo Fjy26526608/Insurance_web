@@ -75,6 +75,7 @@
 
 <script>
   import axios from '@/libs/api.request'
+  import {formatDate } from '@/libs/util'
   export default {
     name: 'home',
     data() {
@@ -157,9 +158,8 @@
       }).then(function (res) {
         console.log('查询10天值', res)
         for (let i = 0; i < res.data.data.length; i++) {
-          let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
           that.ctableDet10.push(res.data.data[i])
-          that.ctableDet10[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
+          that.ctableDet10[i].reminddate = res.data.data[i].reminddate.reminddate
         }
       }).catch(function (error) {
         console.log(error)
@@ -185,9 +185,8 @@
       }).then(function (res) {
         console.log('查询15天值', res)
         for (let i = 0; i < res.data.data.length; i++) {
-          let indexs = res.data.data[i].reminddate.reminddate.indexOf('T')
           that.ctableDet15.push(res.data.data[i])
-          that.ctableDet15[i].reminddate = res.data.data[i].reminddate.reminddate.slice(0, indexs)
+          that.ctableDet15[i].reminddate = res.data.data[i].reminddate.reminddate
         }
       }).catch(function (error) {
         console.log(error)
@@ -222,9 +221,8 @@
           }
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
-            let indexs = res.data.data[i].reminddate.indexOf('T')
             that.ptableDet10.push(res.data.data[i])
-            that.ptableDet10[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+            that.ptableDet10[i].reminddate = res.data.data[i].reminddate
           }
         }).catch(function (error) {
           console.log(error)
@@ -239,10 +237,9 @@
           }
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
-            let indexs = res.data.data[i].reminddate.indexOf('T')
             that.ptableDet15.push(res.data.data[i])
             console.log(that.ptableDet15)
-            that.ptableDet15[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+            that.ptableDet15[i].reminddate = res.data.data[i].reminddate
           }
         }).catch(function (error) {
           console.log(error)

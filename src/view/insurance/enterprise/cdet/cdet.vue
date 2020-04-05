@@ -81,7 +81,7 @@
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
-          <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button>
+          <Button type="warning" v-if="isAdmin || iskj"  :disabled='row.state!=0' @click="shen(row.id)" style="margin:0 5px;">审核</Button>
           <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button>
         </template>
       </Table>
@@ -183,7 +183,7 @@
         defaultList2: [],
         imgName: '',
         visible: false,
-        visible2:false,
+        visible2: false,
         uploadList: [],
         uploadList2: [],
         imgData: '',
@@ -407,14 +407,14 @@
       },
       chan(res) {
         console.log('/////////////', res)
-        for (let i = 0; i < this.insuranceList.length; i++) {
-          if (this.insuranceList[i].value === res) {
-            this.formLevel = this.insuranceList[i].levellist
-            for (let j = 0; j < this.formLevel.length; j++) {
-              this.formLevel[j].label = this.formLevel[j].jishu + ' - ' + this.formLevel[j].bili + '%'
-            }
-          }
-        }
+        // for (let i = 0; i < this.insuranceList.length; i++) {
+        //   if (this.insuranceList[i].value === res) {
+        //     this.formLevel = this.insuranceList[i].levellist
+        //     for (let j = 0; j < this.formLevel.length; j++) {
+        //       this.formLevel[j].label = this.formLevel[j].jishu + ' - ' + this.formLevel[j].bili + '%'
+        //     }
+        //   }
+        // }
       },
       getInsuranceTypes() {
         getInsuranceTypes().then((res) => {
@@ -478,8 +478,8 @@
               name: that.formValidate2.name,
               psize: that.formValidate2.psize,
               address: that.formValidate2.address,
-              stime: that.formValidate2.stime,
-              etime: that.formValidate2.etime,
+              stime: formatDate(that.formValidate2.stime, 'yyyy-MM-dd'),
+              etime: formatDate(that.formValidate2.etime, 'yyyy-MM-dd'),
               contactperson: that.formValidate2.contactperson,
               tel: that.formValidate2.tel,
               // remark: that.formValidate2.remark
@@ -525,16 +525,14 @@
           const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
           const data = {
             companyid: this.getValue,
-            contractnum: number,
+            // contractnum: number,
             insured: name,
             tel: phone,
             insurancetypeid: insuranceType,
-            buydate: formatDate(date, 'yyyy-MM-dd hh:mm'),
+            buydate: formatDate(date, 'yyyy-MM-dd'),
             month: duration,
             policyamount: unitPrice,
-            cost,
-            bili: this.levelB,
-            jishu: this.levelJ,
+            glf: cost,
             actualpayment: payment
           }
           console.log(data)
@@ -564,7 +562,7 @@
           method: 'post',
           url: '/main/inslist',
           data: {
-            iscompany:'True',
+            iscompany: 'True',
             page: this.pageNo,
             pagesize: this.pageSize,
             instypeid: this.typeId,
@@ -574,12 +572,9 @@
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
             that.tableLisr[i].id = res.data.data[i].pk
-            let indexs = res.data.data[i].fields.buydate.indexOf('T')
-            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
-            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.reminddate.indexOf('T')
-            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
+            that.tableLisr[i].buydate = res.data.data[i].fields.buydate
+            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
+            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
           }
           that.total = res.data.count
         }).catch(function (error) {
