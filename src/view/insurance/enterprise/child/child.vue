@@ -55,7 +55,7 @@
       </i-col>
       <i-col span="24"></i-col>
       <i-col span="12" class="mt20">
-        <Button type="primary" size="large" @click="showAddModal = true" class="mr15">新增企业</Button>
+        <!-- <Button type="primary" size="large" @click="showAddModal = true" class="mr15">新增企业</Button> -->
         <!-- <Button type="warning" class="mr15">删除</Button>
         <Button>导出</Button> -->
       </i-col>
