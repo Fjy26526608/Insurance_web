@@ -78,8 +78,8 @@
           <strong>{{ row.id }}</strong>
         </template>
         <!-- <template slot-scope="{ row }" slot="action"> -->
-          <!-- <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button> -->
-          <!-- <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button> -->
+        <!-- <Button type="warning" v-if="isAdmin || iskj" @click="shen(row.id)" style="margin:0 5px;">审核</Button> -->
+        <!-- <Button type="error" v-if="isAdmin" @click="remove(row.id)" style="margin:0 5px;">删除</Button> -->
         <!-- </template> -->
       </Table>
     </div>
@@ -133,7 +133,7 @@
 </template>
 
 <script>
-  import { getToken } from '@/libs/util'
+  import { getToken,formatDate } from '@/libs/util'
   import axios from '@/libs/api.request'
   import { addCompany, delCompany } from '@/api/company'
   export default {
@@ -368,7 +368,7 @@
             tooltip: true,
             title: '个人承担(元)',
             key: 'grcd',
-            maxWidth:130,
+            maxWidth: 130,
             minWidth: 100
           },
           {
@@ -376,7 +376,7 @@
             tooltip: true,
             title: '公司承担(元)',
             key: 'gscd',
-            maxWidth:130,
+            maxWidth: 130,
             minWidth: 100
           },
           // {
@@ -425,7 +425,9 @@
 
         ],
         tableLisr: [],
-        loading: true
+        loading: true,
+        a: '',
+        b: ''
       }
     },
     computed: {
@@ -446,15 +448,19 @@
     },
     methods: {
       doSearch() {
-        console.log('搜索值', this.queryStr, JSON.stringify(this.startData),this.endData)
+        console.log('搜索值', this.queryStr, JSON.stringify(this.startData), this.endData)
         this.loading = true
         this.tableLisr = []
-        let indexs = JSON.stringify(this.startData).indexOf('T')
-        let sd = JSON.stringify(this.startData).slice(0, indexs)
-        sd =  sd.slice(1,sd.length)
-        indexs = JSON.stringify(this.endData).indexOf('T')
-        let ed = JSON.stringify(this.endData).slice(0, indexs)
-        ed =  ed.slice(1,ed.length)
+        if (this.startData == '') {
+          this.a = ''
+        } else {
+          this.a = formatDate(this.startData, 'yyyy-MM-dd')
+        }
+        if (this.endData == '') {
+          this.b = ''
+        } else {
+          this.b = formatDate(this.endData, 'yyyy-MM-dd')
+        }
         let that = this
         axios.request({
           method: 'post',
@@ -463,18 +469,21 @@
             page: this.pageNo,
             pagesize: this.pageSize,
             name: this.queryStr,
-            btime: sd,
-            etime: ed,
+            btime: this.a,
+            etime: this.b,
             typeid: this.typeId
           }
         }).then(function (res) {
           console.log('查询返回值', res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i])
-            let indexs = res.data.data[i].stime.indexOf('T')
-            that.tableLisr[i].stime = res.data.data[i].stime.slice(0, indexs)
-            indexs = res.data.data[i].etime.indexOf('T')
-            that.tableLisr[i].etime = res.data.data[i].etime.slice(0, indexs)
+              that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+              that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
+              that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
+            let abc = new Date(res.data.data[i].stime)
+            that.tableLisr[i].stime = formatDate(abc, 'yyyy-MM-dd')
+            let cba = new Date(res.data.data[i].etime)
+            that.tableLisr[i].etime = formatDate(cba, 'yyyy-MM-dd')
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -504,20 +513,18 @@
             typeid: this.typeId
           }
         }).then(function (res) {
-          console.log('********', res)
+          console.log('返回值', res)
           if (res.data.state === 'true') {
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {
               that.tableLisr.push(res.data.data[i])
-              let indexs = res.data.data[i].stime.indexOf('T')
-              that.tableLisr[i].stime = res.data.data[i].stime.slice(0, indexs)
-              indexs = res.data.data[i].etime.indexOf('T')
-              that.tableLisr[i].etime = res.data.data[i].etime.slice(0, indexs)
-              that.tableLisr[i].policyamount = '1000.00'
-              // that.tableLisr[i].alreadyused = '1000.00'
-              // that.tableLisr[i].actualpayment = '1000.00'
-              // that.tableLisr[i].balance = '1000.00'
-              // that.tableLisr[i].cost = '1000.00' //这一行 是个 手续费
+              that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+              that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
+              that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
+              let abc = new Date(res.data.data[i].stime)
+              that.tableLisr[i].stime = formatDate(abc, 'yyyy-MM-dd')
+              let cba = new Date(res.data.data[i].etime)
+              that.tableLisr[i].etime = formatDate(cba, 'yyyy-MM-dd')
             }
           } else {
             that.$Message.error(res.data.msg)
@@ -564,8 +571,8 @@
             name,
             // psize: number,
             address,
-            stime: stime,
-            etime: etime,
+            stime: formatDate(stime, 'yyyy-MM-dd'),
+            etime: formatDate(etime, 'yyyy-MM-dd'),
             contactperson: contactperson,
             tel: tel,
             // remark: desc

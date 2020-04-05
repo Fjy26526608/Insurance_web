@@ -695,6 +695,7 @@
     }).then(function (res) {
       if (res.data.state === 'true') {
         that.$Message.success(res.data.msg)
+        that.fetchPersonalInfo()
       } else {
         that.$Message.error(res.data.msg)
       }

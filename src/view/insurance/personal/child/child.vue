@@ -262,20 +262,20 @@
             minWidth: 100,
             maxwidth: 130
           },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '购买日期',
-            key: 'buydate',
-            width: 130
-          },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '到期日期',
-            key: 'maturitydate',
-            width: 130
-          },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '购买日期',
+          //   key: 'buydate',
+          //   width: 130
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '到期日期',
+          //   key: 'maturitydate',
+          //   width: 130
+          // },
           {
             align: 'center',
             tooltip: true,
@@ -412,7 +412,10 @@
         },
         formLeval: [],
         levelB: '',
-        levelJ: ''
+        levelJ: '',
+        a: '',
+        b: '',
+        bb:[]
       }
     },
     computed: {
@@ -458,12 +461,16 @@
       doSearch() {
         console.log('搜索值', this.queryStr, this.startData, this.endData)
         this.loading = true
-        let indexs = JSON.stringify(this.startData).indexOf('T')
-        let sd = JSON.stringify(this.startData).slice(0, indexs)
-        sd =  sd.slice(1,sd.length)
-        indexs = JSON.stringify(this.endData).indexOf('T')
-        let ed = JSON.stringify(this.endData).slice(0, indexs)
-        ed =  ed.slice(1,ed.length)
+        if (this.startData == '') {
+          this.a = ''
+        } else {
+          this.a = formatDate(this.startData, 'yyyy-MM-dd')
+        }
+        if (this.endData == '') {
+          this.b = ''
+        } else {
+          this.b = formatDate(this.endData, 'yyyy-MM-dd')
+        }
         this.tableLisr = []
         let that = this
         axios.request({
@@ -474,19 +481,15 @@
             pagesize: this.pageSize,
             typeid: this.typeId,
             name: this.queryStr,
-            btime: sd,
-            etime: ed
+            btime: this.a,
+            etime: this.b
           }
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
-            that.tableLisr.push(res.data.data[i].fields)
-            that.tableLisr[i].id = res.data.data[i].pk
-            let indexs = res.data.data[i].fields.buydate.indexOf('T')
-            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
-            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.reminddate.indexOf('T')
-            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
+            that.tableLisr.push(res.data.data[i])
+            that.tableLisr[i].cost=that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd=that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd=that.tableLisr[i].grcd.toFixed(2)
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -512,7 +515,6 @@
           } else {
             this.$Message.error('保险类型查询异常')
           }
-          console.log('*****', this.insuranceList)
         }).catch((err) => {
           console.error(err)
         })
@@ -530,15 +532,12 @@
             typeid: this.typeId
           }
         }).then(function (res) {
+          console.log('查询返回值',res)
           for (let i = 0; i < res.data.data.length; i++) {
-            that.tableLisr.push(res.data.data[i].fields)
-            that.tableLisr[i].id = res.data.data[i].pk
-            let indexs = res.data.data[i].fields.buydate.indexOf('T')
-            that.tableLisr[i].buydate = res.data.data[i].fields.buydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.maturitydate.indexOf('T')
-            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate.slice(0, indexs)
-            indexs = res.data.data[i].fields.reminddate.indexOf('T')
-            that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate.slice(0, indexs)
+            that.tableLisr.push(res.data.data[i])
+            that.tableLisr[i].cost=that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd=that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd=that.tableLisr[i].grcd.toFixed(2)
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -697,9 +696,9 @@
         // })
       }
     },
-    mounted() {
-      this.uploadList = this.$refs.upload.fileList;
-    }
+    // mounted() {
+    //   this.uploadList = this.$refs.upload.fileList;
+    // }
   }
 </script>
 
