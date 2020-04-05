@@ -3,7 +3,7 @@
     <Row>
       <Card shadow>
         <Col span="4">
-          <DatePicker type="year" placeholder="选择年份" style="width: 200px;"></DatePicker>
+          <DatePicker type="year" placeholder="选择年份" style="width: 200px;" @on-change="yearChanged"></DatePicker>
         </Col>
         <example style="height: 580px;"/>
       </Card>
@@ -31,6 +31,11 @@ export default {
   },
   mounted () {
     //
+  },
+  methods: {
+    yearChanged(dateStr) {
+      this.$refs.example.fetchList(parseInt(dateStr))
+    }
   }
 }
 </script>
