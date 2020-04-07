@@ -45,7 +45,7 @@
             </i-col> -->
     </Row>
     <div class="tableList">
-      <Table :loading="loading" highlight-row size="large" border stripe :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"><template slot-scope="{ row }" slot="id">
+      <Table :loading="loading" highlight-row size="large" border  :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"><template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
         <template slot-scope="{ row }" slot="action">
@@ -126,8 +126,8 @@
           {
             tooltip: true,
             align: 'center',
-            title: '合同编号',
-            key: 'contractnum'
+            title: '编号',
+            key: 'id'
           },
           {
             tooltip: true,
@@ -339,8 +339,7 @@
             console.log('10返回值', res)
             for (let i = 0; i < res.data.data.length; i++) {
               that.tableLisr.push(res.data.data[i])
-              let indexs = res.data.data[i].reminddate.indexOf('T')
-              that.tableLisr[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+              that.tableLisr[i].reminddate = res.data.data[i].reminddate
             }
             that.total = res.data.count
           }).catch(function (error) {
@@ -359,8 +358,7 @@
             console.log('15返回值', res)
             for (let i = 0; i < res.data.data.length; i++) {
               that.tableLisr.push(res.data.data[i])
-              let indexs = res.data.data[i].reminddate.indexOf('T')
-              that.tableLisr[i].reminddate = res.data.data[i].reminddate.slice(0, indexs)
+              that.tableLisr[i].reminddate = res.data.data[i].reminddate
             }
             that.total = res.data.count
           }).catch(function (error) {

@@ -26,7 +26,8 @@
               <router-link class="pull-right" :to="{path:'/insurance/enterprise/allDatec', query: { type: 10 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe highlight-row :columns="ctableTitle" :data="ctableDet10" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
+            <Table :loading="loading" size="large"  border  highlight-row :columns="ctableTitle" :data="ctableDet10" max-height="720" style="width:100%"
+                   @on-row-dblclick="cdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0" ></table>-->
           </Card>
         </i-col>
@@ -37,7 +38,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/enterprise/allDatec', query: { type: 15 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe highlight-row :columns="ctableTitle" :data="ctableDet15" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
+            <Table :loading="loading" size="large" border  highlight-row :columns="ctableTitle" :data="ctableDet15" max-height="720" style="width:100%" @on-row-dblclick="cdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0"></table> -->
           </Card>
         </i-col>
@@ -53,7 +54,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/personal/allDatep', query: { type: 10 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe highlight-row :columns="ptableTitle" :data="ptableDet10" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
+            <Table :loading="loading" size="large" border  highlight-row :columns="ptableTitle" :data="ptableDet10" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0" ></table>-->
           </Card>
         </i-col>
@@ -64,7 +65,7 @@
               <router-link class="pull-right" :to="{path:'/insurance/personal/allDatep', query: { type: 15 }}">查看更多
               </router-link>
             </div>
-            <Table :loading="loading" size="large" border stripe highlight-row :columns="ptableTitle" :data="ptableDet15" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
+            <Table :loading="loading" size="large" border  highlight-row :columns="ptableTitle" :data="ptableDet15" max-height="720" style="width:100%" @on-row-dblclick="pdet"></Table>
             <!-- <table class="table-card-box mt20" cellpadding="0" cellspacing="0"></table> -->
           </Card>
         </i-col>
@@ -75,7 +76,7 @@
 
 <script>
   import axios from '@/libs/api.request'
-  import {formatDate } from '@/libs/util'
+  import { formatDate } from '@/libs/util'
   export default {
     name: 'home',
     data() {
@@ -85,8 +86,8 @@
         loading: true,
         ctableTitle: [
           {
-            title: 'ID',
-            key: 'contractnum',
+            title: '编号',
+            key: 'id',
             align: 'center',
             tooltip: true
           },
@@ -105,8 +106,8 @@
         ],
         ptableTitle: [
           {
-            title: 'ID',
-            key: 'contractnum',
+            title: '编号',
+            key: 'id',
             align: 'center',
             tooltip: true
           },
@@ -134,8 +135,8 @@
         ptableDet10: [],
         ptableDet15: [],
         show: true,
-        jr:0,
-        sr:0
+        jr: 0,
+        sr: 0
       }
     },
     beforeCreate() {
@@ -169,8 +170,8 @@
         url: '/main/todaycount'
       }).then(function (res) {
         console.log('shagntopu', res)
-        that.jr=res.data.data
-        that.sr=res.data.data30
+        that.jr = res.data.data
+        that.sr = res.data.data30
       }).catch(function (error) {
         console.log(error)
       })
@@ -268,6 +269,15 @@
           path: '/insurance/personal/pdet',
           query: { id: e.id }
         })
+      },
+      rowClassName(row, index) {
+        console.log('状态颜色',index,row.state)
+        if (row.state == 2) {
+          return 'demo-table-y-row'
+        } else if (row.state == 3) {
+          return 'demo-table-r-row'
+        }
+        return ''
       }
     }
   }
@@ -325,7 +335,7 @@
     position: relative;
   }
 
-  /* .ivu-table .demo-table-y-row td {
+  .ivu-table .demo-table-y-row td {
     background-color: rgba(255, 255, 0, 0.5);
     color: rgb(0, 0, 0);
   }
@@ -333,5 +343,5 @@
   .ivu-table .demo-table-r-row td {
     background-color: rgb(255, 0, 0,0.5);
     color: rgb(0, 0, 0);
-  } */
+  }
 </style>

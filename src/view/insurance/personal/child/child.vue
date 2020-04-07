@@ -49,8 +49,8 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <!-- <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"> -->
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr">
+      <!-- <Table size="large" border  highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"> -->
+      <Table size="large" border  highlight-row :row-class-name="rowClassName" :columns="columns" :data="tableLisr">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
@@ -762,12 +762,12 @@
   }
 
   .ivu-table .demo-table-y-row td {
-    background-color: rgba(255, 255, 0, 0.5);
-    color: rgb(0, 0, 0);
+    /* color: rgba(255, 153, 0, 1); */
+    background-color:rgb(252, 235, 137);
   }
 
   .ivu-table .demo-table-r-row td {
-    background-color: rgb(255, 0, 0, 0.2);
-    color: rgb(0, 0, 0);
+    /* color: rgb(255, 0, 0, 1); */
+    background-color:rgb(252, 137, 137);
   }
 </style>

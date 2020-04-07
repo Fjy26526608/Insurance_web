@@ -76,7 +76,7 @@
     </FormItem>
     <Button size="large" icon="md-add" type="success" @click="showAddModal = true" style="margin:4px">新增保单</Button>
     <div class="tableList">
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
+      <Table size="large" border :row-class-name="rowClassName" highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
@@ -714,6 +714,15 @@
           console.log(error)
         })
       },
+      rowClassName(row, index) {
+        console.log('状态颜色',index,row.state)
+        if (row.state == 2) {
+          return 'demo-table-y-row'
+        } else if (row.state == 3) {
+          return 'demo-table-r-row'
+        }
+        return ''
+      },
       shenOk() {
         // delCompany(this.removeId).then((res) => {
         //   if (res.data.state === 'true') {
@@ -779,5 +788,14 @@
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
+  }
+  .ivu-table .demo-table-y-row td {
+    /* color: rgba(255, 153, 0, 1); */
+    background-color:rgb(252, 235, 137);
+  }
+
+  .ivu-table .demo-table-r-row td {
+    /* color: rgb(255, 0, 0, 1); */
+    background-color:rgb(252, 137, 137);
   }
 </style>

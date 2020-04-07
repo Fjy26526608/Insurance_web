@@ -1,0 +1,163 @@
+main/addinstype：
+参数：id ，name，tag，iscompany，length，data， data[{gsbili:1,grbili:2,name:'name'}]
+
+返回值：{"state": "true", "msg": "新增保险类型成功"}
+
+
+main/instypelist:
+参数： page，pagesize
+返回值：{'id': one.id, 'name': one.name, 'tag': one.tag, 'iscompany': one.iscompany,
+                               'child': childresult}    
+childresult：{'id': onec.id, 'name': onec.name, 'ischild': True}
+
+main/instype:
+返回值多了一个 childresult：{'id': onec.id, 'name': onec.name, 'ischild': True}
+
+
+main/companylistchild
+参数和   companylist 一样 多了一个 typeid 就是 保险子类型的 id
+返回值：
+{
+    "state": "true",
+    "count": 1,
+    "data": [
+        {
+            "id": 1,
+            "name": "1",
+            "address": "111",
+            "stime": "2020-02-28T20:05:00",
+            "etime": "2020-02-28T20:05:03",
+            "cost": 2400.8,
+            "gscd": 1200.4,
+            "grcd": 1200.4
+        }
+    ]
+}
+
+
+
+main/reviewins
+参数：id 保险合同的id
+返回值：{"state": "true", "msg": "审核成功"}
+
+
+main/addins
+参数：增加一个 glf 管理费   修改：policyamount 缴费基数
+返回值没变
+
+
+main/statistics
+参数：gsyear  gryear  一个公司年份，一个个人年份
+返回值：
+{
+    "state": "true",
+    "gscost": [ ////公司成本
+        0,
+        0,
+        0,
+        180.06,
+        180.06,
+        180.06,
+        180.06,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "gsglf": [ ////公司管理费
+        0,
+        0,
+        0,
+        300.0,
+        300.0,
+        300.0,
+        300.0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "gscb": [////公司总金额
+        0,
+        0,
+        0,
+        -119.94,
+        -119.94,
+        -119.94,
+        -119.94,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "grcost": [////个人成本
+        0,
+        0,
+        0,
+        720.24,
+        720.24,
+        720.24,
+        720.24,
+        900.3,
+        900.3,
+        900.3,
+        900.3,
+        900.3
+    ],
+    "grglf": [////个人管理费
+        0,
+        0,
+        0,
+        1200.0,
+        1200.0,
+        1200.0,
+        1200.0,
+        1500.0,
+        1500.0,
+        1500.0,
+        1500.0,
+        1500.0
+    ],
+    "grcb": [///个人总金额
+        0,
+        0,
+        0,
+        -479.76,
+        -479.76,
+        -479.76,
+        -479.76,
+        -599.7,
+        -599.7,
+        -599.7,
+        -599.7,
+        -599.7
+    ]
+}
+
+
+
+
+main/plistchild
+参数：page，pagesize,typeid 子类的id ，name，btime，etime 跟companylist是一样的
+返回值：
+{
+    "state": "true",
+    "count": 3,
+    "data": [
+        {
+            "id": 26,
+            "name": "张三1",
+            "buydate": "2020-04-04", 购买时间
+            "typename": "测试112333",主保险类型名字
+            "month": 10, 购买时长
+            "cost": 2022.6000000000001,总成本
+            "gscd": 922.3000000000001,公司承担
+            "grcd": 922.3000000000001个人承担
+        }
+    ]
+}
+
+

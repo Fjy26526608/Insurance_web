@@ -1,13 +1,3 @@
-<style>
-  .ivu-table .demo-table-y-row td {
-    color: rgba(255, 153, 0, 1);
-  }
-
-  .ivu-table .demo-table-r-row td {
-    color: rgb(255, 0, 0, 1);
-  }
-</style>
-
 <template>
   <div>
     <Row :gutter="20">
@@ -72,8 +62,8 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <!-- <Table size="large" :loading="loading" :row-class-name="rowClassName" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet"> -->
-      <Table size="large" :loading="loading" :row-class-name="rowClassName" border stripe highlight-row :columns="columns" :data="tableLisr">
+      <!-- <Table size="large" :loading="loading" :row-class-name="rowClassName" border  highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet"> -->
+      <Table size="large" :loading="loading" :row-class-name="rowClassName" border  highlight-row :columns="columns" :data="tableLisr">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
@@ -596,9 +586,10 @@
         })
       },
       rowClassName(row, index) {
-        if (row.state === 2) {
+        console.log('状态颜色',index,row.state)
+        if (row.state == 2) {
           return 'demo-table-y-row'
-        } else if (row.state === 3) {
+        } else if (row.state == 3) {
           return 'demo-table-r-row'
         }
         return ''
@@ -706,5 +697,14 @@
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
+  }
+  .ivu-table .demo-table-y-row td {
+    /* color: rgba(255, 153, 0, 1); */
+    background-color:rgb(252, 235, 137);
+  }
+
+  .ivu-table .demo-table-r-row td {
+    /* color: rgb(255, 0, 0, 1); */
+    background-color:rgb(252, 137, 137);
   }
 </style>

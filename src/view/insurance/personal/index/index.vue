@@ -1,3 +1,15 @@
+<style>
+  .ivu-table .demo-table-y-row td {
+    /* color: rgba(255, 153, 0, 1); */
+    background-color:rgb(252, 235, 137);
+  }
+
+  .ivu-table .demo-table-r-row td {
+    /* color: rgb(255, 0, 0, 1); */
+    background-color:rgb(252, 137, 137);
+  }
+</style>
+
 <template>
   <div>
     <Row :gutter="20">
@@ -49,7 +61,7 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
+      <Table size="large" border :row-class-name="rowClassName" highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
@@ -241,7 +253,7 @@
           {
             align: 'center',
             tooltip: true,
-            title: 'ID',
+            title: '编号',
             key: 'id',
             width: 65
           },
@@ -397,7 +409,7 @@
         levelJ: '',
         a: '',
         b: '',
-        bb:[]
+        bb: []
       }
     },
     computed: {
@@ -470,14 +482,14 @@
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
-            that.tableLisr[i].policyamount=that.tableLisr[i].policyamount.toFixed(2)
-            that.tableLisr[i].cost=that.tableLisr[i].cost.toFixed(2)
-            that.tableLisr[i].gscd=that.tableLisr[i].gscd.toFixed(2)
-            that.tableLisr[i].grcd=that.tableLisr[i].grcd.toFixed(2)
-            that.tableLisr[i].glf=that.tableLisr[i].glf.toFixed(2)
-            that.tableLisr[i].actualpayment=that.tableLisr[i].actualpayment.toFixed(2)
-            that.tableLisr[i].alreadyused=that.tableLisr[i].alreadyused.toFixed(2)
-            that.tableLisr[i].balance=that.tableLisr[i].balance.toFixed(2)
+            that.tableLisr[i].policyamount = that.tableLisr[i].policyamount.toFixed(2)
+            that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
+            that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+            that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+            that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+            that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
             that.tableLisr[i].id = res.data.data[i].pk
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
@@ -529,193 +541,202 @@
           console.log('yemianfanhuizhi', res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
-            that.tableLisr[i].policyamount=that.tableLisr[i].policyamount.toFixed(2)
-            that.tableLisr[i].cost=that.tableLisr[i].cost.toFixed(2)
-            that.tableLisr[i].gscd=that.tableLisr[i].gscd.toFixed(2)
-            that.tableLisr[i].grcd=that.tableLisr[i].grcd.toFixed(2)
-            that.tableLisr[i].glf=that.tableLisr[i].glf.toFixed(2)
-            that.tableLisr[i].actualpayment=that.tableLisr[i].actualpayment.toFixed(2)
-            that.tableLisr[i].alreadyused=that.tableLisr[i].alreadyused.toFixed(2)
-            that.tableLisr[i].balance=that.tableLisr[i].balance.toFixed(2)
+            that.tableLisr[i].policyamount = that.tableLisr[i].policyamount.toFixed(2)
+            that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
+            that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+            that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+            that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+            that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
             that.tableLisr[i].id = res.data.data[i].pk
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
           }
           that.total = res.data.count
-    }).catch(function (error) {
-      console.log(error)
-    })
+        }).catch(function (error) {
+          console.log(error)
+        })
         this.loading = false
-  },
-  changePage(page) {
-    this.pageNo = page
-    this.fetchPersonalInfo()
-  },
-  pdet(e, index) {
-    console.log('我的下标是', index, e)
-    this.$router.push({
-      path: '/insurance/personal/pdet',
-      query: { id: e.id }
-    })
-  },
-  cancel() {
-  },
-  changeLoading() {
-    this.modalLoading = false
-    this.$nextTick(() => {
-      this.modalLoading = true
-    })
-  },
-  ok() {
-    this.$refs['formValidate'].validate((valid) => {
-      if (!valid) {
-        return this.changeLoading()
-      }
-      // 请求服务端添加接口
-      const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
-      const data = {
-        // contractnum: number,
-        glf: cost,
-        insured: name,
-        tel: phone,
-        insurancetypeid: insuranceType,
-        buydate: formatDate(date, 'yyyy-MM-dd'),
-        month: duration,
-        policyamount: unitPrice,
-        // bili: this.levelB,
-        // jishu: this.levelJ,
-        actualpayment: payment,
-        // cost: cost
-      }
-      saveOrModifyInsuranceInfo(data).then((res) => {
-        if (res.data.state === 'true') {
-          setTimeout(() => {
-            this.changeLoading()
-            this.showAddModal = false
-            this.$Message.success('添加成功')
-            this.fetchPersonalInfo()
-          }, 1000)
-        } else {
-          this.$Message.error('添加保险合同失败')
-        }
-      }).catch((err) => {
-        console.error(err)
-        this.$Message.error('请求服务器错误')
-        this.changeLoading()
-      })
-    })
-  },
-  remove(id) {
-    this.deleteInsuModal = true
-    this.removeId = id
-  },
-  deleteCancel() { },
-  deleteOk() {
-    deleteInsuranceInfo(this.removeId).then((res) => {
-      if (res.data.state === 'true') {
-        this.$Message.success('删除成功')
+      },
+      changePage(page) {
+        this.pageNo = page
         this.fetchPersonalInfo()
-      } else {
-        this.$Message.error('删除操作失败')
+      },
+      pdet(e, index) {
+        console.log('我的下标是', index, e)
+        this.$router.push({
+          path: '/insurance/personal/pdet',
+          query: { id: e.id }
+        })
+      },
+      cancel() {
+      },
+      changeLoading() {
+        this.modalLoading = false
+        this.$nextTick(() => {
+          this.modalLoading = true
+        })
+      },
+      ok() {
+        this.$refs['formValidate'].validate((valid) => {
+          if (!valid) {
+            return this.changeLoading()
+          }
+          // 请求服务端添加接口
+          const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
+          const data = {
+            // contractnum: number,
+            glf: cost,
+            insured: name,
+            tel: phone,
+            insurancetypeid: insuranceType,
+            buydate: formatDate(date, 'yyyy-MM-dd'),
+            month: duration,
+            policyamount: unitPrice,
+            // bili: this.levelB,
+            // jishu: this.levelJ,
+            actualpayment: payment,
+            // cost: cost
+          }
+          saveOrModifyInsuranceInfo(data).then((res) => {
+            if (res.data.state === 'true') {
+              setTimeout(() => {
+                this.changeLoading()
+                this.showAddModal = false
+                this.$Message.success('添加成功')
+                this.fetchPersonalInfo()
+              }, 1000)
+            } else {
+              this.$Message.error('添加保险合同失败')
+            }
+          }).catch((err) => {
+            console.error(err)
+            this.$Message.error('请求服务器错误')
+            this.changeLoading()
+          })
+        })
+      },
+      remove(id) {
+        this.deleteInsuModal = true
+        this.removeId = id
+      },
+      deleteCancel() { },
+      deleteOk() {
+        deleteInsuranceInfo(this.removeId).then((res) => {
+          if (res.data.state === 'true') {
+            this.$Message.success('删除成功')
+            this.fetchPersonalInfo()
+          } else {
+            this.$Message.error('删除操作失败')
+          }
+        }).catch((err) => {
+          console.error(err)
+          this.$Message.error('请求服务器异常')
+        })
+      },
+      handleSuccess(res, file) {
+        console.log('上传后返回信息', res)
+        file.url = 'http://47.105.49.81:2222/api/main/getimg' + '/' + res.id + '/' + this.token;
+        console.log('图片地址', file.url)
+        file.name = res.id;
+      },
+      handleFormatError(file) {
+        this.$Notice.warning({
+          title: '文件格式不正确',
+          desc: '文件 ' + file.name + ' 的格式不正确，请选择jpg、jpeg或png格式的图片。'
+        });
+      },
+      handleMaxSize(file) {
+        this.$Notice.warning({
+          title: '超出文件大小限制',
+          desc: '文件  ' + file.name + ' 超出大小限制，文件最大为2MB。'
+        });
+      },
+      handleBeforeUpload() {
+        const check = this.uploadList.length < 5;
+        if (!check) {
+          this.$Notice.warning({
+            title: '最多可以上传5张图片。'
+          });
+        }
+        return check;
+      },
+      handleRemove(file) {
+        console.log(file)
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/delimg',
+          data: {
+            id: file.name,
+          }
+        }).then(function (res) {
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
+        const fileList = this.$refs.upload.fileList;
+        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+      },
+      handleView(index) {
+        console.log(index)
+        console.log(this.uploadList)
+        for (let i = 0; i < this.uploadList.length; i++) {
+          if (this.uploadList[i].name === index) {
+            this.value1 = i
+            this.visible = true
+          }
+        }
+      },
+      shen(id) {
+        this.shModal = true
+        this.shId = id
+        let that = this
+        axios.request({
+          method: 'post',
+          url: '/main/reviewins',
+          data: {
+            id: that.shId
+          }
+        }).then(function (res) {
+          if (res.data.state === 'true') {
+            that.$Message.success(res.data.msg)
+            that.fetchPersonalInfo()
+          } else {
+            that.$Message.error(res.data.msg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
+      },
+      shenOk() {
+        // delCompany(this.removeId).then((res) => {
+        //   if (res.data.state === 'true') {
+        this.$Message.success('删除成功')
+        //     this.fetchCompanyList()
+        //   } else {
+        //     this.$Message.error('删除操作失败')
+        //   }
+        // }).catch((err) => {
+        //   console.error(err)
+        //   this.$Message.error('请求服务器异常')
+        // })
+      },
+      rowClassName(row, index) {
+        console.log('状态颜色',index,row.state)
+        if (row.state == 2) {
+          return 'demo-table-y-row'
+        } else if (row.state == 3) {
+          return 'demo-table-r-row'
+        }
+        return ''
       }
-    }).catch((err) => {
-      console.error(err)
-      this.$Message.error('请求服务器异常')
-    })
-  },
-  handleSuccess(res, file) {
-    console.log('上传后返回信息', res)
-    file.url = 'http://47.105.49.81:2222/api/main/getimg' + '/' + res.id + '/' + this.token;
-    console.log('图片地址', file.url)
-    file.name = res.id;
-  },
-  handleFormatError(file) {
-    this.$Notice.warning({
-      title: '文件格式不正确',
-      desc: '文件 ' + file.name + ' 的格式不正确，请选择jpg、jpeg或png格式的图片。'
-    });
-  },
-  handleMaxSize(file) {
-    this.$Notice.warning({
-      title: '超出文件大小限制',
-      desc: '文件  ' + file.name + ' 超出大小限制，文件最大为2MB。'
-    });
-  },
-  handleBeforeUpload() {
-    const check = this.uploadList.length < 5;
-    if (!check) {
-      this.$Notice.warning({
-        title: '最多可以上传5张图片。'
-      });
-    }
-    return check;
-  },
-  handleRemove(file) {
-    console.log(file)
-    let that = this
-    axios.request({
-      method: 'post',
-      url: '/main/delimg',
-      data: {
-        id: file.name,
-      }
-    }).then(function (res) {
-      if (res.data.state === 'true') {
-        that.$Message.success(res.data.msg)
-      } else {
-        that.$Message.error(res.data.msg)
-      }
-    }).catch(function (error) {
-      console.log(error)
-    })
-    const fileList = this.$refs.upload.fileList;
-    this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-  },
-  handleView(index) {
-    console.log(index)
-    console.log(this.uploadList)
-    for (let i = 0; i < this.uploadList.length; i++) {
-      if (this.uploadList[i].name === index) {
-        this.value1 = i
-        this.visible = true
-      }
-    }
-  },
-  shen(id) {
-    this.shModal = true
-    this.shId = id
-    let that = this
-    axios.request({
-      method: 'post',
-      url: '/main/reviewins',
-      data: {
-        id: that.shId
-      }
-    }).then(function (res) {
-      if (res.data.state === 'true') {
-        that.$Message.success(res.data.msg)
-        that.fetchPersonalInfo()
-      } else {
-        that.$Message.error(res.data.msg)
-      }
-    }).catch(function (error) {
-      console.log(error)
-    })
-  },
-  shenOk() {
-    // delCompany(this.removeId).then((res) => {
-    //   if (res.data.state === 'true') {
-    this.$Message.success('删除成功')
-    //     this.fetchCompanyList()
-    //   } else {
-    //     this.$Message.error('删除操作失败')
-    //   }
-    // }).catch((err) => {
-    //   console.error(err)
-    //   this.$Message.error('请求服务器异常')
-    // })
-  }
     },
     // mounted() {
     //   this.uploadList = this.$refs.upload.fileList;
@@ -780,15 +801,5 @@
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
-  }
-
-  .ivu-table .demo-table-y-row td {
-    background-color: rgba(255, 255, 0, 0.5);
-    color: rgb(0, 0, 0);
-  }
-
-  .ivu-table .demo-table-r-row td {
-    background-color: rgb(255, 0, 0, 0.2);
-    color: rgb(0, 0, 0);
   }
 </style>

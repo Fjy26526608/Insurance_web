@@ -45,7 +45,7 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <Table size="large" border stripe highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"></Table>
+      <Table size="large" border  highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"></Table>
     </div>
     <div class="text-right pageList">
       <Page :total="total" @on-change="changePage" :current.sync="pageNo" :page-size="pageSize" show-total show-elevator />

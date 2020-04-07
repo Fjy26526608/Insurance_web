@@ -8,7 +8,7 @@
       </i-col>
     </Row>
     <div class="tableList">
-      <Table highlight-row :loading='loading' size="large" border stripe :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
+      <Table highlight-row :loading='loading' size="large" border  :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
