@@ -358,41 +358,41 @@
           //   width: 110
           // },
           {
-            title: '总成本(元)',
+            title: '成本(元/月)',
             key: 'cost',
             align: 'center',
             tooltip: true,
             width: 110
           },
           {
-            title: '管理费(元)',
+            title: '管理费(元/月)',
             key: 'glf',
             align: 'center',
             tooltip: true,
-            width: 120
+            width: 123
           },
           {
             title: '实际支付(元)',
             key: 'actualpayment',
             align: 'center',
             tooltip: true,
-            width: 150
+            width: 123
           },
           {
-            title: '已使用(元)',
+            title: '总计(元/月)',
             key: 'alreadyused',
             align: 'center',
             tooltip: true,
-            minWidth: 110,
-            maxWidth: 130
+            minWidth: 123,
+            maxWidth: 123
           },
           {
             title: '剩余(元)',
             key: 'balance',
             align: 'center',
             tooltip: true,
-            maxWidth: 130,
-            minWidth: 130
+            maxWidth: 123,
+            minWidth: 123
           },
           // {
           //   title: '备注',
@@ -449,7 +449,7 @@
         }
         axios.request({
           method: 'post',
-          url: '/main/companylist',
+          url: '/companylist',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,
@@ -494,7 +494,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/companylist',
+          url: '/companylist',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,

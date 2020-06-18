@@ -253,14 +253,14 @@
           {
             align: 'center',
             tooltip: true,
-            title: '总成本(元)',
-            key: 'cost',
-            width: 100
+            title: '成本(元/月)',
+            key: 'getcost',
+            width: 80
           },
           {
             align: 'center',
             tooltip: true,
-            title: '管理费(元)',
+            title: '管理费(元/月)',
             key: 'glf',
             width: 100
           },
@@ -275,8 +275,8 @@
           {
             align: 'center',
             tooltip: true,
-            title: '已使用(元)',
-            key: 'alreadyused',
+            title: '总计(元/月)',
+            key: 'cost',
             maxwidth: 100,
             minWidth: 100
           },
@@ -355,7 +355,7 @@
       let that = this
       axios.request({
         method: 'post',
-        url: '/main/companyinfo',
+        url: '/companyinfo',
         data: {
           id: that.getValue
         }
@@ -371,7 +371,7 @@
       this.fetchPersonalInfo()
       axios.request({
         method: 'post',
-        url: '/main/getimglist',
+        url: '/img/getimglist',
         data: {
           companyid: that.getValue
         }
@@ -473,7 +473,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/addcompany',
+          url: '/addcompany',
           data: {
             id: that.formValidate2.id,
             name: that.formValidate2.name,
@@ -561,7 +561,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/inslist',
+          url: '/inslist',
           data: {
             iscompany: 'True',
             page: this.pageNo,
@@ -585,6 +585,8 @@
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
+            that.tableLisr[i].glf=(that.tableLisr[i].glf/that.tableLisr[i].month).toFixed(2)
+            that.tableLisr[i].getcost=(that.tableLisr[i].cost-that.tableLisr[i].glf).toFixed(2)
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -699,7 +701,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/reviewins',
+          url: '/reviewins',
           data: {
             id: that.shId
           }

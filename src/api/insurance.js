@@ -2,7 +2,7 @@ import axios from '@/libs/api.request'
 
 export const getInsuranceTypes = () => {
   return axios.request({
-    url: '/main/instype',
+    url: '/instype',
     method: 'post'
   })
 }
@@ -13,7 +13,7 @@ export const getInsuranceInfo = (id) => {
   }
 
   return axios.request({
-    url: '/main/insinfo',
+    url: '/insinfo',
     data,
     method: 'post'
   })
@@ -39,7 +39,7 @@ export const saveOrModifyInsuranceInfo = ({ companyid, glf, id, psize, contractn
   }
 
   return axios.request({
-    url: '/main/addins',
+    url: '/addins',
     data,
     method: 'post'
   })
@@ -51,7 +51,7 @@ export const deleteInsuranceInfo = (id) => {
   }
 
   return axios.request({
-    url: '/main/delins',
+    url: '/delins',
     data,
     method: 'post'
   })

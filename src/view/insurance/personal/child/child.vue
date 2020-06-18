@@ -50,7 +50,7 @@
     </Row>
     <div class="tableList">
       <!-- <Table size="large" border  highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="pdet"> -->
-      <Table size="large" border  highlight-row :row-class-name="rowClassName" :columns="columns" :data="tableLisr">
+      <Table size="large" border  highlight-row :row-class-name="rowClassName" :columns="columns" :data="tableLisr" @on-row-dblclick="pdet">
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>

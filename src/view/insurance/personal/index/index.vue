@@ -289,17 +289,17 @@
           {
             align: 'center',
             tooltip: true,
-            title: '总成本(元)',
-            key: 'cost',
-            maxWidth: 130,
-            minWidth: 100
+            title: '成本(元/月)',
+            key: 'getcost',
+            maxWidth: 80,
+            minWidth: 80
           },
           {
             align: 'center',
             tooltip: true,
-            title: '管理费(元)',
+            title: '管理费(元/月)',
             key: 'glf',
-            maxWidth: 130,
+            maxWidth: 100,
             minWidth: 100
           },
           {
@@ -307,16 +307,16 @@
             tooltip: true,
             title: '实际支付(元)',
             key: 'actualpayment',
-            maxWidth: 130,
+            maxWidth: 100,
             minWidth: 100
           },
           {
             align: 'center',
             tooltip: true,
-            title: '已使用(元)',
-            key: 'alreadyused',
-            maxWidth: 130,
-            minWidth: 100
+            title: '总计(元/月)',
+            key: 'cost',
+            maxWidth: 80,
+            minWidth: 80
           },
           {
             align: 'center',
@@ -469,7 +469,7 @@
         }
         axios.request({
           method: 'post',
-          url: '/main/inslist',
+          url: '/inslist',
           data: {
             iscompany: 'False',
             page: this.pageNo,
@@ -494,6 +494,8 @@
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
+            that.tableLisr[i].glf=(that.tableLisr[i].glf/that.tableLisr[i].month).toFixed(2)
+            that.tableLisr[i].getcost=(that.tableLisr[i].cost-that.tableLisr[i].glf).toFixed(2)
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -530,7 +532,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/inslist',
+          url: '/inslist',
           data: {
             iscompany: 'False',
             page: this.pageNo,
@@ -553,6 +555,8 @@
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
             that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
+            that.tableLisr[i].glf=(that.tableLisr[i].glf/that.tableLisr[i].month).toFixed(2)
+            that.tableLisr[i].getcost=(that.tableLisr[i].cost-that.tableLisr[i].glf).toFixed(2)
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -700,7 +704,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/reviewins',
+          url: '/reviewins',
           data: {
             id: that.shId
           }

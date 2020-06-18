@@ -26,7 +26,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/statistics',
+          url: '/statistics',
           data: {
             gryear: year
           }

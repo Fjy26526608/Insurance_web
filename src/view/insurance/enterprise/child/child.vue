@@ -62,8 +62,8 @@
       </i-col> -->
     </Row>
     <div class="tableList">
-      <!-- <Table size="large" :loading="loading" :row-class-name="rowClassName" border  highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet"> -->
-      <Table size="large" :loading="loading" :row-class-name="rowClassName" border  highlight-row :columns="columns" :data="tableLisr">
+      <Table size="large" :loading="loading" :row-class-name="rowClassName" border highlight-row :columns="columns" :data="tableLisr" @on-row-dblclick="cdet">
+        <!-- <Table size="large" :loading="loading" :row-class-name="rowClassName" border  highlight-row :columns="columns" :data="tableLisr"> -->
         <template slot-scope="{ row }" slot="id">
           <strong>{{ row.id }}</strong>
         </template>
@@ -123,7 +123,7 @@
 </template>
 
 <script>
-  import { getToken,formatDate } from '@/libs/util'
+  import { getToken, formatDate } from '@/libs/util'
   import axios from '@/libs/api.request'
   import { addCompany, delCompany } from '@/api/company'
   export default {
@@ -467,9 +467,9 @@
           console.log('查询返回值', res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i])
-              that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
-              that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
-              that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
+            that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+            that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
+            that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
             let abc = new Date(res.data.data[i].stime)
             that.tableLisr[i].stime = formatDate(abc, 'yyyy-MM-dd')
             let cba = new Date(res.data.data[i].etime)
@@ -540,10 +540,6 @@
       },
       cancel() {
       },
-      cdet(e, index) {
-        console.log('我的下标是', index, e)
-        this.$router.push({ path: '/insurance/enterprise/cdet' })
-      },
       changeLoading() {
         this.modalLoading = false
         this.$nextTick(() => {
@@ -586,7 +582,7 @@
         })
       },
       rowClassName(row, index) {
-        console.log('状态颜色',index,row.state)
+        console.log('状态颜色', index, row.state)
         if (row.state == 2) {
           return 'demo-table-y-row'
         } else if (row.state == 3) {
@@ -698,13 +694,14 @@
     cursor: pointer;
     margin: 0 2px;
   }
+
   .ivu-table .demo-table-y-row td {
     /* color: rgba(255, 153, 0, 1); */
-    background-color:rgb(252, 235, 137);
+    background-color: rgb(252, 235, 137);
   }
 
   .ivu-table .demo-table-r-row td {
     /* color: rgb(255, 0, 0, 1); */
-    background-color:rgb(252, 137, 137);
+    background-color: rgb(252, 137, 137);
   }
 </style>

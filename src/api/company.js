@@ -22,7 +22,7 @@ export const addCompany = ({
   }
 
   return axios.request({
-    url: '/main/addcompany',
+    url: '/addcompany',
     data,
     method: 'post'
   })
@@ -34,7 +34,7 @@ export const delCompany = (id) => {
   }
 
   return axios.request({
-    url: '/main/delcompany',
+    url: '/delcompany',
     data,
     method: 'post'
   })

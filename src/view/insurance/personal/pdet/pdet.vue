@@ -39,8 +39,8 @@
       <FormItem label="购买时长" prop="duration">
         <Input v-model="formValidate.duration" placeholder="输入购买时长（月）" :disabled="!isChange"></Input>
       </FormItem>
-      <FormItem label="管理费(元/月)" prop="cost">
-        <Input v-model="formValidate.cost" placeholder="输入保单总成本金额（元/月）" :disabled="!isChange"></Input>
+      <FormItem label="管理费(元/月)" prop="glf">
+        <Input v-model="formValidate.glf" placeholder="输入保单总成本金额（元/月）" :disabled="!isChange"></Input>
       </FormItem>
       <FormItem label="实际支付" prop="payment">
         <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）" :disabled="!isChange"></Input>
@@ -166,11 +166,11 @@
               trigger: 'change'
             }
           ],
-          cost: [
+          glf: [
             {
               type: 'number',
               required: true,
-              message: '保单总成本不能为空',
+              message: '保单管理费不能为空',
               trigger: 'blur'
             }
           ]
@@ -195,7 +195,7 @@
       let that = this
       axios.request({
         method: 'post',
-        url: '/main/getimglist',
+        url: '/img/getimglist',
         data: {
           companyid: that.id
         }
@@ -267,7 +267,8 @@
               unitPrice: info.policyamount, // 单价
               duration: info.month, // 购买时长
               payment: info.actualpayment, // 实际支付
-              cost: info.cost, // 总成本
+              glf:info.glf/info.month,//管理费
+              cost: info.cost, // 总计
               level:info.jishu+'-'+info.bili+'%'
             }
           } else {
@@ -280,7 +281,7 @@
       handleSubmit(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
-            const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost } = this.formValidate
+            const { number, name, phone, insuranceType, date, unitPrice, duration, payment, cost, glf } = this.formValidate
             const data = {
               id: this.id,
               contractnum: number,
@@ -291,6 +292,7 @@
               month: duration,
               policyamount: unitPrice,
               cost,
+              glf,
               bili: this.levelB,
               jishu: this.levelJ,
               actualpayment: payment

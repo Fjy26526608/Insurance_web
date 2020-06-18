@@ -240,7 +240,7 @@ export default {
       this.loading = true
       axios.request({
         method: 'post',
-        url: '/main/allUser',
+        url: '/allUser',
         data: {
           page: this.pageNo,
           pagesize: this.pageSize
@@ -273,19 +273,20 @@ export default {
       let that = this
       axios.request({
         method: 'post',
-        url: '/main/addUser',
+        url: '/addUser',
         data: {
           loginname: that.formValidate.loginname,
           passwd: that.formValidate.passwd,
           name: that.formValidate.name,
-          roleid: that.formValidate.roleid
+          roleid: that.formValidate.roleid,
+          companyid: 2
         }
       }).then(function (res) {
         console.log(res)
         if (res.data === true) {
-          this.$Message.success(res.data.msg)
+          that.$Message.success(res.data.msg)
         } else {
-          this.$Message.success(res.data.msg)
+          that.$Message.success(res.data.msg)
         }
       }).catch(function (error) {
         console.log(error)
@@ -300,20 +301,21 @@ export default {
       let that = this
       axios.request({
         method: 'post',
-        url: '/main/addUser',
+        url: '/addUser',
         data: {
           id: that.formValidate.id,
           loginname: that.formValidate.loginname,
           passwd: that.formValidate.passwd,
           name: that.formValidate.name,
-          roleid: that.formValidate.roleid
+          roleid: that.formValidate.roleid,
+          companyid: 2
         }
       }).then(function (res) {
         console.log(res)
         if (res.data === true) {
-          this.$Message.success(res.data.msg)
+          that.$Message.success(res.data.msg)
         } else {
-          this.$Message.success(res.data.msg)
+          that.$Message.success(res.data.msg)
         }
       }).catch(function (error) {
         console.log(error)
@@ -328,16 +330,16 @@ export default {
       let that = this
       axios.request({
         method: 'post',
-        url: '/main/delUser',
+        url: '/delUser',
         data: {
           id: that.tableLisr[this.remov].id
         }
       }).then(function (res) {
         console.log(res)
         if (res.data === true) {
-          this.$Message.success(res.data.msg)
+          that.$Message.success(res.data.msg)
         } else {
-          this.$Message.success(res.data.msg)
+          that.$Message.success(res.data.msg)
         }
       }).catch(function (error) {
         console.log(error)

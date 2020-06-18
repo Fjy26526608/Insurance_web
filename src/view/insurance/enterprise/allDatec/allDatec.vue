@@ -360,7 +360,7 @@
         if (this.type === '10') {
           axios.request({
             method: 'post',
-            url: '/main/maturitylist10',
+            url: '/maturitylist10',
             data: {
               page: this.pageNo,
               pagesize: this.pageSize,
@@ -379,7 +379,7 @@
         } else if (this.type === '15') {
           axios.request({
             method: 'post',
-            url: '/main/maturitylist15',
+            url: '/maturitylist15',
             data: {
               page: this.pageNo,
               pagesize: this.pageSize,

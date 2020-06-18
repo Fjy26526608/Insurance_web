@@ -235,7 +235,7 @@
         this.loading = true
         axios.request({
           method: 'post',
-          url: '/main/instypelist',
+          url: '/instypelist',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize
@@ -284,7 +284,7 @@
         console.log('转码后的数组', tp)
         axios.request({
           method: 'post',
-          url: '/main/addinstype',
+          url: '/addinstype',
           data: {
             name: that.formValidate.name,
             iscompany: that.formValidate.radio,
@@ -326,7 +326,7 @@
         let tp = JSON.stringify(this.formDynamic.items)
         axios.request({
           method: 'post',
-          url: '/main/addinstype',
+          url: '/addinstype',
           data: {
             id: that.formValidate.id,
             name: that.formValidate.name,
@@ -360,7 +360,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/delinstype',
+          url: '/delinstype',
           data: {
             id: that.tableLisr[this.remov].id
           }
