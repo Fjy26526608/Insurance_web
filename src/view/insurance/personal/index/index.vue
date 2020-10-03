@@ -279,53 +279,54 @@
             key: 'buydate',
             width: 130
           },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '到期日期',
+          //   key: 'maturitydate',
+          //   width: 130
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '成本(元/月)',
+          //   key: 'getcost',
+          //   maxWidth: 80,
+          //   minWidth: 80
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '管理费(元/月)',
+          //   key: 'glf',
+          //   maxWidth: 100,
+          //   minWidth: 100
+          // },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '实际支付(元)',
+          //   key: 'actualpayment',
+          //   maxWidth: 100,
+          //   minWidth: 100
+          // },
           {
             align: 'center',
             tooltip: true,
-            title: '到期日期',
-            key: 'maturitydate',
-            width: 130
-          },
-          {
-            align: 'center',
-            tooltip: true,
+            // title: '总计(元/月)',
             title: '成本(元/月)',
-            key: 'getcost',
-            maxWidth: 80,
-            minWidth: 80
-          },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '管理费(元/月)',
-            key: 'glf',
-            maxWidth: 100,
-            minWidth: 100
-          },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '实际支付(元)',
-            key: 'actualpayment',
-            maxWidth: 100,
-            minWidth: 100
-          },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '总计(元/月)',
             key: 'cost',
-            maxWidth: 80,
-            minWidth: 80
+            maxWidth: 160,
+            minWidth: 160
           },
-          {
-            align: 'center',
-            tooltip: true,
-            title: '剩余(元)',
-            key: 'balance',
-            maxWidth: 100,
-            minWidth: 100
-          },
+          // {
+          //   align: 'center',
+          //   tooltip: true,
+          //   title: '剩余(元)',
+          //   key: 'balance',
+          //   maxWidth: 100,
+          //   minWidth: 100
+          // },
           {
             title: '操作',
             slot: 'action',
@@ -482,20 +483,38 @@
         }).then(function (res) {
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
-            that.tableLisr[i].policyamount = that.tableLisr[i].policyamount.toFixed(2)
+            //buydate: "2020-10-03"
+            // cardinality: 1000
+            // companyCost: 300
+            // companyid: null
+            // contractnum: null
+            // cost: 450
+            // enddate: "2022-10-03"
+            // insurancetypeid: 1
+            // insurancetypename: "保险1"
+            // insured: "李四"
+            // ischecked: false
+            // iscompany: false
+            // month: 24
+            // orderNumber: null
+            // personCost: 150
+            // reminddate: null
+            // state: 0
+            // tel: "13511112222"
+            // that.tableLisr[i].policyamount = that.tableLisr[i].policyamount.toFixed(2)
             that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
-            that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
-            that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
-            that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
-            that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
-            that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
-            that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
+            // that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
+            // that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
+            // that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+            // that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+            // that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+            // that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
             that.tableLisr[i].id = res.data.data[i].pk
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
-            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
+            // that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
-            that.tableLisr[i].glf=(that.tableLisr[i].glf/that.tableLisr[i].month).toFixed(2)
-            that.tableLisr[i].getcost=(that.tableLisr[i].cost-that.tableLisr[i].glf).toFixed(2)
+            // that.tableLisr[i].glf=(that.tableLisr[i].glf/that.tableLisr[i].month).toFixed(2)
+            // that.tableLisr[i].getcost=(that.tableLisr[i].cost-that.tableLisr[i].glf).toFixed(2)
           }
           that.total = res.data.count
         }).catch(function (error) {
@@ -543,20 +562,20 @@
           console.log('yemianfanhuizhi', res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i].fields)
-            that.tableLisr[i].policyamount = that.tableLisr[i].policyamount.toFixed(2)
+            // that.tableLisr[i].policyamount = that.tableLisr[i].policyamount.toFixed(2)
             that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
-            that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
-            that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
-            that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
-            that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
-            that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
-            that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
+            // that.tableLisr[i].gscd = that.tableLisr[i].gscd.toFixed(2)
+            // that.tableLisr[i].grcd = that.tableLisr[i].grcd.toFixed(2)
+            // that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+            // that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+            // that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+            // that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
             that.tableLisr[i].id = res.data.data[i].pk
             that.tableLisr[i].buydate = res.data.data[i].fields.buydate
-            that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
+            // that.tableLisr[i].maturitydate = res.data.data[i].fields.maturitydate
             that.tableLisr[i].reminddate = res.data.data[i].fields.reminddate
-            that.tableLisr[i].glf=(that.tableLisr[i].glf/that.tableLisr[i].month).toFixed(2)
-            that.tableLisr[i].getcost=(that.tableLisr[i].cost-that.tableLisr[i].glf).toFixed(2)
+            // that.tableLisr[i].glf=(that.tableLisr[i].glf/that.tableLisr[i].month).toFixed(2)
+            // that.tableLisr[i].getcost=(that.tableLisr[i].cost-that.tableLisr[i].glf).toFixed(2)
           }
           that.total = res.data.count
         }).catch(function (error) {

@@ -292,7 +292,7 @@
             grbili:that.formValidate.grbili,
             gsbili:that.formValidate.gsbili,
             data: tp,
-            tag:1
+            // tag:1
           }
         }).then(function (res) {
           console.log(res)
@@ -335,7 +335,7 @@
             data: tp,
             grbili:that.formValidate.grbili,
             gsbili:that.formValidate.gsbili,
-            tag:1
+            // tag:1
           }
         }).then(function (res) {
           console.log(res)

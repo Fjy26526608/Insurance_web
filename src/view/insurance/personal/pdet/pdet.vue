@@ -33,18 +33,18 @@
           </Col>
         </Row>
       </FormItem>
-      <FormItem label="基数(月)" prop="unitPrice">
+      <!-- <FormItem label="基数(月)" prop="unitPrice">
         <Input v-model="formValidate.unitPrice" placeholder="输入基数（月）" :disabled="!isChange"></Input>
-      </FormItem>
+      </FormItem> -->
       <FormItem label="购买时长" prop="duration">
         <Input v-model="formValidate.duration" placeholder="输入购买时长（月）" :disabled="!isChange"></Input>
       </FormItem>
-      <FormItem label="管理费(元/月)" prop="glf">
+      <!-- <FormItem label="管理费(元/月)" prop="glf">
         <Input v-model="formValidate.glf" placeholder="输入保单总成本金额（元/月）" :disabled="!isChange"></Input>
       </FormItem>
       <FormItem label="实际支付" prop="payment">
         <Input v-model="formValidate.payment" placeholder="输入实际支付金额（元）" :disabled="!isChange"></Input>
-      </FormItem>
+      </FormItem> -->
       </Col>
       <Col span="1" style='text-align:center'>合同照片</Col>
       <Col span="5">
@@ -79,10 +79,10 @@
       </Modal>
       </Col>
     </Row>
-    <FormItem>
+    <!-- <FormItem>
       <Button size="large" icon="md-checkmark" type="success" @click="handleSubmit('formValidate')" v-if="isChange">递 交</Button>
       <Button icon="md-create" size="large" type="primary" @click="doChange()" style="margin-left: 8px" v-if="isAdmin && !isChange">修 改</Button>
-    </FormItem>
+    </FormItem> -->
   </Form>
 </template>
 <script>
@@ -141,14 +141,14 @@
               trigger: 'blur'
             }
           ],
-          payment: [
-            {
-              type: 'number',
-              required: true,
-              message: '实际支付不能为空',
-              trigger: 'blur'
-            }
-          ],
+          // payment: [
+          //   {
+          //     type: 'number',
+          //     required: true,
+          //     message: '实际支付不能为空',
+          //     trigger: 'blur'
+          //   }
+          // ],
           phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
           insuranceType: [
             {
@@ -166,14 +166,14 @@
               trigger: 'change'
             }
           ],
-          glf: [
-            {
-              type: 'number',
-              required: true,
-              message: '保单管理费不能为空',
-              trigger: 'blur'
-            }
-          ]
+          // glf: [
+          //   {
+          //     type: 'number',
+          //     required: true,
+          //     message: '保单管理费不能为空',
+          //     trigger: 'blur'
+          //   }
+          // ]
         },
         levelB: '',
         levelJ: '',

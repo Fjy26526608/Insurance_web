@@ -475,7 +475,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/plistchild',
+          url: '/plistchild',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,
@@ -525,7 +525,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/plistchild',
+          url: '/plistchild',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,

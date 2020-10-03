@@ -454,7 +454,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/companylistchild',
+          url: '/companylistchild',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,
@@ -496,7 +496,7 @@
         let that = this
         axios.request({
           method: 'post',
-          url: '/main/companylistchild',
+          url: '/companylistchild',
           data: {
             page: this.pageNo,
             pagesize: this.pageSize,

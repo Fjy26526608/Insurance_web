@@ -5,7 +5,7 @@
         <Col span="4">
           <DatePicker type="year" placeholder="选择年份" :clearable='false' style="width: 200px;" @on-change="yearChanged"></DatePicker>
         </Col>
-        <example style="height: 580px;"/>
+        <example ref="example" style="height: 580px;"/>
       </Card>
     </Row>
   </div>

@@ -43,7 +43,7 @@
           </Select>
         </FormItem>
         <FormItem label="用户密码" prop="passwd">
-          <Input v-model="formValidate.passwd" placeholder="输入用户密码"></Input>
+          <Input v-model="formValidate.passwd" type="password" placeholder="输入用户密码"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -68,7 +68,7 @@
           </Select>
         </FormItem>
         <FormItem label="用户密码" prop="passwd">
-          <Input v-model="formValidate.passwd" placeholder="输入用户密码"></Input>
+          <Input v-model="formValidate.passwd" type="password" placeholder="输入用户密码"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -266,7 +266,7 @@ export default {
     },
     cancel() {
       this.$Message.success('点击取消!')
-      this.formValidate = []
+      this.formValidate = {}
     },
     ok() {
       console.log(this.formValidate)
@@ -279,23 +279,24 @@ export default {
           passwd: that.formValidate.passwd,
           name: that.formValidate.name,
           roleid: that.formValidate.roleid,
-          companyid: 2
+          companyid: 1
         }
       }).then(function (res) {
         console.log(res)
-        if (res.data === true) {
+        if (res.data.state === 'true') {
           that.$Message.success(res.data.msg)
+          that.fetchList()
         } else {
           that.$Message.success(res.data.msg)
         }
       }).catch(function (error) {
         console.log(error)
       })
-      this.formValidate = []
+      this.formValidate = {}
     },
     cancel1() {
       this.$Message.success('点击取消!')
-      this.formValidate = []
+      this.formValidate = {}
     },
     ok1() {
       let that = this
@@ -308,23 +309,24 @@ export default {
           passwd: that.formValidate.passwd,
           name: that.formValidate.name,
           roleid: that.formValidate.roleid,
-          companyid: 2
+          companyid: 1
         }
       }).then(function (res) {
         console.log(res)
-        if (res.data === true) {
+        if (res.data.state === 'true') {
           that.$Message.success(res.data.msg)
+          that.fetchList()
         } else {
           that.$Message.success(res.data.msg)
         }
       }).catch(function (error) {
         console.log(error)
       })
-      this.formValidate = []
+      this.formValidate = {}
     },
     cancel2() {
       this.$Message.success('点击取消!')
-      this.formValidate = []
+      this.formValidate = {}
     },
     ok2() {
       let that = this

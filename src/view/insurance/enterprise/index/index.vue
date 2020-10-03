@@ -357,43 +357,43 @@
           //   tooltip: true,
           //   width: 110
           // },
-          {
-            title: '成本(元/月)',
-            key: 'cost',
-            align: 'center',
-            tooltip: true,
-            width: 110
-          },
-          {
-            title: '管理费(元/月)',
-            key: 'glf',
-            align: 'center',
-            tooltip: true,
-            width: 123
-          },
-          {
-            title: '实际支付(元)',
-            key: 'actualpayment',
-            align: 'center',
-            tooltip: true,
-            width: 123
-          },
-          {
-            title: '总计(元/月)',
-            key: 'alreadyused',
-            align: 'center',
-            tooltip: true,
-            minWidth: 123,
-            maxWidth: 123
-          },
-          {
-            title: '剩余(元)',
-            key: 'balance',
-            align: 'center',
-            tooltip: true,
-            maxWidth: 123,
-            minWidth: 123
-          },
+          // {
+          //   title: '成本(元/月)',
+          //   key: 'cost',
+          //   align: 'center',
+          //   tooltip: true,
+          //   width: 110
+          // },
+          // {
+          //   title: '管理费(元/月)',
+          //   key: 'glf',
+          //   align: 'center',
+          //   tooltip: true,
+          //   width: 123
+          // },
+          // {
+          //   title: '实际支付(元)',
+          //   key: 'actualpayment',
+          //   align: 'center',
+          //   tooltip: true,
+          //   width: 123
+          // },
+          // {
+          //   title: '总计(元/月)',
+          //   key: 'alreadyused',
+          //   align: 'center',
+          //   tooltip: true,
+          //   minWidth: 123,
+          //   maxWidth: 123
+          // },
+          // {
+          //   title: '剩余(元)',
+          //   key: 'balance',
+          //   align: 'center',
+          //   tooltip: true,
+          //   maxWidth: 123,
+          //   minWidth: 123
+          // },
           // {
           //   title: '备注',
           //   key: 'remark',
@@ -462,12 +462,22 @@
           console.log('查询返回值', res)
           for (let i = 0; i < res.data.data.length; i++) {
             that.tableLisr.push(res.data.data[i])
-            that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
-            that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
-            that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
-            that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
-            that.tableLisr[i].allmoney = that.tableLisr[i].allmoney.toFixed(2)
-            that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+            // address: "1"
+            // contactperson: "1"
+            // etime: "2020-09-21T16:02:53Z"
+            // id: 1
+            // name: "test"
+            // num: "1"
+            // remark: "1"
+            // state: 0
+            // stime: "2020-09-21T16:02:56Z"
+            // tel: "1"
+            // that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+            // that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+            // that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+            // that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
+            // that.tableLisr[i].allmoney = that.tableLisr[i].allmoney.toFixed(2)
+            // that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
             let abc = new Date(res.data.data[i].stime)
             that.tableLisr[i].stime = formatDate(abc, 'yyyy-MM-dd')
             let cba = new Date(res.data.data[i].etime)
@@ -506,12 +516,12 @@
             that.total = res.data.count
             for (let i = 0; i < res.data.data.length; i++) {
               that.tableLisr.push(res.data.data[i])
-              that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
-              that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
-              that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
-              that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
-              that.tableLisr[i].allmoney = that.tableLisr[i].allmoney.toFixed(2)
-              that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
+              // that.tableLisr[i].glf = that.tableLisr[i].glf.toFixed(2)
+              // that.tableLisr[i].actualpayment = that.tableLisr[i].actualpayment.toFixed(2)
+              // that.tableLisr[i].alreadyused = that.tableLisr[i].alreadyused.toFixed(2)
+              // that.tableLisr[i].balance = that.tableLisr[i].balance.toFixed(2)
+              // that.tableLisr[i].allmoney = that.tableLisr[i].allmoney.toFixed(2)
+              // that.tableLisr[i].cost = that.tableLisr[i].cost.toFixed(2)
               let abc = new Date(res.data.data[i].stime)
               that.tableLisr[i].stime = formatDate(abc, 'yyyy-MM-dd')
               let cba = new Date(res.data.data[i].etime)
